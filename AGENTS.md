@@ -2,15 +2,17 @@
 
 You are working in **NEXTJS-SKELETON**: a production-grade starting point for web apps, designed so that AI agents do the bulk of implementation while humans steer through specs, docs, and review gates. The repository is the harness: everything you need to do a good job is written down here. Ground every decision in these files, not in generic training priors.
 
-## Starting a new project? Run `/progix`
+## Operating model — repo-only (ADR-0006)
 
-A new Progix project begins with a clone of this skeleton and one message: **`/progix`**. It interviews you, fills the Notion project, creates the GitHub repo, initializes the clone, and emits the Claude Design prompt. You do not need to memorize the rest of this file to begin — `/progix` walks you through it. The detail below is the operating model `/progix` sets up. Full rationale: ADR-0005.
+**The repo is the only operating surface.** There is no Notion/Slack/GitHub-Actions layer to keep
+in sync, and no cloud CI — verification runs locally (`pnpm verify` + Husky pre-commit hooks).
+Every fact has one home, and that home is the repo: conventions, specs, ADRs, gates, PRDs, and
+reports all live here. Duplicating a fact elsewhere is a bug. The upgrade in progress (web security,
+SSR Supabase, production-readiness, design, skills) is tracked in `UPGRADE-ROADMAP.md` and grounded
+in the cited briefs under `docs/research/`.
 
-## The four surfaces (one home per fact)
-
-> **Notion explains · GitHub tracks · Slack coordinates · the repo enforces.**
-
-Each fact lives in exactly one place. Product intent and human-readable docs → Notion. Tasks, issues, PRs, review state → GitHub. Meeting outputs, questions, decisions, handoffs → Slack. Conventions, specs, ADRs, gates → this repo. Duplicating a fact across surfaces is a bug. Details: `docs/process/notion-workspace.md`.
+> Note: the old `/progix` "four-surface" front door (ADR-0005) is retired; some skills still
+> reference Notion/GitHub orchestration and are de-Notioned during the docs/skill rebuild.
 
 ## The loop
 

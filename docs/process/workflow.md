@@ -25,9 +25,12 @@ agent:  /implement-feature                           (tasks, checkpoint commits,
 agent:  /verify-ui    →  artifacts/screenshots/NNN-slug/   (evidence vs acceptance criteria)
 agent:  /review       →  persona findings fixed (P0/P1)
 agent:  /feature-report → docs/reports/NNN-slug.md   (diff + screenshots + verdicts)
-PR:     CI gates + persona action + human CODEOWNER
+merge:  local gates green (`pnpm verify` + pre-commit) + `/review` + human CODEOWNER
 after merge: /update-docs → living feature doc, CUJs, INDEX updated; spec marked shipped
 ```
+
+Verification runs **locally** (`pnpm verify` + Husky pre-commit), not in cloud CI. The repo is the
+only operating surface — no Notion/Slack/GitHub-Actions layer (ADR-0006).
 
 ## Working without conflicts
 

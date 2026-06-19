@@ -32,7 +32,7 @@ For AI-driven work, open the repo in Claude Code (or any agent that reads `AGENT
 | Add a feature module        | `/new-module <name>`                                                                                                         |
 | Make a correction permanent | `/encode-lesson`                                                                                                             |
 
-The four surfaces — **Notion explains · GitHub tracks · Slack coordinates · the repo enforces** ([ADR-0005](docs/architecture/decisions/0005-progix-operating-system.md)). Process, roles, and the R2R loop: [docs/process/workflow.md](docs/process/workflow.md) · [docs/process/notion-workspace.md](docs/process/notion-workspace.md) · [docs/process/r2r.md](docs/process/r2r.md).
+**The repo is the only operating surface** — no Notion/Slack/GitHub-Actions layer, no cloud CI; verification runs locally (`pnpm verify` + Husky pre-commit). See [ADR-0006](docs/architecture/decisions/0006-repo-only-operating-model.md). Process, roles, and the R2R loop: [docs/process/workflow.md](docs/process/workflow.md) · [docs/process/r2r.md](docs/process/r2r.md).
 
 ## Map
 

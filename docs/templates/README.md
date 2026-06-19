@@ -4,11 +4,8 @@ These are the canonical sources for the human-facing artifacts of a project. Ski
 
 | Template                                                 | Filled by                                                      | Lives (when filled)                                                           |
 | -------------------------------------------------------- | -------------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| [notion-project-template.md](notion-project-template.md) | `/progix`                                                      | A page under Notion → Projets                                                 |
-| [pm-page.md](pm-page.md)                                 | `/progix`, kept current by `/daily-report` + `/meeting-intake` | Notion → project → PM                                                         |
 | [prd.md](prd.md)                                         | `/write-prd`                                                   | Notion → project → PRD (human original) + `docs/product/prd.md` (repo mirror) |
 | [claude-design-prompt.md](claude-design-prompt.md)       | `/progix` / `/design-prompt`                                   | Exported `.md`, pasted into Claude Design                                     |
 | [daily-report.md](daily-report.md)                       | `/daily-report`                                                | Notion → project → GitHub + `docs/reports/daily/`                             |
-| [meeting-notes.md](meeting-notes.md)                     | `/meeting-intake`                                              | Notion → project → Meetings                                                   |
 
 Rule for all of them: human-readable first (the PM, Ilyes, and the client read these), short, honest, and dated. See `docs/process/notion-workspace.md`.

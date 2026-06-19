@@ -28,7 +28,6 @@ The docs tree is the repository's long-term memory. Agents and humans ground the
 | File                                                           | What it answers                                                     |
 | -------------------------------------------------------------- | ------------------------------------------------------------------- |
 | [process/workflow.md](process/workflow.md)                     | Roles, the two work tracks, conflict-free collaboration             |
-| [process/notion-workspace.md](process/notion-workspace.md)     | The four surfaces, the Notion project structure, the human PM page  |
 | [process/r2r.md](process/r2r.md)                               | Requirement-to-Review — the meeting → diff → grill → spec loop      |
 | [process/definition-of-done.md](process/definition-of-done.md) | The checklist that gates every merge                                |
 | [process/painted-door.md](process/painted-door.md)             | How designers/PMs ship UI experiments safely                        |
@@ -39,12 +38,9 @@ The docs tree is the repository's long-term memory. Agents and humans ground the
 | File                                                                         | Filled by                                     |
 | ---------------------------------------------------------------------------- | --------------------------------------------- |
 | [templates/](templates/README.md)                                            | Index of all project artifacts                |
-| [templates/notion-project-template.md](templates/notion-project-template.md) | `/progix`                                     |
-| [templates/pm-page.md](templates/pm-page.md)                                 | `/progix`, `/daily-report`, `/meeting-intake` |
 | [templates/prd.md](templates/prd.md)                                         | `/write-prd`                                  |
 | [templates/claude-design-prompt.md](templates/claude-design-prompt.md)       | `/design-prompt`                              |
 | [templates/daily-report.md](templates/daily-report.md)                       | `/daily-report`                               |
-| [templates/meeting-notes.md](templates/meeting-notes.md)                     | `/meeting-intake`                             |
 
 ## Product (what we are building)
 

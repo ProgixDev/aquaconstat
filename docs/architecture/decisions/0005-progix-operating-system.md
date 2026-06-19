@@ -1,6 +1,6 @@
 # 0005 — The Progix operating system: one front door, four surfaces, R2R
 
-- **Status:** Accepted
+- **Status:** Partially superseded by [ADR-0006](0006-repo-only-operating-model.md) — the **four-surface (Notion / GitHub / Slack / repo) model and cloud CI/CD are dropped**; the repo is the only operating surface. The spec track, sizing gate, and skills introduced here remain.
 - **Date:** 2026-06-08
 - **Deciders:** Achraf Arabi (lead), Ilyes Ghorieb (Progix), Mohamed Bouhezza (PM)
 
