@@ -106,7 +106,9 @@ export function HeroDroplet() {
         let lastScrollY = window.scrollY;
         let lastSplash = 0;
         let splashStart = -1;
+        let prevP = 0;
         let running = true;
+        const runway = document.getElementById("hero-runway");
 
         const observer = new IntersectionObserver(([entry]) => {
           running = entry?.isIntersecting ?? true;
@@ -126,17 +128,35 @@ export function HeroDroplet() {
           const velocity = y - lastScrollY;
           lastScrollY = y;
 
-          // A quick flick of the wheel makes the drop land and splash.
-          if (Math.abs(velocity) > 14 && time - lastSplash > 1400) {
+          // Pinned-runway progress (desktop) — 0 on mobile where the hero
+          // isn't pinned and the runway has no extra height.
+          let p = 0;
+          const rect = runway?.getBoundingClientRect();
+          if (rect && rect.height - window.innerHeight > 80) {
+            p = Math.min(Math.max(-rect.top / (rect.height - window.innerHeight), 0), 1);
+          }
+
+          const IMPACT = 0.42;
+          if (prevP < IMPACT && p >= IMPACT) {
+            // The drop lands — splash at the impact point of the story.
+            splashStart = time;
+            ripples.forEach((r, i) => (r.start = time + i * 150));
+          } else if (p === 0 && Math.abs(velocity) > 14 && time - lastSplash > 1400) {
+            // Mobile fallback: a quick scroll flick still splashes.
             lastSplash = time;
             splashStart = time;
             ripples.forEach((r, i) => (r.start = time + i * 150));
           }
+          prevP = p;
 
-          const scrub = Math.min(y / 900, 1);
           const t = time / 1000;
-          group.rotation.y = t * 0.25 + scrub * Math.PI * 2;
-          group.position.y = Math.sin(t * 0.9) * 0.09 - scrub * 1.1;
+          // Story: descent to impact → brief rest → settle back up, slightly smaller.
+          const fall = p < IMPACT ? Math.pow(p / IMPACT, 1.6) * 0.32 : 0.32;
+          const settle = p > 0.62 ? (p - 0.62) / 0.38 : 0;
+          group.rotation.y = t * 0.25 + p * Math.PI * 3;
+          group.position.y = Math.sin(t * 0.9) * 0.09 * (1 - p) - fall + settle * 0.3;
+          const shrink = 1 - settle * 0.14;
+          group.scale.set(shrink, shrink, shrink);
 
           // Squash-and-stretch splash on the drop itself.
           let squash = 0;
