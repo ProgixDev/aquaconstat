@@ -6,16 +6,26 @@ import { useEffect, useRef } from "react";
 const RIPPLES = 4;
 const SPRAY = 10;
 
+/** Broadcast so the rest of the hero (chips, headline) can react to the landing. */
+export const IMPACT_EVENT = "aquaconstat:impact";
+
 /**
  * Signature hero droplet (design brief §3) — the photoreal raindrop from
- * design/source, animated with rAF transforms. Idle float and wobble; on the
- * desktop pinned runway, scroll scrubs the story: descend → cinematic impact
- * (light flash, ballistic spray droplets, layered ripple rings, deep squash-
- * and-stretch) → rise back home. Mobile keeps normal flow where a quick
- * scroll flick still splashes. prefers-reduced-motion gets the static image.
+ * design/source, animated with rAF transforms over a glassy water surface.
+ * Idle float and wobble; on the desktop pinned runway, scroll scrubs the
+ * story: descend → cinematic impact (light flash, ballistic spray, layered
+ * ripple rings, deep squash-and-stretch) → time-based rise back home. A
+ * mirrored reflection and a sharpening contact shadow anticipate the fall.
+ * On mobile (no pin) the full cycle auto-plays once shortly after load, and
+ * a quick scroll flick still splashes. prefers-reduced-motion gets the
+ * static image.
  */
 export function HeroDroplet() {
   const dropRef = useRef<HTMLDivElement>(null);
+  const reflectionRef = useRef<HTMLDivElement>(null);
+  const reflectionWrapRef = useRef<HTMLDivElement>(null);
+  const shadowRef = useRef<HTMLDivElement>(null);
+  const poolRef = useRef<HTMLDivElement>(null);
   const flashRef = useRef<HTMLDivElement>(null);
   const rippleRefs = useRef<(HTMLDivElement | null)[]>([]);
   const sprayRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -24,6 +34,7 @@ export function HeroDroplet() {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const runway = document.getElementById("hero-runway");
+    const desktop = window.matchMedia("(min-width: 64rem)");
     const rippleStarts: number[] = Array.from({ length: RIPPLES }, () => -1);
     const spray = Array.from({ length: SPRAY }, () => ({ start: -1, angle: 0, speed: 0 }));
     let lastScrollY = window.scrollY;
@@ -31,6 +42,8 @@ export function HeroDroplet() {
     let splashStart = -1;
     let phase: "fall" | "returning" | "home" = "fall";
     let returnStart = 0;
+    let autoStart = -1;
+    let autoDone = false;
     let raf = 0;
 
     const triggerSplash = (time: number) => {
@@ -41,6 +54,7 @@ export function HeroDroplet() {
         s.angle = Math.PI * (0.12 + (0.76 * i) / (SPRAY - 1)) + (Math.random() - 0.5) * 0.2;
         s.speed = 0.55 + Math.random() * 0.5;
       });
+      window.dispatchEvent(new CustomEvent(IMPACT_EVENT));
     };
 
     const loop = (time: number) => {
@@ -52,17 +66,28 @@ export function HeroDroplet() {
       const velocity = y - lastScrollY;
       lastScrollY = y;
 
-      // Pinned-runway progress (desktop) — 0 on mobile where the hero
-      // isn't pinned and the runway has no extra height.
+      // Pinned-runway progress — the pin only exists at the lg breakpoint
+      // (hero.tsx gates sticky + runway height on lg:).
       let p = 0;
       const rect = runway?.getBoundingClientRect();
-      if (rect && rect.height - window.innerHeight > 80) {
+      const pinned = desktop.matches && !!rect && rect.height - window.innerHeight > 80;
+      if (pinned && rect) {
         p = Math.min(Math.max(-rect.top / (rect.height - window.innerHeight), 0), 1);
+      } else if (!autoDone) {
+        // Mobile: no pin to scrub, so the full story auto-plays once —
+        // a synthetic ramp drives the same fall → impact machinery.
+        if (autoStart < 0) autoStart = time + 900;
+        p = Math.min(Math.max((time - autoStart) / 1300, 0), 1) * 0.7;
+        if (phase === "home") {
+          autoDone = true;
+          p = 0;
+        }
       }
 
       const IMPACT = 0.6;
       if (phase === "fall" && p >= IMPACT) {
         // The drop lands — splash, then swim back home on its own clock.
+        lastSplash = time;
         triggerSplash(time);
         phase = "returning";
         returnStart = time + 380;
@@ -96,7 +121,31 @@ export function HeroDroplet() {
         if (k >= 1) splashStart = -1;
         else squash = Math.sin(Math.PI * k);
       }
-      drop.style.transform = `translateY(${float + fall + squash * 6}%) rotate(${wobble}deg) scale(${1 + squash * 0.34}, ${1 - squash * 0.44})`;
+      const drift = float + fall + squash * 6;
+      drop.style.transform = `translateY(${drift}%) rotate(${wobble}deg) scale(${1 + squash * 0.34}, ${1 - squash * 0.44})`;
+
+      // Mirrored reflection on the water — rises to meet the falling drop,
+      // brightens as they close, and shatters (dims) during the splash.
+      const reflection = reflectionRef.current;
+      const reflectionWrap = reflectionWrapRef.current;
+      if (reflection && reflectionWrap) {
+        reflection.style.transform = `translateY(${-drift}%) scale(${1 + squash * 0.34}, ${-(1 - squash * 0.44)})`;
+        reflectionWrap.style.opacity = String((0.16 + grounded * 0.3) * (1 - squash * 0.75));
+      }
+
+      // Contact shadow — wide and soft while airborne, tight and dark at
+      // the surface: the classic cue that gives the fall its weight.
+      const shadow = shadowRef.current;
+      if (shadow) {
+        shadow.style.transform = `translateX(-50%) scale(${1.65 - grounded * 0.85}, ${1.25 - grounded * 0.35})`;
+        shadow.style.opacity = String(0.14 + grounded * 0.4);
+      }
+
+      // The pool swells briefly under the impact.
+      const pool = poolRef.current;
+      if (pool) {
+        pool.style.transform = `scale(${1 + squash * 0.08}, ${1 + squash * 0.16})`;
+      }
 
       // Impact light flash at the base.
       const flash = flashRef.current;
@@ -157,7 +206,44 @@ export function HeroDroplet() {
   }, []);
 
   return (
-    <div className="absolute inset-0" aria-hidden>
+    <div className="animate-hero-drop-in absolute inset-0" aria-hidden>
+      {/* Water surface — the glassy pool the drop lands on. */}
+      <div
+        className="absolute bottom-[-5%] left-1/2 h-24 w-[135%]"
+        style={{ transform: "translateX(-50%)" }}
+      >
+        <div
+          ref={poolRef}
+          className="from-aqua-bright/20 via-navy-light/25 absolute inset-0 rounded-[50%] bg-radial to-transparent to-72%"
+        />
+        <div className="via-aqua-pale/45 absolute inset-x-[8%] top-[36%] h-[3px] rounded-full bg-linear-90 from-transparent to-transparent blur-[1.5px]" />
+      </div>
+
+      {/* Contact shadow on the surface — scrubbed by the descent. */}
+      <div
+        ref={shadowRef}
+        style={{ transform: "translateX(-50%)" }}
+        className="bg-navy-deep/70 absolute bottom-[2%] left-1/2 h-6 w-40 rounded-[50%] opacity-0 blur-md will-change-transform"
+      />
+
+      {/* Mirrored reflection below the waterline — the drop's box mirrored
+          across its contact point (88% of the box, 79% of the slot), so the
+          reflected underside meets the real one exactly at the surface. */}
+      <div
+        ref={reflectionWrapRef}
+        className="absolute inset-x-[3%] top-[68%] -bottom-[58%] [mask-image:linear-gradient(to_bottom,transparent_11%,black_15%,transparent_46%)] opacity-0"
+      >
+        <div ref={reflectionRef} className="absolute inset-0 will-change-transform">
+          <Image
+            src="/droplet.png"
+            alt=""
+            fill
+            sizes="(min-width: 768px) 26rem, 18rem"
+            className="object-contain"
+          />
+        </div>
+      </div>
+
       <div
         ref={flashRef}
         style={{ transform: "translateX(-50%)" }}
@@ -170,7 +256,7 @@ export function HeroDroplet() {
             rippleRefs.current[i] = el;
           }}
           style={{ transform: "translateX(-50%)" }}
-          className="border-aqua-pale absolute bottom-[2%] left-1/2 h-11 w-52 rounded-full border-2 opacity-0"
+          className="border-aqua-pale absolute bottom-[2%] left-1/2 h-11 w-52 rounded-[50%] border-2 opacity-0"
         />
       ))}
       {Array.from({ length: SPRAY }, (_, i) => (
