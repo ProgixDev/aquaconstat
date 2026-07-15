@@ -29,7 +29,8 @@ export function HeroDroplet() {
     let lastScrollY = window.scrollY;
     let lastSplash = 0;
     let splashStart = -1;
-    let prevP = 0;
+    let phase: "fall" | "returning" | "home" = "fall";
+    let returnStart = 0;
     let raf = 0;
 
     const triggerSplash = (time: number) => {
@@ -59,23 +60,31 @@ export function HeroDroplet() {
         p = Math.min(Math.max(-rect.top / (rect.height - window.innerHeight), 0), 1);
       }
 
-      const IMPACT = 0.4;
-      if (prevP < IMPACT && p >= IMPACT) {
+      const IMPACT = 0.6;
+      if (phase === "fall" && p >= IMPACT) {
+        // The drop lands — splash, then swim back home on its own clock.
         triggerSplash(time);
+        phase = "returning";
+        returnStart = time + 380;
       } else if (p === 0 && Math.abs(velocity) > 14 && time - lastSplash > 1400) {
         lastSplash = time;
         triggerSplash(time);
       }
-      prevP = p;
+      // Re-arm the story when the user scrolls back up past the fall zone.
+      if (phase !== "fall" && p < IMPACT * 0.5) phase = "fall";
 
       const t = time / 1000;
-      // Story: descend to the impact, hold through the splash, then rise
-      // back to the original floating position at full size.
+      // Story: scroll scrubs the descent; after impact the return is
+      // time-based — the drop rises home without any further scrolling.
       const DEPTH = 16; // % of the drop's height
-      let fall: number;
-      if (p < IMPACT) fall = Math.pow(p / IMPACT, 1.6) * DEPTH;
-      else if (p < 0.6) fall = DEPTH;
-      else fall = DEPTH * (1 - Math.pow((p - 0.6) / 0.4, 0.8));
+      let fall = 0;
+      if (phase === "fall") {
+        fall = p < IMPACT ? Math.pow(p / IMPACT, 1.6) * DEPTH : DEPTH;
+      } else if (phase === "returning") {
+        const k = Math.min(Math.max((time - returnStart) / 900, 0), 1);
+        fall = DEPTH * (1 - (1 - Math.pow(1 - k, 3)));
+        if (k >= 1) phase = "home";
+      }
       const grounded = fall / DEPTH;
       const float = Math.sin(t * 0.9) * 3 * (1 - grounded);
       const wobble = Math.sin(t * 0.7) * 2.2 * (1 - grounded);
