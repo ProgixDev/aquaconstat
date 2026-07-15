@@ -31,7 +31,7 @@ export function Hero() {
           AquaConstat
         </div>
 
-        <div className="relative mx-auto max-w-6xl px-6 pt-16 pb-28 md:px-10 md:pt-24 md:pb-32">
+        <div className="relative mx-auto max-w-6xl px-6 pt-32 pb-28 md:px-10 md:pt-36 md:pb-32">
           <div className="grid items-center gap-14 lg:grid-cols-[1.15fr_0.85fr]">
             <div>
               <SectionBadge variant="navy">Dégât des eaux · Devis à distance</SectionBadge>

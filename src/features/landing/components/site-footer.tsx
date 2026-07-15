@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { DropletGlyph } from "@/components/ui/droplet-glyph";
+import { BrandLogo } from "@/components/ui/brand-logo";
 
 /** Full-bleed navy footer — brand, service nav, legal links, contact. */
 export function SiteFooter() {
@@ -8,12 +8,7 @@ export function SiteFooter() {
       <div className="mx-auto max-w-6xl px-6 py-14 md:px-10 md:py-16">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div className="max-w-72">
-            <div className="flex items-center gap-2.5">
-              <DropletGlyph size="lg" />
-              <span className="font-display text-secondary-foreground text-[15px] font-bold tracking-widest">
-                AQUACONSTAT
-              </span>
-            </div>
+            <BrandLogo variant="dark" />
             <div className="text-aqua-pale/80 mt-4 text-sm leading-relaxed">
               Devis dégât des eaux à distance — France métropolitaine.
             </div>
