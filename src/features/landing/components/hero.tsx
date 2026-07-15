@@ -16,7 +16,7 @@ export function Hero() {
     <div className="relative">
       {/* Scroll runway — on desktop the hero pins while scrolling drives the
           droplet's descent → splash → settle, then the page releases. */}
-      <div id="hero-runway" className="bg-navy lg:h-[260vh]">
+      <div id="hero-runway" className="bg-navy lg:h-[175vh]">
         <section className="bg-navy-hero relative overflow-hidden lg:sticky lg:top-0 lg:flex lg:h-svh lg:flex-col lg:justify-center">
           <div aria-hidden className="absolute inset-0">
             <Image
@@ -61,7 +61,7 @@ export function Hero() {
                 </div>
               </div>
 
-              <div className="relative mx-auto h-72 w-64 md:h-88 md:w-80" aria-hidden>
+              <div className="relative mx-auto h-80 w-72 md:h-112 md:w-100" aria-hidden>
                 <div className="from-aqua-bright/25 absolute top-1/2 left-1/2 h-[120%] w-[130%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-radial to-transparent to-65%" />
                 <HeroDroplet />
                 <div className="bg-paper/95 text-foreground shadow-chip animate-droplet-drift absolute top-[8%] -right-4 flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold whitespace-nowrap md:-right-10">
