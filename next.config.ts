@@ -42,6 +42,10 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   // Don't advertise the framework version.
   poweredByHeader: false,
+  images: {
+    // Unsplash photography (hero atmosphere + photo-guide examples).
+    remotePatterns: [{ protocol: "https", hostname: "images.unsplash.com" }],
+  },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

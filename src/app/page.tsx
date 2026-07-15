@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Reveal } from "@/components/ui/reveal";
 import {
   AudienceSection,
   DeliverableSection,
@@ -23,16 +24,34 @@ export default function Home() {
       <SiteHeader />
       <main className="flex flex-col gap-4.5">
         <Hero />
-        <AudienceSection />
-        <HowItWorksSection />
-        <PhotoGuideSection />
-        <DeliverableSection />
-        <PricingSection />
-        <TestimonialsSection />
-        <FaqSection />
-        <FinalCtaSection />
+        <Reveal>
+          <AudienceSection />
+        </Reveal>
+        <Reveal>
+          <HowItWorksSection />
+        </Reveal>
+        <Reveal>
+          <PhotoGuideSection />
+        </Reveal>
+        <Reveal>
+          <DeliverableSection />
+        </Reveal>
+        <Reveal>
+          <PricingSection />
+        </Reveal>
+        <Reveal>
+          <TestimonialsSection />
+        </Reveal>
+        <Reveal>
+          <FaqSection />
+        </Reveal>
+        <Reveal>
+          <FinalCtaSection />
+        </Reveal>
       </main>
-      <SiteFooter />
+      <Reveal>
+        <SiteFooter />
+      </Reveal>
     </div>
   );
 }

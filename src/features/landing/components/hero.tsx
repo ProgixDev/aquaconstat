@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { CtaButton } from "./cta-button";
 import { DropletGlyph } from "@/components/ui/droplet-glyph";
 import { SectionBadge } from "./section-badge";
@@ -12,6 +13,16 @@ const stats = [
 export function Hero() {
   return (
     <section className="bg-navy-hero rounded-panel relative overflow-hidden px-5 pt-11 pb-9 text-center md:px-14 md:pt-18">
+      <div aria-hidden className="absolute inset-0">
+        <Image
+          src="https://images.unsplash.com/photo-1559825481-12a05cc00344?auto=format&fit=crop&w=1600&q=70"
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover opacity-20"
+        />
+        <div className="from-navy/70 via-navy/30 to-navy/80 absolute inset-0 bg-linear-180" />
+      </div>
       <div
         aria-hidden
         className="font-display text-secondary-foreground/5 pointer-events-none absolute inset-x-0 bottom-20 text-8xl font-bold whitespace-nowrap italic md:text-9xl"
