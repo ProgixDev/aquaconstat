@@ -49,17 +49,19 @@ export function FaqSection() {
         aria-hidden
         className="from-aqua-pale/40 absolute -right-40 -bottom-40 size-140 rounded-full bg-radial to-transparent to-70%"
       />
-      <div className="relative mx-auto grid max-w-5xl gap-x-14 gap-y-8 px-6 py-14 md:px-10 md:py-20 lg:grid-cols-[0.75fr_1.25fr]">
-        <div>
-          <SectionBadge>FAQ</SectionBadge>
-          <h2 className="font-display mt-4 text-3xl leading-snug font-bold md:text-4xl">
-            Questions fréquentes
-          </h2>
-          <p className="text-muted-foreground mt-3 text-sm">
+      <div className="relative mx-auto max-w-5xl px-6 py-10 md:px-10 md:py-14">
+        <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-3">
+          <div>
+            <SectionBadge>FAQ</SectionBadge>
+            <h2 className="font-display mt-3 text-2xl leading-snug font-bold md:text-3xl">
+              Questions fréquentes
+            </h2>
+          </div>
+          <p className="text-muted-foreground text-sm">
             Une autre question ? Écrivez-nous à contact@aquaconstat.fr.
           </p>
         </div>
-        <div className="flex flex-col gap-2.5">
+        <div className="mt-7 grid items-start gap-2.5 md:grid-cols-2">
           {faqs.map((faq, i) => {
             const isOpen = open === i;
             return (
@@ -75,14 +77,14 @@ export function FaqSection() {
                   aria-expanded={isOpen}
                   aria-controls={`faq-panel-${i}`}
                   onClick={() => setOpen(isOpen ? null : i)}
-                  className="text-foreground flex w-full cursor-pointer items-center justify-between gap-4 px-5 py-4 text-left text-base font-semibold"
+                  className="text-foreground flex w-full cursor-pointer items-center justify-between gap-4 px-4.5 py-3.5 text-left text-sm font-semibold"
                 >
                   {faq.q}
                   <m.span
                     aria-hidden
                     animate={{ rotate: isOpen ? 45 : 0 }}
                     transition={{ duration: 0.2, ease: "easeOut" }}
-                    className="bg-muted text-link flex size-7 flex-none items-center justify-center rounded-full text-lg font-normal"
+                    className="bg-muted text-link flex size-6 flex-none items-center justify-center rounded-full text-base font-normal"
                   >
                     +
                   </m.span>
@@ -97,7 +99,7 @@ export function FaqSection() {
                       transition={{ duration: 0.22, ease: "easeOut" }}
                       className="overflow-hidden"
                     >
-                      <p className="text-muted-foreground m-0 px-5 pb-4.5 text-sm leading-relaxed">
+                      <p className="text-muted-foreground m-0 px-4.5 pb-4 text-sm leading-relaxed">
                         {faq.a}
                       </p>
                     </m.div>
