@@ -87,6 +87,7 @@ export function HeroDroplet() {
           envMapIntensity: 1.15,
         });
         const drop = new THREE.Mesh(geometry, material);
+        drop.rotation.z = Math.PI; // point up — raindrop, not pendant
         const group = new THREE.Group();
         group.add(drop);
         scene.add(group);
@@ -150,13 +151,16 @@ export function HeroDroplet() {
           prevP = p;
 
           const t = time / 1000;
-          // Story: descent to impact → brief rest → settle back up, slightly smaller.
-          const fall = p < IMPACT ? Math.pow(p / IMPACT, 1.6) * 0.32 : 0.32;
-          const settle = p > 0.62 ? (p - 0.62) / 0.38 : 0;
+          // Story: descend to the impact, hold through the splash, then rise
+          // back to the original floating position at full size.
+          const DEPTH = 0.32;
+          let fall: number;
+          if (p < IMPACT) fall = Math.pow(p / IMPACT, 1.6) * DEPTH;
+          else if (p < 0.68) fall = DEPTH;
+          else fall = DEPTH * (1 - Math.pow((p - 0.68) / 0.32, 0.8));
+          const amplitude = 0.09 * (1 - fall / DEPTH);
           group.rotation.y = t * 0.25 + p * Math.PI * 3;
-          group.position.y = Math.sin(t * 0.9) * 0.09 * (1 - p) - fall + settle * 0.3;
-          const shrink = 1 - settle * 0.14;
-          group.scale.set(shrink, shrink, shrink);
+          group.position.y = Math.sin(t * 0.9) * amplitude - fall;
 
           // Squash-and-stretch splash on the drop itself.
           let squash = 0;
