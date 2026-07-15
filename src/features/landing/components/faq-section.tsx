@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { AnimatePresence, m } from "@/components/motion";
+import { cn } from "@/lib/utils";
 import { SectionBadge } from "./section-badge";
 
 const faqs = [
@@ -30,50 +32,77 @@ const faqs = [
   },
 ] as const;
 
-/** FAQ accordion — one item open at a time, keyboard-operable (spec 002, AC-2). */
+/** FAQ — compact tinted band, animated accordion (spec 002, AC-2). */
 export function FaqSection() {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="bg-card scroll-mt-20">
-      <div className="mx-auto grid max-w-6xl gap-x-16 gap-y-10 px-6 py-20 md:px-10 md:py-28 lg:grid-cols-[0.8fr_1.2fr]">
+    <section
+      id="faq"
+      className="from-mist/70 via-background to-aqua-pale/40 relative scroll-mt-20 overflow-hidden bg-linear-160"
+    >
+      <div
+        aria-hidden
+        className="from-aqua-bright/20 absolute -top-24 -left-32 size-120 rounded-full bg-radial to-transparent to-70%"
+      />
+      <div
+        aria-hidden
+        className="from-aqua-pale/40 absolute -right-40 -bottom-40 size-140 rounded-full bg-radial to-transparent to-70%"
+      />
+      <div className="relative mx-auto grid max-w-5xl gap-x-14 gap-y-8 px-6 py-14 md:px-10 md:py-20 lg:grid-cols-[0.75fr_1.25fr]">
         <div>
           <SectionBadge>FAQ</SectionBadge>
-          <h2 className="font-display mt-5 text-3xl leading-snug font-bold md:text-4xl">
+          <h2 className="font-display mt-4 text-3xl leading-snug font-bold md:text-4xl">
             Questions fréquentes
           </h2>
-          <p className="text-muted-foreground mt-4 text-sm">
+          <p className="text-muted-foreground mt-3 text-sm">
             Une autre question ? Écrivez-nous à contact@aquaconstat.fr.
           </p>
         </div>
-        <div className="border-border-soft border-t">
+        <div className="flex flex-col gap-2.5">
           {faqs.map((faq, i) => {
             const isOpen = open === i;
             return (
-              <div key={faq.q} className="border-border-soft border-b">
+              <div
+                key={faq.q}
+                className={cn(
+                  "bg-paper/85 rounded-lg border backdrop-blur-sm transition-colors",
+                  isOpen ? "border-aqua/50" : "border-border-soft hover:border-aqua/40",
+                )}
+              >
                 <button
                   type="button"
                   aria-expanded={isOpen}
                   aria-controls={`faq-panel-${i}`}
                   onClick={() => setOpen(isOpen ? null : i)}
-                  className="text-foreground flex w-full cursor-pointer items-center justify-between gap-4.5 py-5.5 text-left text-base font-semibold md:text-lg"
+                  className="text-foreground flex w-full cursor-pointer items-center justify-between gap-4 px-5 py-4 text-left text-base font-semibold"
                 >
                   {faq.q}
-                  <span
+                  <m.span
                     aria-hidden
-                    className="bg-muted text-link flex size-7 flex-none items-center justify-center rounded-full text-base font-normal"
+                    animate={{ rotate: isOpen ? 45 : 0 }}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
+                    className="bg-muted text-link flex size-7 flex-none items-center justify-center rounded-full text-lg font-normal"
                   >
-                    {isOpen ? "–" : "+"}
-                  </span>
+                    +
+                  </m.span>
                 </button>
-                {isOpen && (
-                  <p
-                    id={`faq-panel-${i}`}
-                    className="text-muted-foreground m-0 pr-11 pb-5 text-sm leading-relaxed"
-                  >
-                    {faq.a}
-                  </p>
-                )}
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <m.div
+                      id={`faq-panel-${i}`}
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.22, ease: "easeOut" }}
+                      className="overflow-hidden"
+                    >
+                      <p className="text-muted-foreground m-0 px-5 pb-4.5 text-sm leading-relaxed">
+                        {faq.a}
+                      </p>
+                    </m.div>
+                  )}
+                </AnimatePresence>
               </div>
             );
           })}
