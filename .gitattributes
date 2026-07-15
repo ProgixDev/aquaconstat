@@ -1,0 +1,7 @@
+# Prettier enforces LF; without this, Windows clones (core.autocrlf=true) fail
+# `pnpm format:check` on every file at checkout.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.ico binary
+*.woff2 binary
