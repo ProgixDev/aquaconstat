@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 import { CtaButton } from "./cta-button";
 import { DropletGlyph } from "@/components/ui/droplet-glyph";
 import { HeroDroplet } from "./hero-droplet";
@@ -64,19 +65,33 @@ export function Hero() {
               </div>
             </div>
 
-            <div className="border-aqua-pale/15 mt-16 flex flex-wrap gap-y-6 border-t pt-8">
-              {stats.map((stat, i) => (
-                <div key={stat.value} className="flex">
-                  {i > 0 && <span aria-hidden className="bg-aqua-pale/15 mx-8 w-px md:mx-14" />}
-                  <div>
-                    <div className="font-display text-secondary-foreground text-2xl font-bold md:text-3xl">
+            {/* Proof row — anchored to the right half so it sits under the
+                droplet and balances the headline instead of trailing it. */}
+            <div className="border-aqua-pale/15 mt-16 border-t pt-8 lg:mt-12">
+              <dl className="grid grid-cols-2 grid-rows-[auto_auto] gap-x-7 gap-y-7 sm:grid-cols-3 lg:ml-auto lg:max-w-2xl">
+                {stats.map((stat, i) => (
+                  <div
+                    key={stat.value}
+                    /* Subgrid keeps every value on one baseline and every label
+                       on the next, even when a label wraps to two lines. The
+                       gap-0 override stops the row gap splitting the pairs. */
+                    className={cn(
+                      "row-span-2 grid grid-rows-subgrid gap-0",
+                      i > 0 && "border-aqua-pale/15 sm:border-l sm:pl-7",
+                    )}
+                  >
+                    <dt className="text-aqua-pale/80 row-start-2 mt-1.5 text-xs leading-snug">
+                      {stat.label}
+                    </dt>
+                    <dd className="font-display text-secondary-foreground row-start-1 text-2xl font-bold md:text-3xl">
                       <StatCounter value={stat.value} />{" "}
-                      {"suffix" in stat && <span className="text-base">{stat.suffix}</span>}
-                    </div>
-                    <div className="text-aqua-pale/85 mt-1 text-xs">{stat.label}</div>
+                      {"suffix" in stat && (
+                        <span className="text-base font-semibold">{stat.suffix}</span>
+                      )}
+                    </dd>
                   </div>
-                </div>
-              ))}
+                ))}
+              </dl>
             </div>
           </div>
 
