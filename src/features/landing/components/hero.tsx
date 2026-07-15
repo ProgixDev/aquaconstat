@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { CtaButton } from "./cta-button";
 import { DropletGlyph } from "@/components/ui/droplet-glyph";
+import { HeroDroplet } from "./hero-droplet";
 import { SectionBadge } from "./section-badge";
 
 const stats = [
@@ -59,10 +60,7 @@ export function Hero() {
 
             <div className="relative mx-auto h-72 w-64 md:h-88 md:w-80" aria-hidden>
               <div className="from-aqua-bright/25 absolute top-1/2 left-1/2 h-[120%] w-[130%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-radial to-transparent to-65%" />
-              <div className="animate-droplet-float absolute inset-0">
-                <div className="rounded-droplet-lg border-aqua-pale/40 shadow-droplet from-mist/30 via-aqua-bright/35 to-navy-light/60 absolute top-1/2 left-1/2 aspect-square w-[64%] -translate-x-1/2 -translate-y-1/2 rotate-45 border bg-linear-135 via-45%" />
-                <div className="from-paper/90 absolute top-[30%] left-[36%] h-[17%] w-[12%] -rotate-12 rounded-full bg-radial to-transparent" />
-              </div>
+              <HeroDroplet />
               <div className="bg-paper/95 text-foreground shadow-chip animate-droplet-drift absolute top-[8%] -right-4 flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold whitespace-nowrap md:-right-10">
                 <DropletGlyph />
                 Devis sous 48 h ouvrées
