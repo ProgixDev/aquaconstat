@@ -42,44 +42,44 @@ const reassurances = [
   },
 ] as const;
 
-/** « Ils ont reçu leur devis » — testimonials plus four reassurance answers. */
+/** « Ils ont reçu leur devis » — editorial serif quotes, no boxes. */
 export function TestimonialsSection() {
   return (
-    <section className="bg-card rounded-panel shadow-panel p-7 md:p-12">
-      <div className="flex flex-wrap items-baseline gap-x-7 gap-y-4">
+    <section className="bg-paper">
+      <div className="mx-auto max-w-6xl px-6 py-20 md:px-10 md:py-28">
         <SectionBadge>Ils ont reçu leur devis</SectionBadge>
-        <h2 className="font-display text-2xl font-bold md:text-3xl">
+        <h2 className="font-display mt-5 text-3xl leading-snug font-bold md:text-4xl">
           Des dossiers réglés, sans déplacement.
         </h2>
-      </div>
-      <div className="mt-6 grid gap-3.5 md:grid-cols-3">
-        {testimonials.map((t) => (
-          <figure className="bg-muted m-0 flex flex-col gap-3.5 rounded-xl p-6" key={t.initials}>
-            <blockquote className="text-ink-soft m-0 flex-1 text-sm leading-relaxed">
-              {t.quote}
-            </blockquote>
-            <figcaption className="flex items-center gap-2.5">
-              <span
-                aria-hidden
-                className="bg-secondary text-secondary-foreground flex size-9 flex-none items-center justify-center rounded-full text-xs font-semibold"
-              >
-                {t.initials}
-              </span>
-              <span>
-                <span className="block text-sm font-semibold">{t.name}</span>
-                <span className="text-muted-foreground block text-xs">{t.context}</span>
-              </span>
-            </figcaption>
-          </figure>
-        ))}
-      </div>
-      <div className="border-border-soft mt-9 grid gap-x-11 gap-y-7 border-t pt-8 sm:grid-cols-2">
-        {reassurances.map((r) => (
-          <div key={r.q}>
-            <div className="text-base font-semibold">{r.q}</div>
-            <p className="text-muted-foreground mt-2 text-sm leading-relaxed">{r.a}</p>
-          </div>
-        ))}
+        <div className="mt-14 grid gap-x-14 gap-y-12 md:grid-cols-3">
+          {testimonials.map((t) => (
+            <figure key={t.initials} className="m-0 flex flex-col gap-6">
+              <blockquote className="font-display text-ink-soft m-0 flex-1 text-xl leading-snug font-bold italic">
+                {t.quote}
+              </blockquote>
+              <figcaption className="flex items-center gap-3">
+                <span
+                  aria-hidden
+                  className="bg-secondary text-secondary-foreground flex size-9 flex-none items-center justify-center rounded-full text-xs font-semibold"
+                >
+                  {t.initials}
+                </span>
+                <span>
+                  <span className="block text-sm font-semibold">{t.name}</span>
+                  <span className="text-muted-foreground block text-xs">{t.context}</span>
+                </span>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+        <div className="border-border-soft mt-16 grid gap-x-14 gap-y-9 border-t pt-12 sm:grid-cols-2">
+          {reassurances.map((r) => (
+            <div key={r.q}>
+              <div className="text-base font-semibold">{r.q}</div>
+              <p className="text-muted-foreground mt-2 text-sm leading-relaxed">{r.a}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );

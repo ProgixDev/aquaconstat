@@ -20,24 +20,28 @@ const audiences = [
   },
 ] as const;
 
-/** « À qui s’adresse ce service » — four profile cards. */
+/** « À qui s’adresse ce service » — editorial split, hairline list instead of card grid. */
 export function AudienceSection() {
   return (
-    <section className="bg-card rounded-panel shadow-panel p-7 md:p-12">
-      <div className="flex flex-wrap items-baseline gap-x-7 gap-y-4">
-        <SectionBadge>À qui s’adresse ce service</SectionBadge>
-        <h2 className="font-display text-2xl font-bold md:text-3xl">
-          Quel que soit votre lien avec le logement touché.
-        </h2>
-      </div>
-      <div className="mt-7 grid gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
-        {audiences.map((a) => (
-          <div key={a.title} className="bg-muted rounded-xl p-6">
-            <DropletGlyph size="md" />
-            <div className="mt-3 text-base font-semibold">{a.title}</div>
-            <div className="text-muted-foreground mt-1.5 text-sm leading-relaxed">{a.text}</div>
-          </div>
-        ))}
+    <section className="bg-paper">
+      <div className="mx-auto grid max-w-6xl gap-x-16 gap-y-10 px-6 py-20 md:px-10 md:py-28 lg:grid-cols-[0.8fr_1.2fr]">
+        <div>
+          <SectionBadge>À qui s’adresse ce service</SectionBadge>
+          <h2 className="font-display mt-5 max-w-sm text-3xl leading-snug font-bold md:text-4xl">
+            Quel que soit votre lien avec le logement touché.
+          </h2>
+        </div>
+        <div className="grid gap-x-12 gap-y-8 sm:grid-cols-2">
+          {audiences.map((a) => (
+            <div key={a.title} className="border-border border-t pt-5">
+              <div className="flex items-center gap-2.5 text-lg font-semibold">
+                <DropletGlyph size="md" />
+                {a.title}
+              </div>
+              <p className="text-muted-foreground mt-2 text-sm leading-relaxed">{a.text}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );

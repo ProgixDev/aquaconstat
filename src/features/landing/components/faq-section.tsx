@@ -35,42 +35,49 @@ export function FaqSection() {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="bg-card rounded-panel shadow-panel scroll-mt-6 p-7 md:p-12">
-      <div className="flex flex-wrap items-baseline gap-x-7 gap-y-4">
-        <SectionBadge>FAQ</SectionBadge>
-        <h2 className="font-display text-2xl font-bold md:text-3xl">Questions fréquentes</h2>
-      </div>
-      <div className="mt-4.5 max-w-3xl">
-        {faqs.map((faq, i) => {
-          const isOpen = open === i;
-          return (
-            <div key={faq.q} className="border-border-soft border-b">
-              <button
-                type="button"
-                aria-expanded={isOpen}
-                aria-controls={`faq-panel-${i}`}
-                onClick={() => setOpen(isOpen ? null : i)}
-                className="text-foreground flex w-full cursor-pointer items-center justify-between gap-4.5 py-5 text-left text-base font-semibold"
-              >
-                {faq.q}
-                <span
-                  aria-hidden
-                  className="bg-muted text-link flex size-7 flex-none items-center justify-center rounded-full text-base font-normal"
+    <section id="faq" className="bg-card scroll-mt-20">
+      <div className="mx-auto grid max-w-6xl gap-x-16 gap-y-10 px-6 py-20 md:px-10 md:py-28 lg:grid-cols-[0.8fr_1.2fr]">
+        <div>
+          <SectionBadge>FAQ</SectionBadge>
+          <h2 className="font-display mt-5 text-3xl leading-snug font-bold md:text-4xl">
+            Questions fréquentes
+          </h2>
+          <p className="text-muted-foreground mt-4 text-sm">
+            Une autre question ? Écrivez-nous à contact@aquaconstat.fr.
+          </p>
+        </div>
+        <div className="border-border-soft border-t">
+          {faqs.map((faq, i) => {
+            const isOpen = open === i;
+            return (
+              <div key={faq.q} className="border-border-soft border-b">
+                <button
+                  type="button"
+                  aria-expanded={isOpen}
+                  aria-controls={`faq-panel-${i}`}
+                  onClick={() => setOpen(isOpen ? null : i)}
+                  className="text-foreground flex w-full cursor-pointer items-center justify-between gap-4.5 py-5.5 text-left text-base font-semibold md:text-lg"
                 >
-                  {isOpen ? "–" : "+"}
-                </span>
-              </button>
-              {isOpen && (
-                <p
-                  id={`faq-panel-${i}`}
-                  className="text-muted-foreground m-0 pr-11 pb-5 text-sm leading-relaxed"
-                >
-                  {faq.a}
-                </p>
-              )}
-            </div>
-          );
-        })}
+                  {faq.q}
+                  <span
+                    aria-hidden
+                    className="bg-muted text-link flex size-7 flex-none items-center justify-center rounded-full text-base font-normal"
+                  >
+                    {isOpen ? "–" : "+"}
+                  </span>
+                </button>
+                {isOpen && (
+                  <p
+                    id={`faq-panel-${i}`}
+                    className="text-muted-foreground m-0 pr-11 pb-5 text-sm leading-relaxed"
+                  >
+                    {faq.a}
+                  </p>
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
