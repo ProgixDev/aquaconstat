@@ -4,8 +4,8 @@ import { DropletGlyph } from "@/components/ui/droplet-glyph";
 /** Full-bleed navy footer — brand, service nav, legal links, contact. */
 export function SiteFooter() {
   return (
-    <footer className="bg-secondary text-aqua-pale">
-      <div className="mx-auto max-w-6xl px-6 py-16 md:px-10 md:py-20">
+    <footer className="bg-navy-deep text-aqua-pale border-aqua-pale/10 border-t">
+      <div className="mx-auto max-w-6xl px-6 py-14 md:px-10 md:py-16">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div className="max-w-72">
             <div className="flex items-center gap-2.5">

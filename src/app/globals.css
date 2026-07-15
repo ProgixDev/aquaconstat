@@ -35,6 +35,7 @@
   /* Brand scale (design-prompt roles beyond the shadcn set) */
   --navy: #133a5f;
   --navy-light: #1d5688;
+  --navy-deep: #0d2842;
   --ink-soft: #1c4570;
   --aqua: #5aa9e6;
   --aqua-bright: #7fc8f8;
@@ -103,6 +104,7 @@
   --color-ring: var(--ring);
   --color-navy: var(--navy);
   --color-navy-light: var(--navy-light);
+  --color-navy-deep: var(--navy-deep);
   --color-ink-soft: var(--ink-soft);
   --color-aqua: var(--aqua);
   --color-aqua-bright: var(--aqua-bright);
