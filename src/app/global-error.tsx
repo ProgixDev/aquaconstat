@@ -13,19 +13,19 @@ export default function GlobalError({
   reset: () => void;
 }) {
   return (
-    <html lang="en">
+    <html lang="fr">
       <body className="font-sans antialiased">
         <main className="mx-auto flex min-h-dvh w-full max-w-3xl flex-col items-center justify-center gap-4 px-6 text-center">
-          <h1 className="text-3xl font-semibold tracking-tight">Something went wrong.</h1>
+          <h1 className="text-3xl font-semibold tracking-tight">Une erreur est survenue.</h1>
           <p className="text-muted-foreground max-w-prose">
-            An unexpected error occurred. You can try again, or head back home.
+            Vos données ne sont pas perdues — réessayez, ou revenez à l’accueil.
           </p>
           <button
             type="button"
             onClick={reset}
-            className="bg-primary text-primary-foreground mt-2 inline-flex h-9 items-center rounded-md px-4 text-sm font-medium"
+            className="bg-primary text-primary-foreground mt-2 inline-flex h-9 items-center rounded-full px-5 text-sm font-semibold"
           >
-            Try again
+            Réessayer
           </button>
         </main>
       </body>

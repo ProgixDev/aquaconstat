@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { DropletGlyph } from "./droplet-glyph";
+import { DropletGlyph } from "@/components/ui/droplet-glyph";
 
 type SectionBadgeProps = {
   children: React.ReactNode;

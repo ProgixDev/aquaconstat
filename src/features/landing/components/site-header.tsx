@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { CtaButton } from "./cta-button";
-import { DropletGlyph } from "./droplet-glyph";
+import { DropletGlyph } from "@/components/ui/droplet-glyph";
 
 /** Pill header — logo, anchor nav, primary CTA. */
 export function SiteHeader() {

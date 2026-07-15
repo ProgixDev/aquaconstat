@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { DropletGlyph } from "./droplet-glyph";
+import { DropletGlyph } from "@/components/ui/droplet-glyph";
 
 /** Navy footer — brand, service nav, legal links, contact. */
 export function SiteFooter() {

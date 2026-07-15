@@ -13,5 +13,5 @@ test("@cuj CUJ-01: visitor lands, understands, starts a dossier", async ({ page 
 
   await page.getByRole("link", { name: "Démarrer mon dossier" }).first().click();
   await expect(page).toHaveURL(/\/dossier/);
-  await expect(page.getByRole("heading", { name: "Démarrer mon dossier" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Créons votre dossier" })).toBeVisible();
 });

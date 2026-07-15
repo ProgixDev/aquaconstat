@@ -1,0 +1,227 @@
+"use client";
+
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useFunnelStore } from "../provider";
+import type { PieceKey } from "../types";
+import { pieceNames } from "./questionnaire-form";
+
+function useRecap() {
+  const data = useFunnelStore((s) => s.data);
+  const photoCount = useFunnelStore((s) => s.photos.filter((p) => p.status === "ok").length);
+
+  const coordonnees =
+    [[data.prenom, data.nom].filter(Boolean).join(" "), data.email, data.telephone]
+      .filter(Boolean)
+      .join(" · ") || "À compléter à l’étape 1";
+
+  const typeLieuLabels = {
+    maison: "maison particulière",
+    copro: "immeuble en copropriété",
+    locatif: "immeuble locatif",
+  } as const;
+  const lieuParts = [
+    data.adresse,
+    data.batiment && `Bât. ${data.batiment}`,
+    data.etage && `${data.etage} étage`,
+    [data.codePostal, data.ville].filter(Boolean).join(" "),
+  ].filter(Boolean);
+  const lieu =
+    lieuParts.length > 0
+      ? `${lieuParts.join(", ")}${data.typeLieu ? ` — ${typeLieuLabels[data.typeLieu]}` : ""}`
+      : "À compléter à l’étape 1";
+
+  const origineLabels = {
+    moi: "Chez moi",
+    voisin: "Chez un voisin",
+    communes: "Dans les parties communes",
+    ailleurs: "Ailleurs",
+  } as const;
+  const causeLabels: string[] = [];
+  if (data.causes.canal) {
+    const details = [
+      data.canalType === "commune" ? "commune" : data.canalType === "privative" ? "privative" : "",
+      data.canalFlux === "alim" ? "alimentation" : data.canalFlux === "evac" ? "évacuation" : "",
+      data.canalAcces === "acc"
+        ? "accessible"
+        : data.canalAcces === "nonacc"
+          ? "non accessible"
+          : "",
+    ].filter(Boolean);
+    causeLabels.push(`fuite sur canalisation${details.length ? ` ${details.join(", ")}` : ""}`);
+  }
+  if (data.causes.appareil) causeLabels.push("appareil à effet d’eau");
+  if (data.causes.cheneaux) causeLabels.push("chéneaux ou gouttières");
+  if (data.causes.infil) causeLabels.push("infiltrations");
+  if (data.causes.gel) causeLabels.push("gel");
+  if (data.causes.autre) causeLabels.push(data.autreCause || "autre cause");
+  const origine =
+    [data.origine ? origineLabels[data.origine] : "", causeLabels.join(", ")]
+      .filter(Boolean)
+      .join(" — ") || "À compléter à l’étape 2";
+
+  const selectedPieces = (Object.keys(pieceNames) as PieceKey[]).filter((k) => data.pieces[k]);
+  const pieces =
+    selectedPieces.length > 0
+      ? selectedPieces.map((k) => pieceNames[k]).join(" · ")
+      : "À compléter à l’étape 2";
+
+  const photos =
+    photoCount > 0
+      ? `${photoCount} photo${photoCount > 1 ? "s" : ""} ajoutée${photoCount > 1 ? "s" : ""}`
+      : "Aucune photo ajoutée";
+
+  return { coordonnees, lieu, origine, pieces, photos };
+}
+
+const recapRows = [
+  { label: "Coordonnées", key: "coordonnees", href: "/dossier" },
+  { label: "Lieu du sinistre", key: "lieu", href: "/dossier" },
+  { label: "Origine du sinistre", key: "origine", href: "/dossier/questionnaire" },
+  { label: "Pièces concernées", key: "pieces", href: "/dossier/questionnaire" },
+  { label: "Photos", key: "photos", href: "/dossier/photos" },
+] as const;
+
+/** Étape 4 — récapitulatif + carte (painted-door Stripe, spec 003 AC-6). */
+export function PaiementForm() {
+  const router = useRouter();
+  const recap = useRecap();
+  const submitPayment = useFunnelStore((s) => s.submitPayment);
+  const [declined] = useState(false);
+  const [cardNumber, setCardNumber] = useState("");
+  const [expiry, setExpiry] = useState("");
+  const [cvc, setCvc] = useState("");
+
+  const pay = () => {
+    submitPayment();
+    router.push("/confirmation");
+  };
+
+  return (
+    <>
+      <Link href="/dossier/photos" className="text-muted-foreground hover:text-foreground text-sm">
+        ← Retour aux photos
+      </Link>
+      <h1 className="font-display mt-4.5 text-3xl font-bold md:text-[34px]">Vérifiez et payez</h1>
+
+      <section className="mt-8">
+        <h2 className="font-display text-ink-soft text-lg font-bold">Récapitulatif</h2>
+        <div className="border-border-faint bg-card mt-4 overflow-hidden rounded-xl border">
+          {recapRows.map((row, i) => (
+            <div
+              key={row.key}
+              className={
+                i < recapRows.length - 1
+                  ? "border-border-soft flex flex-wrap justify-between gap-4 border-b px-5 py-4"
+                  : "flex flex-wrap justify-between gap-4 px-5 py-4"
+              }
+            >
+              <div>
+                <div className="text-hint text-xs font-semibold tracking-wider uppercase">
+                  {row.label}
+                </div>
+                <div className="mt-1 text-sm leading-relaxed">{recap[row.key]}</div>
+              </div>
+              <Link
+                href={row.href}
+                className="text-link hover:text-link-hover self-center text-sm font-semibold"
+              >
+                Modifier
+              </Link>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="mt-11">
+        <h2 className="font-display text-ink-soft text-lg font-bold">Paiement</h2>
+        <div className="border-border-faint bg-card mt-4 rounded-xl border px-6 pt-6 pb-7">
+          <div className="text-ink-soft border-border-soft flex justify-between gap-4 border-b pb-3.5 text-sm">
+            <span>Étude du dossier &amp; devis détaillé</span>
+            <span className="text-foreground font-semibold">149 €</span>
+          </div>
+          <div className="flex justify-between gap-4 pt-3.5 text-base font-semibold">
+            <span>Total</span>
+            <span>149 € TTC</span>
+          </div>
+
+          <div className="border-border-faint bg-paper mt-5.5 rounded-md border p-4.5">
+            <div className="flex items-center justify-between gap-3">
+              <span className="text-hint text-xs font-semibold tracking-widest uppercase">
+                Carte bancaire
+              </span>
+              <span className="text-muted-foreground text-xs">
+                Powered by <span className="text-ink-soft font-semibold">Stripe</span>
+              </span>
+            </div>
+            <div className="mt-3.5 flex flex-col gap-3">
+              <label className="text-steel flex flex-col gap-1.5 text-xs font-semibold">
+                Numéro de carte
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  placeholder="1234 1234 1234 1234"
+                  value={cardNumber}
+                  onChange={(e) => setCardNumber(e.target.value)}
+                  className="border-input bg-paper text-foreground rounded-sm border px-3.5 py-3 font-sans text-base tracking-wide"
+                />
+              </label>
+              <div className="grid grid-cols-2 gap-3">
+                <label className="text-steel flex flex-col gap-1.5 text-xs font-semibold">
+                  Expiration
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    placeholder="MM / AA"
+                    value={expiry}
+                    onChange={(e) => setExpiry(e.target.value)}
+                    className="border-input bg-paper text-foreground rounded-sm border px-3.5 py-3 font-sans text-base"
+                  />
+                </label>
+                <label className="text-steel flex flex-col gap-1.5 text-xs font-semibold">
+                  CVC
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    placeholder="123"
+                    value={cvc}
+                    onChange={(e) => setCvc(e.target.value)}
+                    className="border-input bg-paper text-foreground rounded-sm border px-3.5 py-3 font-sans text-base"
+                  />
+                </label>
+              </div>
+            </div>
+          </div>
+
+          {declined && (
+            <div className="border-destructive/30 bg-destructive-soft mt-4 rounded-md border-[1.5px] px-4.5 py-4">
+              <div className="text-destructive text-sm font-semibold">
+                Votre banque a refusé le paiement.
+              </div>
+              <p className="text-destructive/80 mt-1.5 text-sm leading-relaxed">
+                Aucun montant n’a été débité. Vérifiez le numéro de carte ou essayez une autre carte
+                — votre dossier est conservé, rien n’est perdu.
+              </p>
+            </div>
+          )}
+
+          <button
+            type="button"
+            onClick={pay}
+            className="bg-primary text-primary-foreground shadow-cta-sm mt-5 flex w-full cursor-pointer justify-center rounded-full px-8 py-4.5 font-sans text-base font-semibold"
+          >
+            {declined ? "Réessayer le paiement — 149 €" : "Payer 149 € et envoyer mon dossier"}
+          </button>
+          <p className="text-hint mt-4 text-center text-xs leading-relaxed">
+            En payant, vous acceptez nos CGV. Votre dossier n’est transmis qu’une fois le paiement
+            confirmé.
+          </p>
+          <p className="text-muted-foreground mt-2 text-center text-xs">
+            Paiement sécurisé par Stripe — votre carte n’est jamais stockée par AquaConstat.
+          </p>
+        </div>
+      </section>
+    </>
+  );
+}

@@ -1,4 +1,4 @@
-import { DropletGlyph } from "./droplet-glyph";
+import { DropletGlyph } from "@/components/ui/droplet-glyph";
 import { SectionBadge } from "./section-badge";
 
 const pointers = [
