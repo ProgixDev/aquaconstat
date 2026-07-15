@@ -1,0 +1,590 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="./support.js"></script>
+  </head>
+  <body>
+    <x-dc>
+      <helmet data-dc-atomics>
+        <title>AC-2026-0147 · Camille Moreau — Administration AquaConstat</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&amp;family=Nunito:ital,wght@0,400;0,600;1,400&amp;display=swap"
+          rel="stylesheet"
+        />
+        <style>
+          body {
+            margin: 0;
+            background: #eaf4fe;
+            font-family: "Nunito", system-ui, sans-serif;
+            color: #133a5f;
+            -webkit-font-smoothing: antialiased;
+          }
+          a {
+            color: #2e7fc2;
+            text-decoration: none;
+          }
+          a:hover {
+            color: #1d5688;
+          }
+          a:focus-visible,
+          button:focus-visible {
+            outline: 3px solid rgba(90, 169, 230, 0.55);
+            outline-offset: 2px;
+            border-radius: 6px;
+          }
+        </style>
+      </helmet>
+      <div style="min-height: 100vh; display: flex; flex-direction: column">
+        <header
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 20px clamp(20px, 3.5vw, 48px);
+            border-bottom: 1px solid #d5e7f7;
+            background: #f9f9f9;
+          "
+        >
+          <div style="display: flex; align-items: center; gap: 16px">
+            <a href="accueil.dc.html" style="display: flex; align-items: center; gap: 11px">
+              <span
+                style="
+                  display: inline-block;
+                  width: 13px;
+                  height: 13px;
+                  border-radius: 0 50% 50% 50%;
+                  transform: rotate(45deg);
+                  background: linear-gradient(135deg, #7fc8f8, #5aa9e6);
+                "
+              ></span>
+              <span
+                style="
+                  font-family: &quot;Playfair Display&quot;;
+                  font-size: 14.5px;
+                  letter-spacing: 0.14em;
+                  color: #133a5f;
+                "
+                >AQUACONSTAT</span
+              >
+            </a>
+            <span
+              style="
+                font-size: 11px;
+                font-weight: 600;
+                letter-spacing: 0.16em;
+                color: #567292;
+                text-transform: uppercase;
+                border: 1px solid #bbd9f0;
+                border-radius: 999px;
+                padding: 4px 10px;
+              "
+              >Administration</span
+            >
+          </div>
+          <a href="admin-connexion.dc.html" style="font-size: 13px; color: #567292">Déconnexion</a>
+        </header>
+
+        <main
+          style="
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 30px clamp(20px, 3.5vw, 48px) 70px;
+            box-sizing: border-box;
+            flex: 1;
+          "
+        >
+          <a href="admin-dossiers.dc.html" style="font-size: 13px; color: #567292"
+            >← Dossiers reçus</a
+          >
+          <div
+            style="margin-top: 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 14px"
+          >
+            <h1
+              style="
+                margin: 0;
+                font-family: &quot;Playfair Display&quot;;
+                font-weight: 700;
+                font-size: 24px;
+                letter-spacing: 0.06em;
+              "
+            >
+              AC-2026-0147
+            </h1>
+            <span style="font-size: 16px; font-weight: 600">Camille Moreau</span>
+            <span style="font-size: 13px; color: #567292">créé le 17 juin 2026</span>
+            <span
+              style="
+                display: inline-block;
+                padding: 5px 12px;
+                border-radius: 999px;
+                font-size: 12.5px;
+                font-weight: 600;
+                background: #e8f6ec;
+                color: #1b7d6e;
+              "
+              >Payé ✓</span
+            >
+            <div style="margin-left: auto; display: flex; align-items: center; gap: 10px">
+              <span
+                style="
+                  font-size: 12px;
+                  font-weight: 600;
+                  letter-spacing: 0.1em;
+                  color: #8aa9c6;
+                  text-transform: uppercase;
+                "
+                >Statut</span
+              >
+              <div style="display: flex; gap: 6px">
+                <sc-for list="{{ statutOpts }}" as="o" hint-placeholder-count="3">
+                  <button
+                    onClick="{{ o.pick }}"
+                    style="padding:9px 15px;border:1px solid #BBD9F0;border-radius:999px;background:#FFFFFF;cursor:pointer;font-family:'Nunito';font-size:12.5px;font-weight:600;color:#1C4570;box-shadow:0 0 0 1.5px rgba(90,169,230,{{ o.on }})"
+                  >
+                    {{ o.label }}
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+
+          <div
+            style="
+              margin-top: 26px;
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+              gap: 20px;
+              align-items: start;
+            "
+          >
+            <section
+              style="
+                border: 1px solid #d5e7f7;
+                border-radius: 16px;
+                background: #f9f9f9;
+                padding: 22px 24px;
+              "
+            >
+              <h2
+                style="
+                  margin: 0;
+                  font-family: &quot;Playfair Display&quot;;
+                  font-weight: 700;
+                  font-size: 14px;
+                  color: #1c4570;
+                "
+              >
+                Coordonnées &amp; lieu du sinistre
+              </h2>
+              <div
+                style="
+                  margin-top: 16px;
+                  display: grid;
+                  grid-template-columns: 150px 1fr;
+                  gap: 10px 16px;
+                  font-size: 13.5px;
+                "
+              >
+                <span style="color: #8aa9c6">Nom</span
+                ><span style="font-weight: 600">Camille Moreau</span>
+                <span style="color: #8aa9c6">E-mail</span><span>camille.moreau@gmail.com</span>
+                <span style="color: #8aa9c6">Téléphone</span><span>06 42 17 89 03</span>
+                <span style="color: #8aa9c6">Adresse</span
+                ><span>12 rue des Lilas, Bât.&nbsp;B, 3ᵉ&nbsp;étage, 69003 Lyon</span>
+                <span style="color: #8aa9c6">Bâtiment</span
+                ><span
+                  >Immeuble en copropriété · construit depuis moins de 10&nbsp;ans&nbsp;: je ne sais
+                  pas</span
+                >
+                <span style="color: #8aa9c6">Usage</span><span>Habitation&nbsp;: oui</span>
+                <span style="color: #8aa9c6">Demandeur</span
+                ><span>Locataire — bail résilié&nbsp;: non · meublée / saisonnière&nbsp;: non</span>
+                <span style="color: #8aa9c6">Propriétaire</span
+                ><span>M. Henri Vasseur — 28 cours Gambetta, 69007 Lyon · 06 71 45 02 88</span>
+                <span style="color: #8aa9c6">Syndic / gérant</span
+                ><span>Cabinet Berthelot — 4 quai Saint-Antoine, 69002 Lyon · 04 72 10 22 30</span>
+              </div>
+            </section>
+
+            <div style="display: flex; flex-direction: column; gap: 20px">
+              <section
+                style="
+                  border: 1px solid #d5e7f7;
+                  border-radius: 16px;
+                  background: #f9f9f9;
+                  padding: 22px 24px;
+                "
+              >
+                <h2
+                  style="
+                    margin: 0;
+                    font-family: &quot;Playfair Display&quot;;
+                    font-weight: 700;
+                    font-size: 14px;
+                    color: #1c4570;
+                  "
+                >
+                  Assurance
+                </h2>
+                <div
+                  style="
+                    margin-top: 16px;
+                    display: grid;
+                    grid-template-columns: 150px 1fr;
+                    gap: 10px 16px;
+                    font-size: 13.5px;
+                  "
+                >
+                  <span style="color: #8aa9c6">Assureur</span
+                  ><span style="font-weight: 600">MAIF</span>
+                  <span style="color: #8aa9c6">N° de contrat</span><span>4 582 917 K</span>
+                  <span style="color: #8aa9c6">N° de sinistre</span><span>2026-DDE-08341</span>
+                  <span style="color: #8aa9c6">Agent / courtier</span><span>—</span>
+                </div>
+              </section>
+              <section
+                style="
+                  border: 1px solid #d5e7f7;
+                  border-radius: 16px;
+                  background: #f9f9f9;
+                  padding: 22px 24px;
+                "
+              >
+                <h2
+                  style="
+                    margin: 0;
+                    font-family: &quot;Playfair Display&quot;;
+                    font-weight: 700;
+                    font-size: 14px;
+                    color: #1c4570;
+                  "
+                >
+                  Paiement
+                </h2>
+                <div
+                  style="
+                    margin-top: 16px;
+                    display: grid;
+                    grid-template-columns: 150px 1fr;
+                    gap: 10px 16px;
+                    font-size: 13.5px;
+                  "
+                >
+                  <span style="color: #8aa9c6">Montant</span
+                  ><span style="font-weight: 600">149,00&nbsp;€</span>
+                  <span style="color: #8aa9c6">Date</span
+                  ><span>17 juin 2026, 14&nbsp;h&nbsp;32</span>
+                  <span style="color: #8aa9c6">Statut Stripe</span
+                  ><span
+                    ><span
+                      style="
+                        display: inline-block;
+                        padding: 3px 10px;
+                        border-radius: 999px;
+                        font-size: 12px;
+                        font-weight: 600;
+                        background: #e8f6ec;
+                        color: #1b7d6e;
+                      "
+                      >succeeded · Payé ✓</span
+                    ></span
+                  >
+                </div>
+              </section>
+            </div>
+          </div>
+
+          <section
+            style="
+              margin-top: 20px;
+              border: 1px solid #d5e7f7;
+              border-radius: 16px;
+              background: #f9f9f9;
+              padding: 22px 24px;
+            "
+          >
+            <h2
+              style="
+                margin: 0;
+                font-family: &quot;Playfair Display&quot;;
+                font-weight: 700;
+                font-size: 14px;
+                color: #1c4570;
+              "
+            >
+              Réponses au questionnaire
+            </h2>
+            <div
+              style="
+                margin-top: 18px;
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 24px;
+              "
+            >
+              <div>
+                <div
+                  style="
+                    font-size: 12px;
+                    font-weight: 600;
+                    letter-spacing: 0.1em;
+                    color: #2e7fc2;
+                    text-transform: uppercase;
+                  "
+                >
+                  A · Le sinistre
+                </div>
+                <div
+                  style="
+                    margin-top: 12px;
+                    display: grid;
+                    grid-template-columns: 150px 1fr;
+                    gap: 9px 16px;
+                    font-size: 13.5px;
+                  "
+                >
+                  <span style="color: #8aa9c6">Date</span><span>14 juin 2026</span>
+                  <span style="color: #8aa9c6">Recherche de fuite</span><span>Non</span>
+                  <span style="color: #8aa9c6">Cause</span
+                  ><span>Identifiée&nbsp;: oui · réparée&nbsp;: non</span>
+                  <span style="color: #8aa9c6">Origine</span><span>Chez un voisin</span>
+                  <span style="color: #8aa9c6">Nature</span
+                  ><span>Fuite sur canalisation — privative, évacuation, non accessible</span>
+                  <span style="color: #8aa9c6">Tiers en cause</span><span>Non</span>
+                  <span style="color: #8aa9c6">Pièces</span><span>Salle de bain · couloir</span>
+                </div>
+              </div>
+              <div>
+                <div
+                  style="
+                    font-size: 12px;
+                    font-weight: 600;
+                    letter-spacing: 0.1em;
+                    color: #2e7fc2;
+                    text-transform: uppercase;
+                  "
+                >
+                  B · Surfaces endommagées
+                </div>
+                <div
+                  style="
+                    margin-top: 12px;
+                    display: grid;
+                    grid-template-columns: 150px 1fr;
+                    gap: 9px 16px;
+                    font-size: 13.5px;
+                  "
+                >
+                  <span style="color: #8aa9c6">Salle de bain</span
+                  ><span>Plafond — 2,1&nbsp;×&nbsp;1,8&nbsp;m</span>
+                  <span style="color: #8aa9c6">Couloir</span
+                  ><span>Murs — 3,2&nbsp;×&nbsp;1,1&nbsp;m</span>
+                </div>
+                <div
+                  style="
+                    margin-top: 22px;
+                    font-size: 12px;
+                    font-weight: 600;
+                    letter-spacing: 0.1em;
+                    color: #2e7fc2;
+                    text-transform: uppercase;
+                  "
+                >
+                  C · État des éléments
+                </div>
+                <div
+                  style="
+                    margin-top: 12px;
+                    display: grid;
+                    grid-template-columns: 150px 1fr;
+                    gap: 9px 16px;
+                    font-size: 13.5px;
+                  "
+                >
+                  <span style="color: #8aa9c6">Peintures</span><span>À refaire</span>
+                  <span style="color: #8aa9c6">Revêtements muraux</span><span>Abîmés</span>
+                  <span style="color: #8aa9c6">Plinthes</span><span>Abîmées</span>
+                  <span style="color: #8aa9c6">Parquet / carrelage</span><span>Intact</span>
+                  <span style="color: #8aa9c6">Humidité / moisissures</span><span>Oui</span>
+                  <span style="color: #8aa9c6">Précisions</span><span>—</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section
+            style="
+              margin-top: 20px;
+              border: 1px solid #d5e7f7;
+              border-radius: 16px;
+              background: #f9f9f9;
+              padding: 22px 24px;
+            "
+          >
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 16px;
+                flex-wrap: wrap;
+              "
+            >
+              <h2
+                style="
+                  margin: 0;
+                  font-family: &quot;Playfair Display&quot;;
+                  font-weight: 700;
+                  font-size: 14px;
+                  color: #1c4570;
+                "
+              >
+                Photos — 5
+              </h2>
+              <button
+                style="
+                  padding: 9px 18px;
+                  border: 1px solid #bbd9f0;
+                  border-radius: 999px;
+                  background: #ffffff;
+                  cursor: pointer;
+                  font-family: &quot;Nunito&quot;;
+                  font-size: 13px;
+                  font-weight: 600;
+                  color: #2e7fc2;
+                "
+              >
+                Tout télécharger
+              </button>
+            </div>
+            <div
+              style="
+                margin-top: 16px;
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 14px;
+              "
+            >
+              <sc-for list="{{ photos }}" as="p" hint-placeholder-count="5">
+                <div style="display: flex; flex-direction: column; gap: 7px">
+                  <button
+                    onClick="{{ p.onOpen }}"
+                    style="
+                      padding: 0;
+                      border: 1px solid #d5e7f7;
+                      border-radius: 12px;
+                      background: repeating-linear-gradient(
+                        45deg,
+                        #e3f0fc 0 10px,
+                        #f0f7fe 10px 20px
+                      );
+                      aspect-ratio: 4/3;
+                      cursor: zoom-in;
+                      display: flex;
+                      align-items: flex-end;
+                      justify-content: center;
+                      padding-bottom: 10px;
+                      box-sizing: border-box;
+                    "
+                  >
+                    <span
+                      style="
+                        font-family: ui-monospace, Menlo, monospace;
+                        font-size: 9.5px;
+                        letter-spacing: 0.05em;
+                        color: #567292;
+                      "
+                      >{{ p.label }}</span
+                    >
+                  </button>
+                  <button
+                    style="
+                      align-self: flex-start;
+                      padding: 0;
+                      border: none;
+                      background: none;
+                      cursor: pointer;
+                      font-family: &quot;Nunito&quot;;
+                      font-size: 12px;
+                      color: #2e7fc2;
+                      text-decoration: underline;
+                    "
+                  >
+                    Télécharger
+                  </button>
+                </div>
+              </sc-for>
+            </div>
+          </section>
+
+          <sc-if value="{{ lightboxOpen }}" hint-placeholder-val="{{ false }}">
+            <div
+              onClick="{{ onCloseLightbox }}"
+              style="
+                position: fixed;
+                inset: 0;
+                background: rgba(8, 28, 52, 0.78);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 32px;
+                z-index: 50;
+                cursor: zoom-out;
+              "
+            >
+              <div
+                style="
+                  width: min(860px, 92vw);
+                  aspect-ratio: 4/3;
+                  border-radius: 18px;
+                  background: repeating-linear-gradient(45deg, #e3f0fc 0 16px, #f0f7fe 16px 32px);
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  justify-content: center;
+                  gap: 10px;
+                  box-shadow: 0 40px 80px -30px rgba(0, 10, 18, 0.7);
+                "
+              >
+                <span
+                  style="
+                    font-family: ui-monospace, Menlo, monospace;
+                    font-size: 13px;
+                    color: #1c4570;
+                  "
+                  >{{ lightboxLabel }}</span
+                >
+                <span style="font-size: 12px; color: #567292"
+                  >cliquez n’importe où pour fermer</span
+                >
+              </div>
+            </div>
+          </sc-if>
+        </main>
+      </div>
+    </x-dc>
+    <script type="text/x-dc" data-dc-script>
+      class Component extends DCLogic {
+        state = { statut: "En cours", lightbox: -1 };
+        labels = ["vue générale — salle de bain", "plafond — salle de bain", "zone endommagée — gros plan", "mur — couloir", "photo-05 — reprise"];
+        renderVals() {
+          return {
+            statutOpts: ["Nouveau", "En cours", "Devis envoyé"].map(v => ({
+              label: v, on: this.state.statut === v ? "1" : "0", pick: () => this.setState({ statut: v })
+            })),
+            photos: this.labels.map((label, i) => ({ label, onOpen: () => this.setState({ lightbox: i }) })),
+            lightboxOpen: this.state.lightbox >= 0,
+            lightboxLabel: this.state.lightbox >= 0 ? this.labels[this.state.lightbox] : "",
+            onCloseLightbox: () => this.setState({ lightbox: -1 })
+          };
+        }
+      }
+    </script>
+  </body>
+</html>

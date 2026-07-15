@@ -1,0 +1,335 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="./support.js"></script>
+  </head>
+  <body>
+    <x-dc>
+      <helmet data-dc-atomics>
+        <title>Dossiers reçus — Administration AquaConstat</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&amp;family=Nunito:ital,wght@0,400;0,600;1,400&amp;display=swap"
+          rel="stylesheet"
+        />
+        <style>
+          body {
+            margin: 0;
+            background: #eaf4fe;
+            font-family: "Nunito", system-ui, sans-serif;
+            color: #133a5f;
+            -webkit-font-smoothing: antialiased;
+          }
+          a {
+            color: #2e7fc2;
+            text-decoration: none;
+          }
+          a:hover {
+            color: #1d5688;
+          }
+          a:focus-visible,
+          button:focus-visible,
+          input:focus-visible {
+            outline: 3px solid rgba(90, 169, 230, 0.55);
+            outline-offset: 2px;
+            border-radius: 6px;
+          }
+          input::placeholder {
+            color: #8aa9c6;
+          }
+        </style>
+      </helmet>
+      <div style="min-height: 100vh; display: flex; flex-direction: column">
+        <header
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 20px clamp(20px, 3.5vw, 48px);
+            border-bottom: 1px solid #d5e7f7;
+            background: #f9f9f9;
+          "
+        >
+          <div style="display: flex; align-items: center; gap: 16px">
+            <a href="accueil.dc.html" style="display: flex; align-items: center; gap: 11px">
+              <span
+                style="
+                  display: inline-block;
+                  width: 13px;
+                  height: 13px;
+                  border-radius: 0 50% 50% 50%;
+                  transform: rotate(45deg);
+                  background: linear-gradient(135deg, #7fc8f8, #5aa9e6);
+                "
+              ></span>
+              <span
+                style="
+                  font-family: &quot;Playfair Display&quot;;
+                  font-size: 14.5px;
+                  letter-spacing: 0.14em;
+                  color: #133a5f;
+                "
+                >AQUACONSTAT</span
+              >
+            </a>
+            <span
+              style="
+                font-size: 11px;
+                font-weight: 600;
+                letter-spacing: 0.16em;
+                color: #567292;
+                text-transform: uppercase;
+                border: 1px solid #bbd9f0;
+                border-radius: 999px;
+                padding: 4px 10px;
+              "
+              >Administration</span
+            >
+          </div>
+          <a href="admin-connexion.dc.html" style="font-size: 13px; color: #567292">Déconnexion</a>
+        </header>
+
+        <main
+          style="
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 36px clamp(20px, 3.5vw, 48px) 70px;
+            box-sizing: border-box;
+            flex: 1;
+          "
+        >
+          <h1
+            style="
+              margin: 0;
+              font-family: &quot;Playfair Display&quot;;
+              font-weight: 700;
+              font-size: 26px;
+            "
+          >
+            Dossiers reçus
+          </h1>
+          <div
+            style="margin-top: 22px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px"
+          >
+            <input
+              type="search"
+              placeholder="Rechercher par nom ou référence…"
+              onInput="{{ onQuery }}"
+              style="
+                flex: 1 1 280px;
+                max-width: 380px;
+                padding: 12px 16px;
+                border: 1px solid #bbd9f0;
+                border-radius: 12px;
+                background: #f4f7f9;
+                font-family: &quot;Nunito&quot;;
+                font-size: 14px;
+                color: #133a5f;
+              "
+              style-focus="border-color:#2E7FC2;box-shadow:0 0 0 3px rgba(127,200,248,.28)"
+            />
+            <div style="display: flex; flex-wrap: wrap; gap: 8px">
+              <sc-for list="{{ filtres }}" as="f" hint-placeholder-count="4">
+                <button
+                  onClick="{{ f.pick }}"
+                  style="padding:10px 16px;border:1px solid #BBD9F0;border-radius:999px;background:#FFFFFF;cursor:pointer;font-family:'Nunito';font-size:13px;font-weight:600;color:#1C4570;box-shadow:0 0 0 1.5px rgba(90,169,230,{{ f.on }})"
+                >
+                  {{ f.label }}
+                </button>
+              </sc-for>
+            </div>
+          </div>
+
+          <sc-if value="{{ hasRows }}" hint-placeholder-val="{{ true }}">
+            <div
+              style="
+                margin-top: 20px;
+                border: 1px solid #d5e7f7;
+                border-radius: 16px;
+                background: #f9f9f9;
+                overflow-x: auto;
+              "
+            >
+              <div style="min-width: 880px">
+                <div
+                  style="
+                    display: grid;
+                    grid-template-columns: 130px 1.4fr 1fr 130px 120px 150px;
+                    gap: 14px;
+                    padding: 13px 20px;
+                    border-bottom: 1px solid #d5e7f7;
+                    font-size: 11px;
+                    font-weight: 600;
+                    letter-spacing: 0.14em;
+                    color: #8aa9c6;
+                    text-transform: uppercase;
+                  "
+                >
+                  <span>Référence</span><span>Demandeur</span><span>Ville</span><span>Créé le</span
+                  ><span>Paiement</span><span>Statut</span>
+                </div>
+                <sc-for list="{{ rows }}" as="r" hint-placeholder-count="8">
+                  <a
+                    href="admin-dossier-detail.dc.html"
+                    style="
+                      display: grid;
+                      grid-template-columns: 130px 1.4fr 1fr 130px 120px 150px;
+                      gap: 14px;
+                      align-items: center;
+                      padding: 14px 20px;
+                      border-bottom: 1px solid #deedfa;
+                      font-size: 14px;
+                      color: #133a5f;
+                    "
+                    style-hover="background:#F2F8F9"
+                  >
+                    <span
+                      style="
+                        font-family: ui-monospace, Menlo, monospace;
+                        font-size: 12.5px;
+                        color: #1c4570;
+                      "
+                      >{{ r.ref }}</span
+                    >
+                    <span style="font-weight: 600">{{ r.nom }}</span>
+                    <span style="color: #446c93">{{ r.ville }}</span>
+                    <span style="color: #446c93; font-size: 13px">{{ r.date }}</span>
+                    <span
+                      ><span
+                        style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ r.payBg }};color:{{ r.payFg }}"
+                        >{{ r.pay }}</span
+                      ></span
+                    >
+                    <span
+                      ><span
+                        style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ r.stBg }};color:{{ r.stFg }}"
+                        >{{ r.statut }}</span
+                      ></span
+                    >
+                  </a>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ emptyAll }}" hint-placeholder-val="{{ false }}">
+            <div
+              style="
+                margin-top: 20px;
+                border: 1px dashed #bbd9f0;
+                border-radius: 16px;
+                padding: 56px 24px;
+                text-align: center;
+                background: #fdfeff;
+              "
+            >
+              <span
+                style="
+                  display: inline-block;
+                  width: 14px;
+                  height: 14px;
+                  border-radius: 0 50% 50% 50%;
+                  transform: rotate(45deg);
+                  background: #bbd9f0;
+                "
+              ></span>
+              <p
+                style="
+                  margin: 14px auto 0;
+                  font-size: 14.5px;
+                  line-height: 1.7;
+                  color: #446c93;
+                  max-width: 420px;
+                "
+              >
+                Aucun dossier pour le moment — les dossiers apparaîtront ici dès la première
+                commande payée.
+              </p>
+            </div>
+          </sc-if>
+          <sc-if value="{{ emptySearch }}" hint-placeholder-val="{{ false }}">
+            <div
+              style="
+                margin-top: 20px;
+                border: 1px dashed #bbd9f0;
+                border-radius: 16px;
+                padding: 48px 24px;
+                text-align: center;
+                background: #fdfeff;
+              "
+            >
+              <p style="margin: 0; font-size: 14.5px; color: #446c93">
+                Aucun résultat pour «&nbsp;{{ query }}&nbsp;».
+              </p>
+              <button
+                onClick="{{ onReset }}"
+                style="
+                  margin-top: 12px;
+                  padding: 9px 18px;
+                  border: 1px solid #bbd9f0;
+                  border-radius: 999px;
+                  background: #ffffff;
+                  cursor: pointer;
+                  font-family: &quot;Nunito&quot;;
+                  font-size: 13px;
+                  font-weight: 600;
+                  color: #2e7fc2;
+                "
+              >
+                Effacer la recherche
+              </button>
+            </div>
+          </sc-if>
+          <div style="margin-top: 14px; font-size: 12.5px; color: #8aa9c6">{{ countLabel }}</div>
+        </main>
+      </div>
+    </x-dc>
+    <script type="text/x-dc" data-dc-script>
+      class Component extends DCLogic {
+        state = { query: "", filtre: "tous" };
+        data = [
+          { ref: "AC-2026-0152", nom: "Nadia Belkacem", ville: "Villeurbanne", date: "14 juil. 2026", pay: "ok", statut: "Nouveau" },
+          { ref: "AC-2026-0151", nom: "Thomas Lefebvre", ville: "Nantes", date: "13 juil. 2026", pay: "ok", statut: "Nouveau" },
+          { ref: "AC-2026-0150", nom: "Marie-Claude Perrin", ville: "Bordeaux", date: "11 juil. 2026", pay: "ko", statut: "Nouveau" },
+          { ref: "AC-2026-0149", nom: "Julien Roche", ville: "Toulouse", date: "10 juil. 2026", pay: "ok", statut: "En cours" },
+          { ref: "AC-2026-0148", nom: "Sophie Anselme", ville: "Rennes", date: "8 juil. 2026", pay: "ok", statut: "En cours" },
+          { ref: "AC-2026-0147", nom: "Camille Moreau", ville: "Lyon", date: "17 juin 2026", pay: "ok", statut: "En cours" },
+          { ref: "AC-2026-0146", nom: "Karim Haddad", ville: "Marseille", date: "15 juin 2026", pay: "ok", statut: "Devis envoyé" },
+          { ref: "AC-2026-0145", nom: "Élise Fontaine", ville: "Dijon", date: "12 juin 2026", pay: "ok", statut: "Devis envoyé" },
+          { ref: "AC-2026-0144", nom: "Paul Guérin", ville: "Angers", date: "9 juin 2026", pay: "ok", statut: "Devis envoyé" }
+        ];
+        renderVals() {
+          const { query, filtre } = this.state;
+          const q = query.trim().toLowerCase();
+          const stColors = { "Nouveau": ["#D9EDFC", "#2E7FC2"], "En cours": ["#DEEDFA", "#1C4570"], "Devis envoyé": ["#E8F6EC", "#1B7D6E"] };
+          const filtered = this.data.filter(d =>
+            (filtre === "tous" || d.statut === filtre) &&
+            (!q || d.nom.toLowerCase().includes(q) || d.ref.toLowerCase().includes(q))
+          );
+          return {
+            rows: filtered.map(d => ({
+              ref: d.ref, nom: d.nom, ville: d.ville, date: d.date,
+              pay: d.pay === "ok" ? "Payé ✓" : "Échoué",
+              payBg: d.pay === "ok" ? "#E8F6EC" : "#F9E4E1", payFg: d.pay === "ok" ? "#1B7D6E" : "#B0473B",
+              statut: d.statut, stBg: stColors[d.statut][0], stFg: stColors[d.statut][1]
+            })),
+            filtres: [["tous", "Tous"], ["Nouveau", "Nouveau"], ["En cours", "En cours"], ["Devis envoyé", "Devis envoyé"]].map(([v, label]) => ({
+              label, on: filtre === v ? "1" : "0", pick: () => this.setState({ filtre: v })
+            })),
+            hasRows: filtered.length > 0,
+            emptyAll: filtered.length === 0 && !q,
+            emptySearch: filtered.length === 0 && !!q,
+            query,
+            onQuery: (e) => this.setState({ query: e.target.value }),
+            onReset: () => this.setState({ query: "", filtre: "tous" }),
+            countLabel: filtered.length + " dossier" + (filtered.length > 1 ? "s" : "") + " · cliquez sur une ligne pour ouvrir le détail"
+          };
+        }
+      }
+    </script>
+  </body>
+</html>

@@ -1,16 +1,17 @@
 import { expect, test } from "@playwright/test";
 import { shot } from "./utils/shot";
 
-// CUJ-01 — Land and orient (docs/product/critical-user-journeys.md)
-test("@cuj CUJ-01: visitor lands, understands, reaches the example", async ({ page }) => {
+// CUJ-01 — Land, understand, start a dossier (specs/002-landing-accueil/spec.md)
+test("@cuj CUJ-01: visitor lands, understands, starts a dossier", async ({ page }) => {
   await page.goto("/");
 
   await expect(
-    page.getByRole("heading", { name: /a codebase that explains itself/i }),
+    page.getByRole("heading", { name: /votre devis dégât des eaux, sans attendre/i }),
   ).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Questions fréquentes" })).toBeVisible();
   await shot(page, "home-landing");
 
-  await page.getByRole("link", { name: "Open the task list" }).click();
-  await expect(page).toHaveURL(/\/examples\/tasks/);
-  await expect(page.getByRole("heading", { name: "Tasks" })).toBeVisible();
+  await page.getByRole("link", { name: "Démarrer mon dossier" }).first().click();
+  await expect(page).toHaveURL(/\/dossier/);
+  await expect(page.getByRole("heading", { name: "Démarrer mon dossier" })).toBeVisible();
 });

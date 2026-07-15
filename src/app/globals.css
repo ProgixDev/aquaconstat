@@ -4,51 +4,69 @@
  * Design tokens — Tailwind v4 CSS-first config (docs/conventions/styling.md).
  * Semantic tokens below are the only colors features may use.
  * shadcn/ui-compatible naming so `pnpm dlx shadcn add <component>` drops in cleanly.
+ *
+ * AquaConstat palette — token contract in design/aquaconstat-design-prompt.md §4,
+ * values from the approved prototype design/prototype/accueil.dc.html.
+ * Aquatique · rassurant · premium · net. No pure black, no pure white.
  */
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --background: #eaf4fe;
+  --foreground: #133a5f;
+  --card: #f9f9f9;
+  --card-foreground: #133a5f;
+  --popover: #f9f9f9;
+  --popover-foreground: #133a5f;
+  --primary: #ffe45e;
+  --primary-foreground: #133a5f;
+  --secondary: #133a5f;
+  --secondary-foreground: #f2f8f9;
+  --muted: #edf5fc;
+  --muted-foreground: #567292;
+  --accent: #edf5fc;
+  --accent-foreground: #1c4570;
   --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --radius: 0.625rem;
+  --destructive-foreground: #f9fcfd;
+  --border: #c9e1f5;
+  --input: #c9e1f5;
+  --ring: #5aa9e6;
+  --radius: 1rem;
+
+  /* Brand scale (design-prompt roles beyond the shadcn set) */
+  --navy: #133a5f;
+  --navy-light: #1d5688;
+  --ink-soft: #1c4570;
+  --aqua: #5aa9e6;
+  --aqua-bright: #7fc8f8;
+  --aqua-pale: #a8d6fa;
+  --mist: #d6ecfd;
+  --border-soft: #deedfa;
+  --paper: #fdfeff;
+  --link: #2e7fc2;
+  --link-hover: #1d5688;
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  /* Designed independently: dark navy-grey base + desaturated aqua (never inverted hex). */
+  --background: #0c1c2e;
+  --foreground: #dcebf7;
+  --card: #12283e;
+  --card-foreground: #dcebf7;
+  --popover: #12283e;
+  --popover-foreground: #dcebf7;
+  --primary: #ffe45e;
+  --primary-foreground: #133a5f;
+  --secondary: #0f2238;
+  --secondary-foreground: #f2f8f9;
+  --muted: #16304a;
+  --muted-foreground: #8fb3d4;
+  --accent: #16304a;
+  --accent-foreground: #c4ddf2;
   --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
+  --destructive-foreground: #f9fcfd;
+  --border: #24486d;
+  --input: #24486d;
+  --ring: #5aa9e6;
 }
 
 @theme inline {
@@ -71,12 +89,36 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-navy: var(--navy);
+  --color-navy-light: var(--navy-light);
+  --color-ink-soft: var(--ink-soft);
+  --color-aqua: var(--aqua);
+  --color-aqua-bright: var(--aqua-bright);
+  --color-aqua-pale: var(--aqua-pale);
+  --color-mist: var(--mist);
+  --color-border-soft: var(--border-soft);
+  --color-paper: var(--paper);
+  --color-link: var(--link);
+  --color-link-hover: var(--link-hover);
+  --radius-panel: 1.75rem;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-nunito);
+  --font-display: var(--font-playfair);
+  --font-mono: ui-monospace, monospace;
+
+  /* One elevation system — layered, cool navy-tinted shadows (never pure-black blurs). */
+  --shadow-card: 0 1px 2px rgb(15 45 80 / 0.05), 0 10px 30px -24px rgb(15 45 80 / 0.4);
+  --shadow-panel: 0 1px 2px rgb(15 45 80 / 0.05), 0 18px 44px -32px rgb(15 45 80 / 0.35);
+  --shadow-cta: 0 16px 30px -14px rgb(8 28 52 / 0.6);
+  --shadow-cta-sm: 0 10px 22px -12px rgb(9 32 58 / 0.55);
+  --shadow-chip: 0 12px 26px -14px rgb(8 28 52 / 0.5);
+  --shadow-droplet:
+    inset 16px 20px 34px rgb(235 252 255 / 0.3), inset -16px -22px 38px rgb(10 30 60 / 0.5),
+    0 34px 54px -22px rgb(8 28 52 / 0.65);
+  --shadow-pdf: 0 2px 5px rgb(8 28 52 / 0.3), 0 34px 60px -22px rgb(8 28 52 / 0.6);
 }
 
 @layer base {
@@ -84,8 +126,99 @@
     border-color: var(--color-border);
     outline-color: color-mix(in oklab, var(--color-ring) 50%, transparent);
   }
+  html {
+    scroll-behavior: smooth;
+  }
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,
+  h2,
+  h3,
+  p {
+    text-wrap: pretty;
+  }
+  a:focus-visible,
+  button:focus-visible {
+    outline: 3px solid color-mix(in oklab, var(--aqua) 55%, transparent);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+}
+
+/* Brand shapes — the droplet glyph and the hero droplet body. */
+@utility rounded-droplet {
+  border-radius: 0 50% 50% 50%;
+}
+
+@utility rounded-droplet-lg {
+  border-radius: 6% 58% 60% 58%;
+}
+
+/* Navy cinematic surfaces — hero, « ce que vous recevez » band, final CTA band. */
+@utility bg-navy-hero {
+  background-color: var(--navy);
+  background-image:
+    radial-gradient(80% 60% at 50% -10%, var(--navy-light) 0%, transparent 60%),
+    radial-gradient(60% 45% at 50% 108%, rgb(127 200 248 / 0.16), transparent 70%);
+}
+
+@utility bg-navy-band {
+  background-color: var(--navy);
+  background-image:
+    radial-gradient(70% 90% at 82% -10%, var(--navy-light) 0%, transparent 60%),
+    radial-gradient(50% 55% at 8% 105%, rgb(127 200 248 / 0.14), transparent 70%);
+}
+
+@utility bg-navy-cta {
+  background-color: var(--navy);
+  background-image:
+    radial-gradient(75% 70% at 50% -15%, var(--navy-light) 0%, transparent 60%),
+    radial-gradient(55% 50% at 50% 115%, rgb(127 200 248 / 0.18), transparent 70%);
+}
+
+/* Signature landing motion — droplet idle float + trust-chip drift (spec 002, AC-5). */
+@keyframes droplet-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-9px);
+  }
+}
+
+@keyframes droplet-drift {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(6px, -12px) rotate(1.5deg);
+  }
+}
+
+@utility animate-droplet-float {
+  animation: droplet-float 7s ease-in-out infinite;
+}
+
+@utility animate-droplet-drift {
+  animation: droplet-drift 9s ease-in-out infinite;
+}
+
+@utility animate-droplet-drift-alt {
+  animation: droplet-drift 11s ease-in-out -4s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-droplet-float,
+  .animate-droplet-drift,
+  .animate-droplet-drift-alt {
+    animation: none;
   }
 }

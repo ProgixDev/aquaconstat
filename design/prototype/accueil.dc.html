@@ -1,0 +1,1994 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="./support.js"></script>
+  </head>
+  <body>
+    <x-dc>
+      <helmet data-dc-atomics>
+        <title>AquaConstat — Devis dégât des eaux à distance</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&amp;family=Nunito:ital,wght@0,400;0,600;1,400&amp;display=swap"
+          rel="stylesheet"
+        />
+        <style>
+          html {
+            scroll-behavior: smooth;
+          }
+          body {
+            margin: 0;
+            background: #eaf4fe;
+            font-family: "Nunito", system-ui, sans-serif;
+            color: #133a5f;
+            -webkit-font-smoothing: antialiased;
+          }
+          a {
+            color: #2e7fc2;
+            text-decoration: none;
+          }
+          a:hover {
+            color: #1d5688;
+          }
+          h1,
+          h2,
+          h3,
+          p {
+            text-wrap: pretty;
+          }
+          a:focus-visible,
+          button:focus-visible {
+            outline: 3px solid rgba(90, 169, 230, 0.55);
+            outline-offset: 2px;
+            border-radius: 6px;
+          }
+          @keyframes acDrift {
+            0%,
+            100% {
+              transform: translate(0, 0) rotate(0deg);
+            }
+            50% {
+              transform: translate(6px, -12px) rotate(1.5deg);
+            }
+          }
+          @keyframes acFloat {
+            0%,
+            100% {
+              transform: translateY(0);
+            }
+            50% {
+              transform: translateY(-9px);
+            }
+          }
+        </style>
+        <script src="image-slot.js"></script>
+      </helmet>
+      <div
+        style="
+          max-width: 1240px;
+          margin: 0 auto;
+          padding: 16px clamp(12px, 2.5vw, 28px) 24px;
+          display: flex;
+          flex-direction: column;
+          gap: 18px;
+        "
+      >
+        <header
+          style="
+            background: #f9f9f9;
+            border-radius: 20px;
+            padding: 14px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            box-shadow:
+              0 1px 2px rgba(15, 45, 80, 0.05),
+              0 10px 30px -24px rgba(15, 45, 80, 0.4);
+          "
+        >
+          <a href="accueil.dc.html" style="display: flex; align-items: center; gap: 10px">
+            <span
+              style="
+                display: inline-block;
+                width: 13px;
+                height: 13px;
+                border-radius: 0 50% 50% 50%;
+                transform: rotate(45deg);
+                background: linear-gradient(135deg, #7fc8f8, #5aa9e6);
+              "
+            ></span>
+            <span
+              style="
+                font-family: &quot;Playfair Display&quot;;
+                font-weight: 700;
+                font-size: 16px;
+                letter-spacing: 0.14em;
+                color: #133a5f;
+              "
+              >AQUACONSTAT</span
+            >
+          </a>
+          <nav style="display: flex; gap: clamp(16px, 2.6vw, 30px); font-size: 13.5px">
+            <a href="#comment-ca-marche" style="color: #567292">Comment ça marche</a>
+            <a href="#tarif" style="color: #567292">Tarif</a>
+            <a href="#faq" style="color: #567292">FAQ</a>
+          </nav>
+          <a
+            href="etape-1-dossier.dc.html"
+            style="
+              background: #ffe45e;
+              color: #133a5f;
+              font-weight: 600;
+              font-size: 13.5px;
+              padding: 11px 22px;
+              border-radius: 999px;
+              white-space: nowrap;
+              box-shadow: 0 10px 22px -12px rgba(9, 32, 58, 0.55);
+            "
+            >Démarrer mon dossier</a
+          >
+        </header>
+
+        <section
+          style="
+            position: relative;
+            background: #133a5f;
+            background-image:
+              radial-gradient(80% 60% at 50% -10%, #1d5688 0%, rgba(22, 64, 92, 0) 60%),
+              radial-gradient(
+                60% 45% at 50% 108%,
+                rgba(127, 200, 248, 0.16),
+                rgba(127, 200, 248, 0) 70%
+              );
+            border-radius: 28px;
+            padding: clamp(44px, 5.5vw, 72px) clamp(20px, 4vw, 56px) 36px;
+            overflow: hidden;
+            text-align: center;
+          "
+        >
+          <div
+            style="
+              position: absolute;
+              left: 0;
+              right: 0;
+              bottom: 86px;
+              font-family: &quot;Playfair Display&quot;;
+              font-weight: 700;
+              font-style: italic;
+              font-size: clamp(84px, 13vw, 180px);
+              line-height: 1;
+              color: rgba(244, 251, 252, 0.05);
+              white-space: nowrap;
+              pointer-events: none;
+            "
+          >
+            AquaConstat
+          </div>
+          <div
+            style="
+              position: relative;
+              display: inline-flex;
+              align-items: center;
+              gap: 9px;
+              background: rgba(244, 251, 252, 0.09);
+              border: 1px solid rgba(168, 214, 250, 0.22);
+              border-radius: 999px;
+              padding: 8px 16px;
+              font-size: 11.5px;
+              font-weight: 600;
+              letter-spacing: 0.18em;
+              color: #a8d6fa;
+              text-transform: uppercase;
+            "
+          >
+            <span
+              style="
+                display: inline-block;
+                width: 7px;
+                height: 7px;
+                border-radius: 0 50% 50% 50%;
+                transform: rotate(45deg);
+                background: linear-gradient(135deg, #7fc8f8, #5aa9e6);
+              "
+            ></span>
+            Dégât des eaux · Devis à distance
+          </div>
+          <h1
+            style="
+              position: relative;
+              margin: 24px auto 0;
+              font-family: &quot;Playfair Display&quot;;
+              font-weight: 700;
+              font-size: clamp(32px, 3.8vw, 52px);
+              line-height: 1.18;
+              color: #f2f8f9;
+              max-width: 820px;
+            "
+          >
+            Votre devis dégât des eaux, sans attendre le passage d’un artisan
+          </h1>
+          <p
+            style="
+              position: relative;
+              margin: 20px auto 0;
+              font-size: 16px;
+              line-height: 1.75;
+              color: rgba(214, 236, 253, 0.82);
+              max-width: 560px;
+            "
+          >
+            Décrivez votre sinistre, ajoutez vos photos, et recevez sous 48&nbsp;h ouvrées un devis
+            détaillé à transmettre à votre assurance. 100&nbsp;% en ligne, depuis votre téléphone.
+          </p>
+          <div
+            style="
+              position: relative;
+              margin-top: 28px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              flex-wrap: wrap;
+              gap: 14px;
+            "
+          >
+            <a
+              href="etape-1-dossier.dc.html"
+              style="
+                display: inline-block;
+                background: #ffe45e;
+                color: #133a5f;
+                font-weight: 600;
+                font-size: 15px;
+                padding: 15px 30px;
+                border-radius: 999px;
+                box-shadow: 0 16px 30px -14px rgba(8, 28, 52, 0.6);
+              "
+              style-hover="transform:translateY(-1px)"
+              >Démarrer mon dossier</a
+            >
+            <a
+              href="#comment-ca-marche"
+              style="
+                display: inline-block;
+                border: 1px solid rgba(168, 214, 250, 0.3);
+                color: #eaf4fe;
+                font-weight: 600;
+                font-size: 14.5px;
+                padding: 14px 26px;
+                border-radius: 999px;
+              "
+              >Comment ça marche</a
+            >
+          </div>
+          <div
+            style="
+              position: relative;
+              margin-top: 10px;
+              font-size: 12.5px;
+              color: rgba(168, 214, 250, 0.85);
+            "
+          >
+            149&nbsp;€ · paiement sécurisé Stripe · sans création de compte
+          </div>
+          <div
+            style="position: relative; margin: 18px auto 0; display: flex; justify-content: center"
+          >
+            <div
+              id="drop-hero"
+              style="
+                position: relative;
+                width: clamp(220px, 22vw, 290px);
+                height: clamp(250px, 25vw, 320px);
+              "
+            >
+              <div
+                style="
+                  position: absolute;
+                  left: 50%;
+                  top: 52%;
+                  transform: translate(-50%, -50%);
+                  width: 135%;
+                  height: 115%;
+                  border-radius: 50%;
+                  background: radial-gradient(
+                    circle,
+                    rgba(127, 200, 248, 0.2),
+                    rgba(127, 200, 248, 0) 62%
+                  );
+                "
+              ></div>
+              <div
+                id="drop-placeholder"
+                style="position: absolute; inset: 0; animation: acFloat 7s ease-in-out infinite"
+              >
+                <div
+                  style="
+                    position: absolute;
+                    left: 50%;
+                    top: 50%;
+                    transform: translate(-50%, -50%) rotate(45deg);
+                    width: 62%;
+                    aspect-ratio: 1;
+                    border-radius: 6% 58% 60% 58%;
+                    background: linear-gradient(
+                      135deg,
+                      rgba(228, 249, 252, 0.32) 0%,
+                      rgba(127, 200, 248, 0.36) 44%,
+                      rgba(29, 86, 136, 0.6) 100%
+                    );
+                    border: 1px solid rgba(168, 214, 250, 0.4);
+                    box-shadow:
+                      inset 16px 20px 34px rgba(235, 252, 255, 0.3),
+                      inset -16px -22px 38px rgba(10, 30, 60, 0.5),
+                      0 34px 54px -22px rgba(8, 28, 52, 0.65);
+                  "
+                ></div>
+                <div
+                  style="
+                    position: absolute;
+                    left: 35%;
+                    top: 31%;
+                    width: 12%;
+                    height: 17%;
+                    border-radius: 50%;
+                    transform: rotate(-22deg);
+                    background: radial-gradient(
+                      closest-side,
+                      rgba(255, 255, 255, 0.85),
+                      rgba(255, 255, 255, 0)
+                    );
+                  "
+                ></div>
+              </div>
+              <div
+                style="
+                  position: absolute;
+                  right: -58%;
+                  top: 12%;
+                  display: flex;
+                  align-items: center;
+                  gap: 8px;
+                  background: rgba(249, 252, 253, 0.95);
+                  border-radius: 999px;
+                  padding: 9px 15px;
+                  color: #133a5f;
+                  font-size: 12px;
+                  font-weight: 600;
+                  box-shadow: 0 12px 26px -14px rgba(8, 28, 52, 0.5);
+                  animation: acDrift 9s ease-in-out infinite;
+                  white-space: nowrap;
+                "
+              >
+                <span
+                  style="
+                    display: inline-block;
+                    flex: none;
+                    width: 7px;
+                    height: 7px;
+                    border-radius: 0 50% 50% 50%;
+                    transform: rotate(45deg);
+                    background: linear-gradient(135deg, #7fc8f8, #5aa9e6);
+                  "
+                ></span>
+                Devis sous 48&nbsp;h ouvrées
+              </div>
+              <div
+                style="
+                  position: absolute;
+                  left: -62%;
+                  bottom: 16%;
+                  display: flex;
+                  align-items: center;
+                  gap: 8px;
+                  background: rgba(249, 252, 253, 0.95);
+                  border-radius: 999px;
+                  padding: 9px 15px;
+                  color: #133a5f;
+                  font-size: 12px;
+                  font-weight: 600;
+                  box-shadow: 0 12px 26px -14px rgba(8, 28, 52, 0.5);
+                  animation: acDrift 11s ease-in-out -4s infinite;
+                  white-space: nowrap;
+                "
+              >
+                <span
+                  style="
+                    display: inline-block;
+                    flex: none;
+                    width: 7px;
+                    height: 7px;
+                    border-radius: 0 50% 50% 50%;
+                    transform: rotate(45deg);
+                    background: linear-gradient(135deg, #7fc8f8, #5aa9e6);
+                  "
+                ></span>
+                100&nbsp;% en ligne
+              </div>
+            </div>
+          </div>
+          <div
+            style="
+              position: relative;
+              margin-top: 26px;
+              border-top: 1px solid rgba(168, 214, 250, 0.14);
+              padding-top: 26px;
+              display: flex;
+              justify-content: center;
+              flex-wrap: wrap;
+            "
+          >
+            <div style="padding: 4px clamp(22px, 3.5vw, 48px); text-align: center">
+              <div
+                style="
+                  font-family: &quot;Playfair Display&quot;;
+                  font-weight: 700;
+                  font-size: clamp(24px, 2.4vw, 32px);
+                  color: #f2f8f9;
+                "
+              >
+                48&nbsp;h <span style="font-size: 16px">ouvrées</span>
+              </div>
+              <div style="margin-top: 4px; font-size: 12.5px; color: rgba(168, 214, 250, 0.85)">
+                pour recevoir votre devis
+              </div>
+            </div>
+            <span style="width: 1px; background: rgba(168, 214, 250, 0.14)"></span>
+            <div style="padding: 4px clamp(22px, 3.5vw, 48px); text-align: center">
+              <div
+                style="
+                  font-family: &quot;Playfair Display&quot;;
+                  font-weight: 700;
+                  font-size: clamp(24px, 2.4vw, 32px);
+                  color: #f2f8f9;
+                "
+              >
+                100&nbsp;%
+              </div>
+              <div style="margin-top: 4px; font-size: 12.5px; color: rgba(168, 214, 250, 0.85)">
+                à distance, sans déplacement
+              </div>
+            </div>
+            <span style="width: 1px; background: rgba(168, 214, 250, 0.14)"></span>
+            <div style="padding: 4px clamp(22px, 3.5vw, 48px); text-align: center">
+              <div
+                style="
+                  font-family: &quot;Playfair Display&quot;;
+                  font-weight: 700;
+                  font-size: clamp(24px, 2.4vw, 32px);
+                  color: #f2f8f9;
+                "
+              >
+                Stripe
+              </div>
+              <div style="margin-top: 4px; font-size: 12.5px; color: rgba(168, 214, 250, 0.85)">
+                paiement sécurisé
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section
+          style="
+            background: #f9f9f9;
+            border-radius: 28px;
+            padding: clamp(28px, 4vw, 48px);
+            box-shadow:
+              0 1px 2px rgba(15, 45, 80, 0.05),
+              0 18px 44px -32px rgba(15, 45, 80, 0.35);
+          "
+        >
+          <div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 16px 28px">
+            <div
+              style="
+                display: inline-flex;
+                align-items: center;
+                gap: 9px;
+                background: #ffffff;
+                border: 1px solid #c9e1f5;
+                border-radius: 999px;
+                padding: 8px 16px;
+                font-size: 11px;
+                font-weight: 600;
+                letter-spacing: 0.18em;
+                color: #567292;
+                text-transform: uppercase;
+              "
+            >
+              <span
+                style="
+                  display: inline-block;
+                  width: 7px;
+                  height: 7px;
+                  border-radius: 0 50% 50% 50%;
+                  transform: rotate(45deg);
+                  background: linear-gradient(135deg, #7fc8f8, #5aa9e6);
+                "
+              ></span>
+              À qui s’adresse ce service
+            </div>
+            <h2
+              style="
+                margin: 0;
+                font-family: &quot;Playfair Display&quot;;
+                font-weight: 700;
+                font-size: clamp(22px, 2.2vw, 30px);
+              "
+            >
+              Quel que soit votre lien avec le logement touché.
+            </h2>
+          </div>
+          <div
+            style="
+              margin-top: 28px;
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+              gap: 14px;
+            "
+          >
+            <div style="background: #edf5fc; border-radius: 18px; padding: 22px">
+              <span
+                style="
+                  display: inline-block;
+                  width: 10px;
+                  height: 10px;
+                  border-radius: 0 50% 50% 50%;
+                  transform: rotate(45deg);
+                  background: linear-gradient(135deg, #7fc8f8, #5aa9e6);
+                "
+              ></span>
+              <div style="margin-top: 12px; font-weight: 600; font-size: 15.5px">
+                Propriétaire occupant
+              </div>
+              <div style="margin-top: 6px; font-size: 14px; line-height: 1.65; color: #567292">
+                Vous devez chiffrer la remise en état de votre logement pour votre assurance.
+              </div>
+            </div>
+            <div style="background: #edf5fc; border-radius: 18px; padding: 22px">
+              <span
+                style="
+                  display: inline-block;
+                  width: 10px;
+                  height: 10px;
+                  border-radius: 0 50% 50% 50%;
+                  transform: rotate(45deg);
+                  background: linear-gradient(135deg, #7fc8f8, #5aa9e6);
+                "
+              ></span>
+              <div style="margin-top: 12px; font-weight: 600; font-size: 15.5px">Locataire</div>
+              <div style="margin-top: 6px; font-size: 14px; line-height: 1.65; color: #567292">
+                Votre assurance vous demande un devis pour débloquer votre dossier.
+              </div>
+            </div>
+            <div style="background: #edf5fc; border-radius: 18px; padding: 22px">
+              <span
+                style="
+                  display: inline-block;
+                  width: 10px;
+                  height: 10px;
+                  border-radius: 0 50% 50% 50%;
+                  transform: rotate(45deg);
+                  background: linear-gradient(135deg, #7fc8f8, #5aa9e6);
+                "
+              ></span>
+              <div style="margin-top: 12px; font-weight: 600; font-size: 15.5px">
+                Bailleur / agence
+              </div>
+              <div style="margin-top: 6px; font-size: 14px; line-height: 1.65; color: #567292">
+                Vous gérez le sinistre d’un bien loué, sans vous déplacer.
+              </div>
+            </div>
+            <div style="background: #edf5fc; border-radius: 18px; padding: 22px">
+              <span
+                style="
+                  display: inline-block;
+                  width: 10px;
+                  height: 10px;
+                  border-radius: 0 50% 50% 50%;
+                  transform: rotate(45deg);
+                  background: linear-gradient(135deg, #7fc8f8, #5aa9e6);
+                "
+              ></span>
+              <div style="margin-top: 12px; font-weight: 600; font-size: 15.5px">
+                Gestionnaire ou syndic
+              </div>
+              <div style="margin-top: 6px; font-size: 14px; line-height: 1.65; color: #567292">
+                Vous centralisez les devis nécessaires au dossier de la copropriété.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="comment-ca-marche"
+          style="
+            background: #f9f9f9;
+            border-radius: 28px;
+            padding: clamp(28px, 4vw, 48px);
+            box-shadow:
+              0 1px 2px rgba(15, 45, 80, 0.05),
+              0 18px 44px -32px rgba(15, 45, 80, 0.35);
+          "
+        >
+          <div
+            style="
+              display: flex;
+              flex-wrap: wrap;
+              align-items: baseline;
+              justify-content: space-between;
+              gap: 16px 28px;
+            "
+          >
+            <div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 16px 28px">
+              <div
+                style="
+                  display: inline-flex;
+                  align-items: center;
+                  gap: 9px;
+                  background: #ffffff;
+                  border: 1px solid #c9e1f5;
+                  border-radius: 999px;
+                  padding: 8px 16px;
+                  font-size: 11px;
+                  font-weight: 600;
+                  letter-spacing: 0.18em;
+                  color: #567292;
+                  text-transform: uppercase;
+                "
+              >
+                <span
+                  id="drop-glyph"
+                  style="
+                    display: inline-block;
+                    width: 7px;
+                    height: 7px;
+                    border-radius: 0 50% 50% 50%;
+                    transform: rotate(45deg);
+                    background: linear-gradient(135deg, #7fc8f8, #5aa9e6);
+                  "
+                ></span>
+                Comment ça marche
+              </div>
+              <h2
+                style="
+                  margin: 0;
+                  font-family: &quot;Playfair Display&quot;;
+                  font-weight: 700;
+                  font-size: clamp(22px, 2.2vw, 30px);
+                "
+              >
+                Dix minutes, cinq étapes, un devis.
+              </h2>
+            </div>
+            <div style="font-size: 13px; color: #567292">
+              Votre dossier n’est transmis qu’une fois le paiement confirmé.
+            </div>
+          </div>
+          <div style="margin-top: 26px; display: flex; flex-direction: column; gap: 10px">
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                gap: 18px;
+                background: #edf5fc;
+                border-radius: 16px;
+                padding: 16px 20px;
+                flex-wrap: wrap;
+              "
+            >
+              <span
+                style="
+                  flex: none;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  width: 40px;
+                  height: 40px;
+                  border-radius: 50%;
+                  background: #133a5f;
+                  color: #f4fbfc;
+                  font-size: 13px;
+                  font-weight: 600;
+                "
+                >01</span
+              >
+              <div style="flex: 1; min-width: 220px">
+                <div style="font-weight: 600; font-size: 15.5px">Créez votre dossier</div>
+                <div style="margin-top: 3px; font-size: 13.5px; color: #567292">
+                  Vos coordonnées et l’adresse du bien concerné. 2&nbsp;minutes.
+                </div>
+              </div>
+              <a
+                href="etape-1-dossier.dc.html"
+                style="
+                  flex: none;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  width: 36px;
+                  height: 36px;
+                  border-radius: 50%;
+                  background: #ffffff;
+                  border: 1px solid #c9e1f5;
+                  color: #133a5f;
+                  font-size: 14px;
+                "
+                >↗</a
+              >
+            </div>
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                gap: 18px;
+                background: #edf5fc;
+                border-radius: 16px;
+                padding: 16px 20px;
+                flex-wrap: wrap;
+              "
+            >
+              <span
+                style="
+                  flex: none;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  width: 40px;
+                  height: 40px;
+                  border-radius: 50%;
+                  background: #133a5f;
+                  color: #f4fbfc;
+                  font-size: 13px;
+                  font-weight: 600;
+                "
+                >02</span
+              >
+              <div style="flex: 1; min-width: 220px">
+                <div style="font-weight: 600; font-size: 15.5px">Décrivez le sinistre</div>
+                <div style="margin-top: 3px; font-size: 13.5px; color: #567292">
+                  Un questionnaire guidé&nbsp;: pièces touchées, surfaces, état des murs, plafonds
+                  et sols.
+                </div>
+              </div>
+              <span style="flex: none; font-size: 12px; color: #8aa9c6">≈ 5 min</span>
+            </div>
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                gap: 18px;
+                background: #edf5fc;
+                border-radius: 16px;
+                padding: 16px 20px;
+                flex-wrap: wrap;
+              "
+            >
+              <span
+                style="
+                  flex: none;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  width: 40px;
+                  height: 40px;
+                  border-radius: 50%;
+                  background: #133a5f;
+                  color: #f4fbfc;
+                  font-size: 13px;
+                  font-weight: 600;
+                "
+                >03</span
+              >
+              <div style="flex: 1; min-width: 220px">
+                <div style="font-weight: 600; font-size: 15.5px">Ajoutez vos photos</div>
+                <div style="margin-top: 3px; font-size: 13.5px; color: #567292">
+                  Depuis la galerie ou l’appareil photo, en suivant nos consignes de prise de vue.
+                </div>
+              </div>
+              <span style="flex: none; font-size: 12px; color: #8aa9c6">4 à 8 photos</span>
+            </div>
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                gap: 18px;
+                background: #edf5fc;
+                border-radius: 16px;
+                padding: 16px 20px;
+                flex-wrap: wrap;
+              "
+            >
+              <span
+                style="
+                  flex: none;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  width: 40px;
+                  height: 40px;
+                  border-radius: 50%;
+                  background: #133a5f;
+                  color: #f4fbfc;
+                  font-size: 13px;
+                  font-weight: 600;
+                "
+                >04</span
+              >
+              <div style="flex: 1; min-width: 220px">
+                <div style="font-weight: 600; font-size: 15.5px">Payez en ligne</div>
+                <div style="margin-top: 3px; font-size: 13.5px; color: #567292">
+                  149&nbsp;€ par carte bancaire, dans l’environnement sécurisé de Stripe.
+                </div>
+              </div>
+              <span style="flex: none; font-size: 12px; color: #8aa9c6">149&nbsp;€ TTC</span>
+            </div>
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                gap: 18px;
+                background: #edf5fc;
+                border-radius: 16px;
+                padding: 16px 20px;
+                flex-wrap: wrap;
+              "
+            >
+              <span
+                style="
+                  flex: none;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  width: 40px;
+                  height: 40px;
+                  border-radius: 50%;
+                  background: #133a5f;
+                  color: #f4fbfc;
+                  font-size: 13px;
+                  font-weight: 600;
+                "
+                >05</span
+              >
+              <div style="flex: 1; min-width: 220px">
+                <div style="font-weight: 600; font-size: 15.5px">Recevez votre devis</div>
+                <div style="margin-top: 3px; font-size: 13.5px; color: #567292">
+                  Un devis détaillé, préparé par un professionnel, envoyé par e-mail sous 48&nbsp;h
+                  ouvrées.
+                </div>
+              </div>
+              <span style="flex: none; font-size: 12px; color: #8aa9c6">PDF par e-mail</span>
+            </div>
+          </div>
+        </section>
+
+        <section
+          style="
+            background: #f9f9f9;
+            border-radius: 28px;
+            padding: clamp(28px, 4vw, 48px);
+            box-shadow:
+              0 1px 2px rgba(15, 45, 80, 0.05),
+              0 18px 44px -32px rgba(15, 45, 80, 0.35);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 40px;
+          "
+        >
+          <div style="flex: 1 1 320px; max-width: 420px">
+            <div
+              style="
+                display: inline-flex;
+                align-items: center;
+                gap: 9px;
+                background: #ffffff;
+                border: 1px solid #c9e1f5;
+                border-radius: 999px;
+                padding: 8px 16px;
+                font-size: 11px;
+                font-weight: 600;
+                letter-spacing: 0.18em;
+                color: #567292;
+                text-transform: uppercase;
+              "
+            >
+              <span
+                style="
+                  display: inline-block;
+                  width: 7px;
+                  height: 7px;
+                  border-radius: 0 50% 50% 50%;
+                  transform: rotate(45deg);
+                  background: linear-gradient(135deg, #7fc8f8, #5aa9e6);
+                "
+              ></span>
+              Vos photos suffisent
+            </div>
+            <h2
+              style="
+                margin: 18px 0 0;
+                font-family: &quot;Playfair Display&quot;;
+                font-weight: 700;
+                font-size: clamp(22px, 2.2vw, 30px);
+                line-height: 1.25;
+              "
+            >
+              Pas besoin d’un expert sur place.
+            </h2>
+            <p style="margin: 14px 0 0; font-size: 15px; line-height: 1.75; color: #567292">
+              Quatre à huit photos depuis votre téléphone, en suivant nos consignes de prise de vue
+              — le professionnel fait le reste.
+            </p>
+            <div
+              style="
+                margin-top: 18px;
+                display: flex;
+                flex-direction: column;
+                gap: 9px;
+                font-size: 14px;
+                color: #1c4570;
+              "
+            >
+              <div style="display: flex; align-items: center; gap: 10px">
+                <span
+                  style="
+                    display: inline-block;
+                    flex: none;
+                    width: 7px;
+                    height: 7px;
+                    border-radius: 0 50% 50% 50%;
+                    transform: rotate(45deg);
+                    background: linear-gradient(135deg, #7fc8f8, #5aa9e6);
+                  "
+                ></span
+                >Une vue générale de chaque pièce touchée
+              </div>
+              <div style="display: flex; align-items: center; gap: 10px">
+                <span
+                  style="
+                    display: inline-block;
+                    flex: none;
+                    width: 7px;
+                    height: 7px;
+                    border-radius: 0 50% 50% 50%;
+                    transform: rotate(45deg);
+                    background: linear-gradient(135deg, #7fc8f8, #5aa9e6);
+                  "
+                ></span
+                >Les zones endommagées de près
+              </div>
+              <div style="display: flex; align-items: center; gap: 10px">
+                <span
+                  style="
+                    display: inline-block;
+                    flex: none;
+                    width: 7px;
+                    height: 7px;
+                    border-radius: 0 50% 50% 50%;
+                    transform: rotate(45deg);
+                    background: linear-gradient(135deg, #7fc8f8, #5aa9e6);
+                  "
+                ></span
+                >Les murs, le plafond, le sol
+              </div>
+            </div>
+            <div style="margin-top: 20px">
+              <a href="etape-3-photos.dc.html" style="font-weight: 600; font-size: 14px"
+                >Voir les consignes complètes →</a
+              >
+            </div>
+          </div>
+          <div
+            style="
+              flex: 1 1 420px;
+              display: grid;
+              grid-template-columns: 1.15fr 0.85fr;
+              grid-template-rows: 170px 170px;
+              gap: 14px;
+            "
+          >
+            <div style="grid-row: span 2; display: flex; flex-direction: column; gap: 8px">
+              <div style="position: relative; flex: 1; border-radius: 18px; overflow: hidden">
+                <image-slot
+                  id="photo-vue"
+                  shape="rect"
+                  placeholder="Photo — vue générale de la pièce"
+                ></image-slot>
+              </div>
+              <div style="font-size: 12.5px; color: #567292">
+                <strong style="color: #133a5f">Vue générale</strong> · chaque pièce touchée
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 8px">
+              <div style="position: relative; flex: 1; border-radius: 18px; overflow: hidden">
+                <image-slot
+                  id="photo-plafond"
+                  shape="rect"
+                  placeholder="Photo — le plafond"
+                ></image-slot>
+              </div>
+              <div style="font-size: 12.5px; color: #567292">
+                <strong style="color: #133a5f">Le plafond</strong>
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 8px">
+              <div style="position: relative; flex: 1; border-radius: 18px; overflow: hidden">
+                <image-slot
+                  id="photo-zone"
+                  shape="rect"
+                  placeholder="Photo — la zone de près"
+                ></image-slot>
+              </div>
+              <div style="font-size: 12.5px; color: #567292">
+                <strong style="color: #133a5f">La zone de près</strong>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section
+          style="
+            position: relative;
+            background: #133a5f;
+            background-image:
+              radial-gradient(70% 90% at 82% -10%, #1d5688 0%, rgba(22, 64, 92, 0) 60%),
+              radial-gradient(
+                50% 55% at 8% 105%,
+                rgba(127, 200, 248, 0.14),
+                rgba(127, 200, 248, 0) 70%
+              );
+            border-radius: 28px;
+            padding: clamp(32px, 4.5vw, 56px);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 44px;
+            overflow: hidden;
+          "
+        >
+          <div style="flex: 1 1 380px">
+            <div
+              style="
+                display: inline-flex;
+                align-items: center;
+                gap: 9px;
+                background: rgba(244, 251, 252, 0.09);
+                border: 1px solid rgba(168, 214, 250, 0.22);
+                border-radius: 999px;
+                padding: 8px 16px;
+                font-size: 11px;
+                font-weight: 600;
+                letter-spacing: 0.18em;
+                color: #a8d6fa;
+                text-transform: uppercase;
+              "
+            >
+              <span
+                style="
+                  display: inline-block;
+                  width: 7px;
+                  height: 7px;
+                  border-radius: 0 50% 50% 50%;
+                  transform: rotate(45deg);
+                  background: linear-gradient(135deg, #7fc8f8, #5aa9e6);
+                "
+              ></span>
+              Ce que vous recevez
+            </div>
+            <h2
+              style="
+                margin: 20px 0 0;
+                font-family: &quot;Playfair Display&quot;;
+                font-weight: 700;
+                font-size: clamp(22px, 2.2vw, 30px);
+                line-height: 1.3;
+                color: #f2f8f9;
+              "
+            >
+              Un devis prêt pour votre assurance.
+            </h2>
+            <p
+              style="
+                margin: 14px 0 0;
+                font-size: 15.5px;
+                line-height: 1.75;
+                color: rgba(214, 236, 253, 0.82);
+                max-width: 520px;
+              "
+            >
+              Un devis détaillé des travaux de remise en état, établi par un professionnel à partir
+              de votre questionnaire et de vos photos, au format PDF, prêt à être transmis à votre
+              assurance.
+            </p>
+            <div
+              style="
+                margin-top: 22px;
+                display: flex;
+                flex-direction: column;
+                gap: 11px;
+                font-size: 14.5px;
+                color: #eaf4fe;
+              "
+            >
+              <div style="display: flex; align-items: center; gap: 11px">
+                <span
+                  style="
+                    display: inline-block;
+                    flex: none;
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 0 50% 50% 50%;
+                    transform: rotate(45deg);
+                    background: linear-gradient(135deg, #7fc8f8, #5aa9e6);
+                  "
+                ></span
+                >Chiffrage poste par poste
+              </div>
+              <div style="display: flex; align-items: center; gap: 11px">
+                <span
+                  style="
+                    display: inline-block;
+                    flex: none;
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 0 50% 50% 50%;
+                    transform: rotate(45deg);
+                    background: linear-gradient(135deg, #7fc8f8, #5aa9e6);
+                  "
+                ></span
+                >Document daté et signé
+              </div>
+              <div style="display: flex; align-items: center; gap: 11px">
+                <span
+                  style="
+                    display: inline-block;
+                    flex: none;
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 0 50% 50% 50%;
+                    transform: rotate(45deg);
+                    background: linear-gradient(135deg, #7fc8f8, #5aa9e6);
+                  "
+                ></span
+                >Recevable par votre assurance
+              </div>
+            </div>
+          </div>
+          <div style="flex: 1 1 300px; display: flex; justify-content: center">
+            <div
+              style="
+                width: 300px;
+                background: #f9f9f9;
+                border-radius: 16px;
+                box-shadow:
+                  0 2px 5px rgba(8, 28, 52, 0.3),
+                  0 34px 60px -22px rgba(8, 28, 52, 0.6);
+                padding: 24px 26px;
+              "
+            >
+              <div style="display: flex; align-items: center; gap: 8px">
+                <span
+                  style="
+                    display: inline-block;
+                    width: 9px;
+                    height: 9px;
+                    border-radius: 0 50% 50% 50%;
+                    transform: rotate(45deg);
+                    background: linear-gradient(135deg, #7fc8f8, #5aa9e6);
+                  "
+                ></span>
+                <span
+                  style="
+                    font-family: &quot;Playfair Display&quot;;
+                    font-weight: 700;
+                    font-size: 10.5px;
+                    letter-spacing: 0.14em;
+                    color: #133a5f;
+                  "
+                  >AQUACONSTAT</span
+                >
+                <span style="margin-left: auto; font-size: 9.5px; color: #567292">PDF</span>
+              </div>
+              <div style="margin-top: 16px; font-weight: 600; font-size: 13px">
+                Devis — remise en état après dégât des eaux
+              </div>
+              <div style="margin-top: 4px; font-size: 10.5px; color: #567292">
+                Réf. AC-2026-0147 · établi le 17 juin 2026
+              </div>
+              <div
+                style="
+                  margin-top: 16px;
+                  border-top: 1px solid #deedfa;
+                  padding-top: 12px;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 9px;
+                  font-size: 11px;
+                  color: #1c4570;
+                "
+              >
+                <div style="display: flex; justify-content: space-between; gap: 12px">
+                  <span>Réfection peinture plafond — salle de bain</span
+                  ><span style="font-weight: 600; white-space: nowrap">412,00&nbsp;€</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; gap: 12px">
+                  <span>Traitement anti-humidité des supports</span
+                  ><span style="font-weight: 600; white-space: nowrap">186,00&nbsp;€</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; gap: 12px">
+                  <span>Dépose et repose des plinthes — couloir</span
+                  ><span style="font-weight: 600; white-space: nowrap">158,00&nbsp;€</span>
+                </div>
+                <div
+                  style="display: flex; justify-content: space-between; gap: 12px; color: #8aa9c6"
+                >
+                  <span>…</span><span>…</span>
+                </div>
+              </div>
+              <div
+                style="
+                  margin-top: 12px;
+                  border-top: 1px solid #deedfa;
+                  padding-top: 10px;
+                  display: flex;
+                  justify-content: space-between;
+                  font-size: 11.5px;
+                  font-weight: 600;
+                "
+              >
+                <span>Total travaux TTC</span><span>—</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="tarif"
+          style="
+            background: #f9f9f9;
+            border-radius: 28px;
+            padding: clamp(32px, 4.5vw, 56px);
+            box-shadow:
+              0 1px 2px rgba(15, 45, 80, 0.05),
+              0 18px 44px -32px rgba(15, 45, 80, 0.35);
+            text-align: center;
+          "
+        >
+          <div
+            style="
+              display: inline-flex;
+              align-items: center;
+              gap: 9px;
+              background: #ffffff;
+              border: 1px solid #c9e1f5;
+              border-radius: 999px;
+              padding: 8px 16px;
+              font-size: 11px;
+              font-weight: 600;
+              letter-spacing: 0.18em;
+              color: #567292;
+              text-transform: uppercase;
+            "
+          >
+            <span
+              style="
+                display: inline-block;
+                width: 7px;
+                height: 7px;
+                border-radius: 0 50% 50% 50%;
+                transform: rotate(45deg);
+                background: linear-gradient(135deg, #7fc8f8, #5aa9e6);
+              "
+            ></span>
+            Tarif
+          </div>
+          <div
+            style="
+              margin-top: 18px;
+              font-family: &quot;Playfair Display&quot;;
+              font-weight: 700;
+              font-size: clamp(46px, 5.5vw, 72px);
+              color: #133a5f;
+            "
+          >
+            149&nbsp;€ <span style="font-size: 21px">— tout compris</span>
+          </div>
+          <div
+            style="
+              margin: 24px auto 0;
+              max-width: 420px;
+              display: flex;
+              flex-direction: column;
+              gap: 12px;
+              text-align: left;
+              font-size: 15px;
+              color: #1c4570;
+            "
+          >
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                background: #edf5fc;
+                border-radius: 14px;
+                padding: 13px 18px;
+              "
+            >
+              <span
+                style="
+                  display: inline-block;
+                  flex: none;
+                  width: 8px;
+                  height: 8px;
+                  border-radius: 0 50% 50% 50%;
+                  transform: rotate(45deg);
+                  background: linear-gradient(135deg, #7fc8f8, #5aa9e6);
+                "
+              ></span
+              >Étude complète de votre dossier
+            </div>
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                background: #edf5fc;
+                border-radius: 14px;
+                padding: 13px 18px;
+              "
+            >
+              <span
+                style="
+                  display: inline-block;
+                  flex: none;
+                  width: 8px;
+                  height: 8px;
+                  border-radius: 0 50% 50% 50%;
+                  transform: rotate(45deg);
+                  background: linear-gradient(135deg, #7fc8f8, #5aa9e6);
+                "
+              ></span
+              >Devis détaillé sous 48&nbsp;h ouvrées
+            </div>
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                background: #edf5fc;
+                border-radius: 14px;
+                padding: 13px 18px;
+              "
+            >
+              <span
+                style="
+                  display: inline-block;
+                  flex: none;
+                  width: 8px;
+                  height: 8px;
+                  border-radius: 0 50% 50% 50%;
+                  transform: rotate(45deg);
+                  background: linear-gradient(135deg, #7fc8f8, #5aa9e6);
+                "
+              ></span
+              >Échange par e-mail si une précision est nécessaire
+            </div>
+          </div>
+          <div style="margin-top: 28px">
+            <a
+              href="etape-1-dossier.dc.html"
+              style="
+                display: inline-block;
+                background: #ffe45e;
+                color: #133a5f;
+                font-weight: 600;
+                font-size: 15.5px;
+                padding: 16px 34px;
+                border-radius: 999px;
+                box-shadow: 0 14px 28px -14px rgba(9, 32, 58, 0.5);
+              "
+              >Démarrer mon dossier</a
+            >
+          </div>
+          <div style="margin-top: 13px; font-size: 12.5px; color: #567292">
+            Paiement unique, aucun abonnement.
+          </div>
+        </section>
+
+        <section
+          style="
+            background: #f9f9f9;
+            border-radius: 28px;
+            padding: clamp(28px, 4vw, 48px);
+            box-shadow:
+              0 1px 2px rgba(15, 45, 80, 0.05),
+              0 18px 44px -32px rgba(15, 45, 80, 0.35);
+          "
+        >
+          <div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 16px 28px">
+            <div
+              style="
+                display: inline-flex;
+                align-items: center;
+                gap: 9px;
+                background: #ffffff;
+                border: 1px solid #c9e1f5;
+                border-radius: 999px;
+                padding: 8px 16px;
+                font-size: 11px;
+                font-weight: 600;
+                letter-spacing: 0.18em;
+                color: #567292;
+                text-transform: uppercase;
+              "
+            >
+              <span
+                style="
+                  display: inline-block;
+                  width: 7px;
+                  height: 7px;
+                  border-radius: 0 50% 50% 50%;
+                  transform: rotate(45deg);
+                  background: linear-gradient(135deg, #7fc8f8, #5aa9e6);
+                "
+              ></span>
+              Ils ont reçu leur devis
+            </div>
+            <h2
+              style="
+                margin: 0;
+                font-family: &quot;Playfair Display&quot;;
+                font-weight: 700;
+                font-size: clamp(22px, 2.2vw, 30px);
+              "
+            >
+              Des dossiers réglés, sans déplacement.
+            </h2>
+          </div>
+          <div
+            style="
+              margin-top: 26px;
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+              gap: 14px;
+            "
+          >
+            <div
+              style="
+                background: #edf5fc;
+                border-radius: 18px;
+                padding: 24px;
+                display: flex;
+                flex-direction: column;
+                gap: 14px;
+              "
+            >
+              <p style="margin: 0; font-size: 14.5px; line-height: 1.7; color: #1c4570; flex: 1">
+                «&nbsp;Devis reçu en moins de 48&nbsp;h, accepté par mon assurance sans aucune
+                question.&nbsp;»
+              </p>
+              <div style="display: flex; align-items: center; gap: 10px">
+                <span
+                  style="
+                    flex: none;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 34px;
+                    height: 34px;
+                    border-radius: 50%;
+                    background: #133a5f;
+                    color: #f4fbfc;
+                    font-size: 11.5px;
+                    font-weight: 600;
+                  "
+                  >CM</span
+                >
+                <div>
+                  <div style="font-size: 13px; font-weight: 600">Camille M.</div>
+                  <div style="font-size: 12px; color: #567292">
+                    Lyon · dégât des eaux en copropriété
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              style="
+                background: #edf5fc;
+                border-radius: 18px;
+                padding: 24px;
+                display: flex;
+                flex-direction: column;
+                gap: 14px;
+              "
+            >
+              <p style="margin: 0; font-size: 14.5px; line-height: 1.7; color: #1c4570; flex: 1">
+                «&nbsp;Aucun artisan ne voulait se déplacer juste pour un devis. Ici, tout s’est
+                fait depuis mon canapé.&nbsp;»
+              </p>
+              <div style="display: flex; align-items: center; gap: 10px">
+                <span
+                  style="
+                    flex: none;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 34px;
+                    height: 34px;
+                    border-radius: 50%;
+                    background: #133a5f;
+                    color: #f4fbfc;
+                    font-size: 11.5px;
+                    font-weight: 600;
+                  "
+                  >KH</span
+                >
+                <div>
+                  <div style="font-size: 13px; font-weight: 600">Karim H.</div>
+                  <div style="font-size: 12px; color: #567292">
+                    Marseille · infiltration en façade
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              style="
+                background: #edf5fc;
+                border-radius: 18px;
+                padding: 24px;
+                display: flex;
+                flex-direction: column;
+                gap: 14px;
+              "
+            >
+              <p style="margin: 0; font-size: 14.5px; line-height: 1.7; color: #1c4570; flex: 1">
+                «&nbsp;Le questionnaire m’a pris dix minutes, photos comprises. Le devis est arrivé
+                le lendemain.&nbsp;»
+              </p>
+              <div style="display: flex; align-items: center; gap: 10px">
+                <span
+                  style="
+                    flex: none;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 34px;
+                    height: 34px;
+                    border-radius: 50%;
+                    background: #133a5f;
+                    color: #f4fbfc;
+                    font-size: 11.5px;
+                    font-weight: 600;
+                  "
+                  >ÉF</span
+                >
+                <div>
+                  <div style="font-size: 13px; font-weight: 600">Élise F.</div>
+                  <div style="font-size: 12px; color: #567292">
+                    Dijon · fuite d’appareil à effet d’eau
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            style="
+              margin-top: 36px;
+              padding-top: 32px;
+              border-top: 1px solid #deedfa;
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+              gap: 28px 44px;
+            "
+          >
+            <div>
+              <div style="font-weight: 600; font-size: 15px">
+                Et si mes photos ne suffisent pas&nbsp;?
+              </div>
+              <p style="margin: 8px 0 0; font-size: 14px; line-height: 1.7; color: #567292">
+                Nous revenons vers vous par e-mail pour toute précision, sans surcoût.
+              </p>
+            </div>
+            <div>
+              <div style="font-weight: 600; font-size: 15px">
+                Le devis sera-t-il accepté par mon assurance&nbsp;?
+              </div>
+              <p style="margin: 8px 0 0; font-size: 14px; line-height: 1.7; color: #567292">
+                Le devis est établi par un professionnel du bâtiment, détaillé poste par poste,
+                comme un devis classique.
+              </p>
+            </div>
+            <div>
+              <div style="font-weight: 600; font-size: 15px">
+                Mes données et mon paiement sont-ils protégés&nbsp;?
+              </div>
+              <p style="margin: 8px 0 0; font-size: 14px; line-height: 1.7; color: #567292">
+                Le paiement s’effectue chez Stripe&nbsp;; nous ne stockons jamais votre carte. Vos
+                photos ne servent qu’à l’étude de votre dossier.
+              </p>
+            </div>
+            <div>
+              <div style="font-weight: 600; font-size: 15px">Dois-je créer un compte&nbsp;?</div>
+              <p style="margin: 8px 0 0; font-size: 14px; line-height: 1.7; color: #567292">
+                Non. Un dossier, un paiement, un devis. C’est tout.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="faq"
+          style="
+            background: #f9f9f9;
+            border-radius: 28px;
+            padding: clamp(28px, 4vw, 48px);
+            box-shadow:
+              0 1px 2px rgba(15, 45, 80, 0.05),
+              0 18px 44px -32px rgba(15, 45, 80, 0.35);
+          "
+        >
+          <div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 16px 28px">
+            <div
+              style="
+                display: inline-flex;
+                align-items: center;
+                gap: 9px;
+                background: #ffffff;
+                border: 1px solid #c9e1f5;
+                border-radius: 999px;
+                padding: 8px 16px;
+                font-size: 11px;
+                font-weight: 600;
+                letter-spacing: 0.18em;
+                color: #567292;
+                text-transform: uppercase;
+              "
+            >
+              <span
+                style="
+                  display: inline-block;
+                  width: 7px;
+                  height: 7px;
+                  border-radius: 0 50% 50% 50%;
+                  transform: rotate(45deg);
+                  background: linear-gradient(135deg, #7fc8f8, #5aa9e6);
+                "
+              ></span>
+              FAQ
+            </div>
+            <h2
+              style="
+                margin: 0;
+                font-family: &quot;Playfair Display&quot;;
+                font-weight: 700;
+                font-size: clamp(22px, 2.2vw, 30px);
+              "
+            >
+              Questions fréquentes
+            </h2>
+          </div>
+          <div style="margin-top: 18px; max-width: 860px">
+            <sc-for list="{{ faqItems }}" as="f" hint-placeholder-count="6">
+              <div style="border-bottom: 1px solid #deedfa">
+                <button
+                  onClick="{{ f.onToggle }}"
+                  style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 18px;
+                    width: 100%;
+                    background: none;
+                    border: none;
+                    padding: 19px 2px;
+                    cursor: pointer;
+                    font-family: &quot;Nunito&quot;;
+                    font-size: 15.5px;
+                    font-weight: 600;
+                    color: #133a5f;
+                    text-align: left;
+                  "
+                >
+                  {{ f.q }}
+                  <span
+                    style="
+                      flex: none;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      width: 28px;
+                      height: 28px;
+                      border-radius: 50%;
+                      background: #edf5fc;
+                      font-size: 16px;
+                      font-weight: 400;
+                      color: #2e7fc2;
+                    "
+                    >{{ f.mark }}</span
+                  >
+                </button>
+                <sc-if value="{{ f.open }}" hint-placeholder-val="{{ false }}">
+                  <p
+                    style="
+                      margin: 0;
+                      padding: 0 46px 20px 2px;
+                      font-size: 14.5px;
+                      line-height: 1.75;
+                      color: #567292;
+                    "
+                  >
+                    {{ f.a }}
+                  </p>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+
+        <section
+          style="
+            position: relative;
+            background: #133a5f;
+            background-image:
+              radial-gradient(75% 70% at 50% -15%, #1d5688 0%, rgba(22, 64, 92, 0) 60%),
+              radial-gradient(
+                55% 50% at 50% 115%,
+                rgba(127, 200, 248, 0.18),
+                rgba(127, 200, 248, 0) 70%
+              );
+            border-radius: 28px;
+            padding: clamp(44px, 5.5vw, 72px) clamp(24px, 4vw, 56px);
+            text-align: center;
+            overflow: hidden;
+          "
+        >
+          <div
+            style="
+              position: absolute;
+              left: 0;
+              right: 0;
+              bottom: -14px;
+              font-family: &quot;Playfair Display&quot;;
+              font-weight: 700;
+              font-style: italic;
+              font-size: clamp(70px, 10.5vw, 150px);
+              line-height: 1;
+              color: rgba(244, 251, 252, 0.05);
+              white-space: nowrap;
+              pointer-events: none;
+            "
+          >
+            10 minutes
+          </div>
+          <h2
+            style="
+              position: relative;
+              margin: 0 auto;
+              font-family: &quot;Playfair Display&quot;;
+              font-weight: 700;
+              font-size: clamp(26px, 3vw, 40px);
+              color: #f2f8f9;
+              max-width: 720px;
+            "
+          >
+            Votre assurance attend un devis&nbsp;?
+          </h2>
+          <p
+            style="
+              position: relative;
+              margin: 12px 0 0;
+              font-family: &quot;Playfair Display&quot;;
+              font-weight: 700;
+              font-style: italic;
+              font-size: clamp(18px, 1.9vw, 23px);
+              color: #ffe45e;
+            "
+          >
+            Il vous faut 10&nbsp;minutes.
+          </p>
+          <div style="position: relative; margin-top: 28px">
+            <a
+              href="etape-1-dossier.dc.html"
+              style="
+                display: inline-block;
+                background: #ffe45e;
+                color: #133a5f;
+                font-weight: 600;
+                font-size: 15.5px;
+                padding: 16px 34px;
+                border-radius: 999px;
+                box-shadow: 0 18px 34px -14px rgba(8, 28, 52, 0.6);
+              "
+              >Démarrer mon dossier</a
+            >
+          </div>
+          <div
+            style="
+              position: relative;
+              margin-top: 13px;
+              font-size: 12.5px;
+              color: rgba(168, 214, 250, 0.85);
+            "
+          >
+            149&nbsp;€ · paiement sécurisé Stripe · sans création de compte
+          </div>
+        </section>
+
+        <footer
+          style="
+            background: #133a5f;
+            border-radius: 28px;
+            color: #a8d6fa;
+            padding: clamp(32px, 4vw, 52px);
+          "
+        >
+          <div
+            style="
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+              gap: 36px;
+            "
+          >
+            <div style="max-width: 300px">
+              <div style="display: flex; align-items: center; gap: 10px">
+                <span
+                  style="
+                    display: inline-block;
+                    width: 13px;
+                    height: 13px;
+                    border-radius: 0 50% 50% 50%;
+                    transform: rotate(45deg);
+                    background: linear-gradient(135deg, #7fc8f8, #5aa9e6);
+                  "
+                ></span>
+                <span
+                  style="
+                    font-family: &quot;Playfair Display&quot;;
+                    font-weight: 700;
+                    font-size: 15px;
+                    letter-spacing: 0.14em;
+                    color: #eaf4f6;
+                  "
+                  >AQUACONSTAT</span
+                >
+              </div>
+              <div style="margin-top: 14px; font-size: 13.5px; line-height: 1.7; color: #9cc4e8">
+                Devis dégât des eaux à distance — France métropolitaine.
+              </div>
+            </div>
+            <div>
+              <div
+                style="
+                  font-size: 11px;
+                  font-weight: 600;
+                  letter-spacing: 0.22em;
+                  color: #6e9cc9;
+                  text-transform: uppercase;
+                "
+              >
+                Service
+              </div>
+              <nav
+                style="
+                  margin-top: 14px;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 10px;
+                  font-size: 13.5px;
+                "
+              >
+                <a href="#comment-ca-marche" style="color: #a8d6fa">Comment ça marche</a>
+                <a href="#tarif" style="color: #a8d6fa">Tarif</a>
+                <a href="#faq" style="color: #a8d6fa">FAQ</a>
+                <a href="etape-1-dossier.dc.html" style="color: #a8d6fa">Démarrer mon dossier</a>
+              </nav>
+            </div>
+            <div>
+              <div
+                style="
+                  font-size: 11px;
+                  font-weight: 600;
+                  letter-spacing: 0.22em;
+                  color: #6e9cc9;
+                  text-transform: uppercase;
+                "
+              >
+                Informations
+              </div>
+              <nav
+                style="
+                  margin-top: 14px;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 10px;
+                  font-size: 13.5px;
+                "
+              >
+                <a href="#" style="color: #a8d6fa">Mentions légales</a>
+                <a href="#" style="color: #a8d6fa">CGV</a>
+                <a href="#" style="color: #a8d6fa">Politique de confidentialité</a>
+              </nav>
+            </div>
+            <div>
+              <div
+                style="
+                  font-size: 11px;
+                  font-weight: 600;
+                  letter-spacing: 0.22em;
+                  color: #6e9cc9;
+                  text-transform: uppercase;
+                "
+              >
+                Contact
+              </div>
+              <div style="margin-top: 14px; font-size: 13.5px; line-height: 1.8; color: #a8d6fa">
+                contact@aquaconstat.fr<br /><span style="color: #9cc4e8"
+                  >Une question sur un dossier envoyé&nbsp;? Répondez à votre e-mail de
+                  confirmation.</span
+                >
+              </div>
+            </div>
+          </div>
+          <div
+            style="
+              margin-top: 32px;
+              padding-top: 20px;
+              border-top: 1px solid rgba(168, 214, 250, 0.14);
+              display: flex;
+              flex-wrap: wrap;
+              gap: 14px;
+              justify-content: space-between;
+              font-size: 12.5px;
+              color: #9cc4e8;
+            "
+          >
+            <span>© 2026 AquaConstat — nom de travail</span>
+            <span>Paiement sécurisé par Stripe</span>
+          </div>
+        </footer>
+
+        <x-import
+          component-from-global-scope="droplet-3d"
+          from="./droplet-3d.js"
+          data-from="drop-hero"
+          data-placeholder="drop-placeholder"
+          data-src="{{ glbUrl }}"
+          hint-size="1px,1px"
+        ></x-import>
+      </div>
+    </x-dc>
+    <script
+      type="text/x-dc"
+      data-dc-script
+      data-props='{"modele3dUrl": {"editor": "text", "default": "", "tsType": "string", "section": "Goutte 3D"}}'
+    >
+      class Component extends DCLogic {
+        state = { open: 0 };
+        faqs = [
+          { q: "Quel est le délai exact pour recevoir mon devis ?", a: "Votre devis détaillé est envoyé par e-mail sous 48 h ouvrées après la confirmation de votre paiement. Si une précision vous est demandée entre-temps, le délai ne repart pas de zéro." },
+          { q: "Quels types de sinistres sont couverts ?", a: "Tous les dégâts des eaux courants : fuite, infiltration, débordement, rupture de canalisation — dans un logement ou un local à usage d’habitation." },
+          { q: "Je ne connais pas les dimensions exactes des surfaces touchées.", a: "Des dimensions approximatives suffisent. Une estimation à 20 cm près convient parfaitement pour établir le devis." },
+          { q: "Et si mon dossier ne peut pas être traité ?", a: "Si votre dossier ne peut pas être étudié à distance, vous êtes intégralement remboursé, sans démarche supplémentaire." },
+          { q: "Quelle zone est couverte ?", a: "Le service couvre l’ensemble de la France métropolitaine." },
+          { q: "Comment le devis est-il envoyé ?", a: "Au format PDF, par e-mail, à l’adresse indiquée dans votre dossier — prêt à être transmis à votre assurance." }
+        ];
+        renderVals() {
+          const open = this.state.open;
+          return {
+            glbUrl: this.props.modele3dUrl ?? "",
+            faqItems: this.faqs.map((f, i) => ({
+              q: f.q, a: f.a,
+              open: i === open,
+              mark: i === open ? "–" : "+",
+              onToggle: () => this.setState({ open: i === this.state.open ? -1 : i })
+            }))
+          };
+        }
+      }
+    </script>
+  </body>
+</html>

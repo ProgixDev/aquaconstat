@@ -1,17 +1,21 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Nunito, Playfair_Display } from "next/font/google";
 import { MotionProvider } from "@/components/motion";
 import { site } from "@/core/site";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const nunito = Nunito({
+  variable: "--font-nunito",
   subsets: ["latin"],
+  weight: ["400", "600"],
+  style: ["normal", "italic"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
   subsets: ["latin"],
+  weight: ["700"],
+  style: ["normal", "italic"],
 });
 
 export const metadata: Metadata = {
@@ -53,8 +57,8 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}>
+    <html lang="fr" suppressHydrationWarning>
+      <body className={`${nunito.variable} ${playfair.variable} font-sans antialiased`}>
         <script
           type="application/ld+json"
           // JSON-LD is static, app-controlled data — safe to inline.
