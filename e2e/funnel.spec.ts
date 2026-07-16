@@ -28,8 +28,9 @@ test("@cuj CUJ-02: visitor fills the funnel and reaches confirmation", async ({ 
   await expect(page.getByText("Que faut-il refaire ?")).toHaveCount(0);
   await page.getByRole("checkbox", { name: "Salle de bain" }).click();
 
-  // Back to step 1 — state persisted (AC-2)
-  await page.getByRole("link", { name: "Dossier ✓" }).click();
+  // Back to step 1 via the numbered progress bar — state persisted (AC-2)
+  await page.getByRole("link", { name: "Revenir à l’étape 1 — Dossier" }).click();
+  await expect(page.getByText("Étape 1 sur 4 · 2 minutes")).toBeVisible();
   await expect(page.getByLabel("Prénom")).toHaveValue("Camille");
 
   await page.getByRole("link", { name: "Continuer vers le questionnaire" }).click();

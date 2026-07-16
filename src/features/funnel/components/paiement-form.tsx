@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useFunnelStore } from "../provider";
 import type { PieceKey, SurfacePart, Taille } from "../types";
 import { pieceNames } from "./questionnaire-form";
+import { StepMeta } from "./step-shell";
 
 const partOrder: SurfacePart[] = ["plaf", "murs", "sol"];
 const partNames: Record<SurfacePart, string> = { plaf: "plafond", murs: "murs", sol: "sol" };
@@ -97,6 +98,7 @@ export function PaiementForm() {
         ← Retour aux photos
       </Link>
       <h1 className="font-display mt-4.5 text-3xl font-bold md:text-[34px]">Vérifiez et payez</h1>
+      <StepMeta step={4} />
 
       <section className="mt-8">
         <h2 className="font-display text-ink-soft text-lg font-bold">Récapitulatif</h2>

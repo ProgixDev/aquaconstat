@@ -62,9 +62,13 @@ and `typeLieu` is what reveals the syndic field.
 
 ## Desired behavior (the what)
 
-A visitor moves through four light, single-column steps under a persistent droplet step
-indicator with a thin gradient « liquid » progress bar (13 % → 38 % → 62 % → 88 %). Completed
-steps become links back (« Dossier ✓ »). Answers persist while navigating between steps.
+A visitor moves through four light, single-column steps under a persistent numbered progress
+bar: one circle per step (1–4) joined by connectors that fill as steps complete, the active
+step highlighted, completed steps shown as ✓ circles that link back. Each step title carries a
+reassuring « Étape N sur 4 · … » line (2 minutes / ≈ 2 minutes / 4 à 8 photos / Paiement
+sécurisé Stripe). _(Revised 2026-07-16 — client feedback: the droplet step indicator + thin
+« liquid » bar read as flat text on mobile, with no visible active step.)_ Answers persist
+while navigating between steps.
 Conditional questions appear based on answers (syndic if copropriété/locatif, sous-questions
 locataire/propriétaire, and a « que faut-il refaire ? » + taille block per selected pièce). Photos are added from the gallery/camera with previews, removable, with an
 inline error for oversized files. The payment step shows a recap with « Modifier » links and a
@@ -73,8 +77,10 @@ in display type, the « la suite » timeline, and the user's e-mail.
 
 ## Acceptance criteria
 
-- **AC-1** Each step renders its prototype's sections, fields, and French copy; the step
-  indicator reflects position and links back to completed steps; the progress bar widths match.
+- **AC-1** Each step renders its prototype's sections, fields, and French copy; the numbered
+  progress bar reflects position (active circle highlighted, done circles ✓ linking back,
+  connectors filled up to the active step) and each title carries its « Étape N sur 4 · … »
+  line. (Revised 2026-07-16 — replaces the droplet indicator + liquid bar widths.)
 - **AC-2** Form state persists across step navigation (fill étape 1, go to étape 2, come back —
   values are still there) within a session.
 - **AC-3** Conditional blocks: syndic field only for copropriété/locatif; locataire and

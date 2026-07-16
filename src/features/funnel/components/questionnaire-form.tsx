@@ -6,6 +6,7 @@ import type { PieceKey, SurfacePart, Taille } from "../types";
 import { ChoicePill } from "./choice-pill";
 import { ContinueCta } from "./continue-cta";
 import { SubPanel } from "./sub-panel";
+import { StepMeta } from "./step-shell";
 import { TextField } from "./text-field";
 
 export const pieceNames: Record<PieceKey, string> = {
@@ -47,6 +48,7 @@ export function QuestionnaireForm() {
   return (
     <>
       <h1 className="font-display text-2xl font-bold md:text-3xl">Décrivez votre dégât des eaux</h1>
+      <StepMeta step={2} />
       <p className="text-muted-foreground mt-2.5 text-sm leading-relaxed md:text-base">
         Vos réponses permettent au professionnel d’établir le devis sans se déplacer. Des valeurs
         approximatives suffisent.

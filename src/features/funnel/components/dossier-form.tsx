@@ -7,6 +7,7 @@ import { ChoiceCard } from "./choice-card";
 import { ChoicePill } from "./choice-pill";
 import { ContinueCta } from "./continue-cta";
 import { SubPanel } from "./sub-panel";
+import { StepMeta } from "./step-shell";
 import { TextField } from "./text-field";
 
 const typeLieuOptions: [TypeLieu, string][] = [
@@ -43,6 +44,7 @@ export function DossierForm() {
       <h1 className="font-display mt-4.5 text-3xl font-bold md:text-[34px]">
         Créons votre dossier
       </h1>
+      <StepMeta step={1} />
       {/* The constat-amiable promise went with the assurance fieldset on
           2026-07-16: the form no longer mirrors that document, so it must not
           say it does. */}

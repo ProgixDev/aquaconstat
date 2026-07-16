@@ -4,6 +4,7 @@ import Link from "next/link";
 import { DropletGlyph } from "@/components/ui/droplet-glyph";
 import { useFunnelStore } from "../provider";
 import { ContinueCta } from "./continue-cta";
+import { StepMeta } from "./step-shell";
 
 /** Client copy, 2026-07-16 — two shots, each with the reason it matters. */
 const consignes = [
@@ -49,6 +50,7 @@ export function PhotosForm() {
         ← Retour au questionnaire
       </Link>
       <h1 className="font-display mt-4.5 text-3xl font-bold md:text-[34px]">Ajoutez vos photos</h1>
+      <StepMeta step={3} />
       <p className="text-steel mt-3.5 max-w-2xl text-base leading-relaxed">
         Elles permettront à l’artisan de chiffrer précisément les travaux sans se déplacer. Ne vous
         inquiétez pas pour la qualité : de simples photos avec votre téléphone suffisent largement.
