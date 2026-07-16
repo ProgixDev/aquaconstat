@@ -21,7 +21,9 @@ export function CtaButton({ href, children, size = "md", className }: CtaButtonP
     <Link
       href={href}
       className={cn(
-        "bg-primary text-primary-foreground inline-block rounded-full font-semibold whitespace-nowrap transition-transform motion-safe:hover:-translate-y-px",
+        // No whitespace-nowrap: long contextual labels must wrap inside the
+        // pill on narrow phones instead of dragging the page sideways.
+        "bg-primary text-primary-foreground inline-block rounded-full text-center font-semibold transition-transform motion-safe:hover:-translate-y-px",
         sizes[size],
         className,
       )}

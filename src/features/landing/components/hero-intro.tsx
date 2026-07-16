@@ -89,14 +89,16 @@ export function HeroIntro() {
           marche » tells the process in full a screen below. */}
       {/* One primary, one quiet anchor — two matched pills competed with each
           other and made the yellow CTA read as merely one of two options. */}
-      {/* On a phone the primary CTA goes full-width — a bigger tap target that
-          reads as intentional, not a pill floating mid-line — with the quiet
-          anchor centred beneath it. From sm up it returns to a compact row. */}
+      {/* Always a vertical stack: pill first, quiet anchor beneath. A wrapping
+          row put « Comment ça marche » beside the pill at some widths and
+          under it at others — the stack keeps the pair aligned on the column's
+          left edge at every width (centred on phones, where the pill is
+          full-width). */}
       <m.div
         variants={block}
-        className="mt-8 flex flex-col items-stretch gap-4 sm:mt-10 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-8 sm:gap-y-5 lg:mt-[clamp(1.5rem,4svh,2.5rem)]"
+        className="mt-8 flex flex-col items-stretch gap-4 sm:mt-10 sm:items-start sm:gap-5 lg:mt-[clamp(1.5rem,4svh,2.5rem)]"
       >
-        <CtaButton href="/dossier" size="lg" className="w-full text-center sm:w-auto">
+        <CtaButton href="/dossier" size="lg" className="w-full sm:w-auto">
           Commencer mon dossier maintenant — 10 minutes
         </CtaButton>
         <a
