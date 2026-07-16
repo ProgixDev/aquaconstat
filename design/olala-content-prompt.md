@@ -80,6 +80,14 @@ CTAs created no reason to act now)_ :
 **Header (minimal):** logo Ôlala + CTA « Démarrer mon dossier ». No nav menu beyond an
 anchor or two (Comment ça marche · Tarif · FAQ).
 
+**Preuve sociale (« Premiers clients », before Tarif)** _(Added 2026-07-16 — client feedback:
+zero social proof on the page)_ : no real testimonials exist yet, so the band says so honestly
+(« Nos premiers avis s’écrivent en ce moment ») and proposes the launch offer — a real
+testimonial after receiving the devis, refunded {30 € — amount to validate}, published with
+first name + city only. The section is coded to switch automatically to a real counter
+(« + de N dossiers traités ») and 2–3 verbatim cards the day `temoignages` /
+`dossiersTraites` are filled with real data. **Never fill these with invented reviews.**
+
 **Hero:**
 
 - Eyebrow: « Dégât des eaux · Devis à distance »

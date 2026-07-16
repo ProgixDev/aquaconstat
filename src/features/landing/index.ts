@@ -9,6 +9,7 @@ export { HowItWorksSection } from "./components/how-it-works-section";
 export { PhotoGuideSection } from "./components/photo-guide-section";
 export { DeliverableSection } from "./components/deliverable-section";
 export { PricingSection } from "./components/pricing-section";
+export { SocialProofSection } from "./components/social-proof-section";
 export { ReassuranceSection } from "./components/reassurance-section";
 export { FaqSection } from "./components/faq-section";
 export { FinalCtaSection } from "./components/final-cta-section";

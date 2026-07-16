@@ -11,6 +11,7 @@ import {
   PricingSection,
   SiteFooter,
   SiteHeader,
+  SocialProofSection,
   ReassuranceSection,
 } from "@/features/landing";
 
@@ -35,6 +36,9 @@ export default function Home() {
         </Reveal>
         <Reveal>
           <DeliverableSection />
+        </Reveal>
+        <Reveal>
+          <SocialProofSection />
         </Reveal>
         <Reveal>
           <PricingSection />
