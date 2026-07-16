@@ -145,7 +145,8 @@ long as it is defensible.)_ — then price block « 149 € — tout compris, sa
 with: étude complète de votre dossier · devis détaillé sous 48 h ouvrées · échange par e-mail
 si une précision est nécessaire. Note: « Paiement unique, aucun abonnement. » CTA again.
 
-**Section — Réassurance / objections (4 items):**
+**Section — Réassurance / objections (4 items)** _(2026-07-16, client feedback: rendered
+**before** Tarif — objections block the decision before the visitor reaches the price)_ :
 _(2026-07-16 — this section is now built as specified. It previously sat beneath three invented
 testimonials that this brief never asked for; those are deleted (see specs/002). Heading drafted:
 « Ce qu’on se demande avant de payer. » ⚠️ Not client-approved — the brief gives no heading for

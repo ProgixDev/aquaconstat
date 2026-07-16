@@ -37,14 +37,16 @@ export default function Home() {
         <Reveal>
           <DeliverableSection />
         </Reveal>
+        {/* Objections before price (client feedback, 2026-07-16): réassurance
+            answers « avant de payer » doubts, so it must precede Tarif. */}
         <Reveal>
           <SocialProofSection />
         </Reveal>
         <Reveal>
-          <PricingSection />
+          <ReassuranceSection />
         </Reveal>
         <Reveal>
-          <ReassuranceSection />
+          <PricingSection />
         </Reveal>
         <Reveal>
           <FaqSection />
