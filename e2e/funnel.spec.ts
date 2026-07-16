@@ -47,7 +47,15 @@ test("@cuj CUJ-02: visitor fills the funnel and reaches confirmation", async ({ 
   await expect(page.getByText(/Salle de bain \(plafond · moyenne\)/)).toBeVisible();
   await shot(page, "funnel-etape-4");
 
-  await page.getByRole("button", { name: "Payer 83,90 € et envoyer mon dossier" }).click();
+  // Vente à distance: the pay button stays blocked until both express
+  // consents — CGV and renonciation au droit de rétractation — are given.
+  const payButton = page.getByRole("button", { name: "Payer 83,90 € et envoyer mon dossier" });
+  await expect(payButton).toBeDisabled();
+  await page.getByRole("checkbox", { name: /J’accepte les Conditions Générales de Vente/ }).click();
+  await expect(payButton).toBeDisabled();
+  await page.getByRole("checkbox", { name: /je renonce expressément à mon droit/ }).click();
+  await expect(payButton).toBeEnabled();
+  await payButton.click();
   await expect(
     page.getByRole("heading", { name: /Merci Camille, votre dossier est envoyé/ }),
   ).toBeVisible();

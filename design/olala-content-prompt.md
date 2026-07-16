@@ -286,9 +286,17 @@ Title: « Vérifiez et payez ». Two zones:
 photos) with per-section « Modifier » links back into the funnel.
 
 **Paiement:** line item « Étude du dossier & devis détaillé — 83,90 € », total « 83,90 € TTC »,
-then the Stripe card payment area, button « Payer 83,90 € et envoyer mon dossier ». Legal
-micro-copy: «
-En payant, vous acceptez nos CGV. Votre dossier n’est transmis qu’une fois le paiement confirmé. »
+then the Stripe card payment area, **two mandatory consent checkboxes** _(Added 2026-07-16 —
+client feedback, loi sur la rétractation / vente à distance; two distinct express consents, not
+one bundled box)_ :
+
+- [ ] « J’accepte les Conditions Générales de Vente. »
+- [ ] « Je demande l’exécution immédiate de la prestation et je renonce expressément à mon
+      droit de rétractation de 14 jours pour que mon devis soit traité et livré sous 48 h. »
+
+then the button « Payer 83,90 € et envoyer mon dossier » — **disabled until both boxes are
+checked**. Legal micro-copy: « Votre dossier n’est transmis qu’une fois le paiement confirmé. »
+_(the former « En payant, vous acceptez nos CGV » line is replaced by the CGV checkbox)_.
 Reassurance line: « Paiement sécurisé par Stripe — votre carte n’est jamais stockée par
 Ôlala. » Error state: payment declined, inline, with retry — the dossier is never lost.
 

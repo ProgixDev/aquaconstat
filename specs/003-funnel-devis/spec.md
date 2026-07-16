@@ -66,6 +66,13 @@ and `typeLieu` is what reveals the syndic field.
 coordonnées, **checked by default** — « Votre compagnie d'assurance vous réclame un devis pour
 débloquer votre dossier ? ». A commitment device, not a gate: it blocks nothing.
 
+**Added (2026-07-16, client — vente à distance):** étape 4 gains two mandatory consent
+checkboxes above the pay button, both unchecked by default: CGV acceptance, and the
+renonciation au droit de rétractation de 14 jours (exécution immédiate demandée, devis livré
+sous 48 h). They are two distinct express consents on purpose — bundling the waiver into the
+CGV box would weaken it legally. **The pay button is disabled until both are checked.** The
+passive « En payant, vous acceptez nos CGV » line is replaced by the CGV checkbox.
+
 ## Desired behavior (the what)
 
 A visitor moves through four light, single-column steps under a persistent numbered progress
@@ -100,7 +107,8 @@ in display type, the « la suite » timeline, and the user's e-mail.
   the inline error card with « Réessayer »; the counter line updates.
 - **AC-5** The recap on étape 4 reflects entered data with « Modifier » links to the right
   steps; « Payer 83,90 € et envoyer mon dossier » (83,90 € since 2026-07-16, client feedback —
-  was 149 €) leads to the confirmation page showing a
+  was 149 €) stays disabled until both consent checkboxes (CGV + renonciation au droit de
+  rétractation) are checked, then leads to the confirmation page showing a
   generated AC-2026-NNNN reference and the entered e-mail (non-happy path: payment-declined
   error banner state exists and is testable).
 - **AC-6** No real payment or upload backend: the card block is a painted door (Stripe

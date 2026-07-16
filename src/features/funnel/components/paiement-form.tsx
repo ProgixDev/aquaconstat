@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useFunnelStore } from "../provider";
 import type { PieceKey, SurfacePart, Taille } from "../types";
+import { ChoiceCard } from "./choice-card";
 import { pieceNames } from "./questionnaire-form";
 import { StepMeta } from "./step-shell";
 
@@ -86,6 +87,13 @@ export function PaiementForm() {
   const [cardNumber, setCardNumber] = useState("");
   const [expiry, setExpiry] = useState("");
   const [cvc, setCvc] = useState("");
+  // Vente à distance (client, 2026-07-16): the CGV acceptance and the
+  // renonciation au droit de rétractation are two distinct express consents —
+  // bundling them would weaken the waiver. Local state on purpose: consent is
+  // gathered at the moment of payment, not carried over from a past visit.
+  const [cgvAccepted, setCgvAccepted] = useState(false);
+  const [retractationWaived, setRetractationWaived] = useState(false);
+  const canPay = cgvAccepted && retractationWaived;
 
   const pay = () => {
     submitPayment();
@@ -201,16 +209,34 @@ export function PaiementForm() {
             </div>
           )}
 
+          <div className="mt-5 flex flex-col gap-2.5">
+            <ChoiceCard
+              checkbox
+              selected={cgvAccepted}
+              onClick={() => setCgvAccepted(!cgvAccepted)}
+            >
+              J’accepte les Conditions Générales de Vente.
+            </ChoiceCard>
+            <ChoiceCard
+              checkbox
+              selected={retractationWaived}
+              onClick={() => setRetractationWaived(!retractationWaived)}
+            >
+              Je demande l’exécution immédiate de la prestation et je renonce expressément à mon
+              droit de rétractation de 14 jours pour que mon devis soit traité et livré sous 48 h.
+            </ChoiceCard>
+          </div>
+
           <button
             type="button"
             onClick={pay}
-            className="bg-primary text-primary-foreground shadow-cta-sm mt-5 flex w-full cursor-pointer justify-center rounded-full px-8 py-4.5 font-sans text-base font-semibold"
+            disabled={!canPay}
+            className="bg-primary text-primary-foreground shadow-cta-sm mt-5 flex w-full cursor-pointer justify-center rounded-full px-8 py-4.5 font-sans text-base font-semibold disabled:cursor-not-allowed disabled:opacity-50"
           >
             {declined ? "Réessayer le paiement — 83,90 €" : "Payer 83,90 € et envoyer mon dossier"}
           </button>
           <p className="text-hint mt-4 text-center text-xs leading-relaxed">
-            En payant, vous acceptez nos CGV. Votre dossier n’est transmis qu’une fois le paiement
-            confirmé.
+            Votre dossier n’est transmis qu’une fois le paiement confirmé.
           </p>
           <p className="text-muted-foreground mt-2 text-center text-xs">
             Paiement sécurisé par Stripe — votre carte n’est jamais stockée par Ôlala.
