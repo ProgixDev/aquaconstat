@@ -8,7 +8,7 @@
 
 ## Problem (the why)
 
-Ôlala sells remote water-damage quotes (83,90 € TTC — revised 2026-07-16, client feedback, was
+Ôlala sells remote water-damage quotes (82,90 € TTC — revised 2026-07-16, client feedback, was
 149 €; devis sous 48 h ouvrées) to
 insurance-stressed homeowners arriving from Meta Ads on mobile. The product needs a
 conversion-focused landing page that establishes trust instantly and funnels visitors into the
@@ -28,7 +28,7 @@ cards); « Comment ça marche » (5 numbered steps); a photo-guidance section; a
 recevez » band with a mock devis PDF card; a « Premiers clients » social-proof band (added
 2026-07-16, client feedback); a navy « Réassurance » band (the 4 objections from the content
 brief) — moved before the price on 2026-07-16 (client feedback: objections block the decision
-before the visitor reaches the tarif); a compact pricing bar (83,90 €, with a market anchor);
+before the visitor reaches the tarif); a compact pricing bar (82,90 €, with a market anchor);
 an interactive FAQ accordion (6 items, one open at a time); a final navy CTA
 band; a navy footer. All copy is French with proper typography (« » ’ …). Every « Démarrer mon
 dossier » CTA leads to the dossier funnel entry.

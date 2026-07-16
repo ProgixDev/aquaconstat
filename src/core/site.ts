@@ -8,7 +8,7 @@ export const site = {
   shortName: "Ôlala",
   title: "Ôlala - Devis dégât des eaux en ligne",
   description:
-    "Devis dégât des eaux à distance — décrivez votre sinistre, ajoutez vos photos et recevez sous 48 h ouvrées un devis détaillé à transmettre à votre assurance. 83,90 €, 100 % en ligne.",
+    "Devis dégât des eaux à distance — décrivez votre sinistre, ajoutez vos photos et recevez sous 48 h ouvrées un devis détaillé à transmettre à votre assurance. 82,90 €, 100 % en ligne.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
   /**
    * SEO is fail-closed: until NEXT_PUBLIC_SITE_URL names the real public

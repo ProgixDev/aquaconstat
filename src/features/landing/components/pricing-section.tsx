@@ -45,7 +45,7 @@ export function PricingSection() {
                 className="border-aqua/20 animate-droplet-ripple-alt absolute top-1/2 left-1/2 size-44 -translate-x-1/2 -translate-y-1/2 rounded-full border"
               />
               <div className="font-display relative text-6xl leading-none font-bold md:text-7xl">
-                <PriceFill value="83,90 €" />
+                <PriceFill value="82,90 €" />
               </div>
             </div>
             <div className="font-display text-ink-soft mt-2 text-lg italic">

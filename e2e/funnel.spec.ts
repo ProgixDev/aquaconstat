@@ -41,7 +41,7 @@ test("@cuj CUJ-02: visitor fills the funnel and reaches confirmation", async ({ 
 
   await page.getByRole("link", { name: "Continuer vers le paiement" }).click();
   await expect(page.getByRole("heading", { name: "Vérifiez et payez" })).toBeVisible();
-  await expect(page.getByText("83,90 € TTC")).toBeVisible();
+  await expect(page.getByText("82,90 € TTC")).toBeVisible();
   // The recap carries the étape-2 answers through (AC-5)
   await expect(page.getByText("14/06/2026")).toBeVisible();
   await expect(page.getByText(/Salle de bain \(plafond · moyenne\)/)).toBeVisible();
@@ -49,7 +49,7 @@ test("@cuj CUJ-02: visitor fills the funnel and reaches confirmation", async ({ 
 
   // Vente à distance: the pay button stays blocked until both express
   // consents — CGV and renonciation au droit de rétractation — are given.
-  const payButton = page.getByRole("button", { name: "Payer 83,90 € et envoyer mon dossier" });
+  const payButton = page.getByRole("button", { name: "Payer 82,90 € et envoyer mon dossier" });
   await expect(payButton).toBeDisabled();
   await page.getByRole("checkbox", { name: /J’accepte les Conditions Générales de Vente/ }).click();
   await expect(payButton).toBeDisabled();

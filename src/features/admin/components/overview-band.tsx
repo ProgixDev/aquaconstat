@@ -3,8 +3,8 @@ import type { DossierRow } from "../data";
 import { slaState } from "../sla";
 
 // Kept in cents: the tile multiplies by the number of paid dossiers, and
-// 83,90 € as a float would drift (3 × 83.9 = 251.70000000000002).
-const PRIX_TTC_CENTS = 8390;
+// 82,90 € as a float would drift (3 × 82.9 = 248.70000000000002).
+const PRIX_TTC_CENTS = 8290;
 
 const formatEuros = (cents: number) => `${(cents / 100).toFixed(2).replace(".", ",")} €`;
 

@@ -34,8 +34,9 @@ Nothing else.
 
 **Placeholders to keep visibly consistent everywhere (final values pending):**
 
-- Price of the service: use **83,90 €** everywhere _(confirmed 2026-07-16, client feedback —
-  was the 149 € placeholder)_
+- Price of the service: use **82,90 €** everywhere _(confirmed 2026-07-16, client feedback —
+  was the 149 € placeholder, briefly 83,90 € the same day; 82,90 € is the contractual figure in
+  the CGV, articles 3 and 7)_
 - Delivery delay of the quote: use **sous 48 h ouvrées**, treat as `[DÉLAI — à confirmer]`
 - Brand name: **Ôlala** `[nom de travail]`
 
@@ -103,7 +104,7 @@ first name + city only. The section is coded to switch automatically to a real c
   states the proof, and the process is told once, in full, where it belongs.)_
 - Primary CTA: « Commencer mon dossier maintenant — 10 minutes » _(Revised 2026-07-16 — client
   feedback)_ (+ secondary anchor « Comment ça marche »), with **no
-  micro-copy underneath** _(Revised 2026-07-15 — the « 83,90 € · paiement sécurisé Stripe · sans
+  micro-copy underneath** _(Revised 2026-07-15 — the « 82,90 € · paiement sécurisé Stripe · sans
   création de compte » line was cut for a leaner hero. ⚠️ Open point: the price is therefore no
   longer visible in the hero, though §3 asks the landing to answer « combien ça coûte » fast. It
   is still stated in Tarif, in « Comment ça marche » step 04, and in the final CTA band.)_
@@ -121,7 +122,7 @@ e.g. « Locataire — votre assurance vous demande un devis pour débloquer votr
 
 **Section — Comment ça marche (5 étapes):**
 _(2026-07-15 — each step also shows a meta fact, labelled by kind so the set reads as one system:
-Durée · 2 min / Durée · ≈ 5 min / À prévoir · 4 à 8 photos / Prix · 83,90 € TTC / Résultat · PDF par
+Durée · 2 min / Durée · ≈ 5 min / À prévoir · 4 à 8 photos / Prix · 82,90 € TTC / Résultat · PDF par
 e-mail. ⚠️ The meta facts and their labels are not in this brief and are not client-approved. The
 section now closes on the « Démarrer mon dossier » CTA — previously it ended with no way to act.)_
 
@@ -130,7 +131,7 @@ section now closes on the « Démarrer mon dossier » CTA — previously it ende
    murs, plafonds et sols. »
 3. « Ajoutez vos photos » — « Depuis la galerie ou l’appareil photo, en suivant nos consignes de
    prise de vue. »
-4. « Payez en ligne » — « 83,90 € par carte bancaire, dans l’environnement sécurisé de Stripe. »
+4. « Payez en ligne » — « 82,90 € par carte bancaire, dans l’environnement sécurisé de Stripe. »
 5. « Recevez votre devis » — « Un devis détaillé, préparé par un professionnel, envoyé par
    e-mail sous 48 h ouvrées. »
 
@@ -142,8 +143,8 @@ recevable par votre assurance).
 **Section — Tarif (single offer, no plan grid):** price anchor above the figure — « Un expert
 qui se déplace facture entre 350 € et 600 €. » _(Added 2026-07-16 — client feedback: the price
 floated with no market anchor. The 350–600 € range is the client’s own claim; keep it only as
-long as it is defensible.)_ — then price block « 83,90 € — tout compris, sans rendez-vous »
-_(83,90 € since 2026-07-16, client feedback — was 149 €)_,
+long as it is defensible.)_ — then price block « 82,90 € — tout compris, sans rendez-vous »
+_(82,90 € since 2026-07-16, client feedback — was 149 €)_,
 with: étude complète de votre dossier · devis détaillé sous 48 h ouvrées · échange par e-mail
 si une précision est nécessaire. Note: « Paiement unique, aucun abonnement. » CTA again.
 
@@ -287,7 +288,7 @@ Title: « Vérifiez et payez ». Two zones:
 **Récapitulatif:** dossier summary (coordonnées, adresse, origine du sinistre, pièces, nombre de
 photos) with per-section « Modifier » links back into the funnel.
 
-**Paiement:** line item « Étude du dossier & devis détaillé — 83,90 € », total « 83,90 € TTC »,
+**Paiement:** line item « Étude du dossier & devis détaillé — 82,90 € », total « 82,90 € TTC »,
 then the Stripe card payment area, **two mandatory consent checkboxes** _(Added 2026-07-16 —
 client feedback, loi sur la rétractation / vente à distance; two distinct express consents, not
 one bundled box)_ :
@@ -296,7 +297,7 @@ one bundled box)_ :
 - [ ] « Je demande l’exécution immédiate de la prestation et je renonce expressément à mon
       droit de rétractation de 14 jours pour que mon devis soit traité et livré sous 48 h. »
 
-then the button « Payer 83,90 € et envoyer mon dossier » — **disabled until both boxes are
+then the button « Payer 82,90 € et envoyer mon dossier » — **disabled until both boxes are
 checked**. Legal micro-copy: « Votre dossier n’est transmis qu’une fois le paiement confirmé. »
 _(the former « En payant, vous acceptez nos CGV » line is replaced by the CGV checkbox)_.
 Reassurance line: « Paiement sécurisé par Stripe — votre carte n’est jamais stockée par
@@ -348,7 +349,7 @@ Devis envoyé). Sections:
   layout.
 - **Photos** — grid of thumbnails, lightbox view, « Télécharger » per photo and « Tout
   télécharger ».
-- **Paiement** — montant (83,90 €), date, statut Stripe.
+- **Paiement** — montant (82,90 €), date, statut Stripe.
 
 Reminder note for context (not necessarily on screen): the professional prepares the quote in his
 own tool and sends it by e-mail — no quote-builder exists in this product.

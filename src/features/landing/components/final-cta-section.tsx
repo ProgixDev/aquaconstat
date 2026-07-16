@@ -34,7 +34,7 @@ export function FinalCtaSection() {
           </CtaButton>
         </div>
         <div className="text-aqua-pale/85 mt-4 text-xs">
-          83,90 € · paiement sécurisé Stripe · sans création de compte
+          82,90 € · paiement sécurisé Stripe · sans création de compte
         </div>
       </div>
     </section>

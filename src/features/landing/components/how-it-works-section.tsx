@@ -32,9 +32,9 @@ const steps = [
   },
   {
     title: "Payez en ligne",
-    text: "83,90 € par carte bancaire, dans l’environnement sécurisé de Stripe.",
+    text: "82,90 € par carte bancaire, dans l’environnement sécurisé de Stripe.",
     kind: "Prix",
-    meta: "83,90 € TTC",
+    meta: "82,90 € TTC",
   },
   {
     title: "Recevez votre devis",
