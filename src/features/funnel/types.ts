@@ -24,6 +24,8 @@ export type PhotoItem = {
 /** Everything the visitor enters across the four steps. */
 export type FunnelData = {
   // Étape 1 — dossier
+  /** Engagement checkbox at the top of étape 1 (2026-07-16, client) — checked by default. */
+  assuranceReclame: boolean;
   prenom: string;
   nom: string;
   email: string;

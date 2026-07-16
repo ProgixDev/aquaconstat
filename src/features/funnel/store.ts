@@ -11,6 +11,7 @@ import type { FunnelData, PhotoItem, PieceKey, RoomSurface, SurfacePart, Taille 
 const emptyRoom: RoomSurface = { plaf: false, murs: false, sol: false, taille: "" };
 
 const initialData: FunnelData = {
+  assuranceReclame: true,
   prenom: "",
   nom: "",
   email: "",

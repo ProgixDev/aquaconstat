@@ -50,6 +50,19 @@ export function DossierForm() {
         Ces informations figureront sur votre devis.
       </p>
 
+      {/* Engagement checkbox (client, 2026-07-16) — checked by default: the
+          visitor confirms the situation the whole funnel solves, before
+          typing anything. */}
+      <div className="mt-7">
+        <ChoiceCard
+          checkbox
+          selected={data.assuranceReclame}
+          onClick={() => setField("assuranceReclame", !data.assuranceReclame)}
+        >
+          Votre compagnie d’assurance vous réclame un devis pour débloquer votre dossier ?
+        </ChoiceCard>
+      </div>
+
       <section className="mt-10">
         <h2 className="font-display text-lg font-bold">Vos coordonnées</h2>
         <div className="mt-5 grid gap-4.5 sm:grid-cols-2">

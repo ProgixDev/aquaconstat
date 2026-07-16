@@ -186,6 +186,10 @@ CGV · Politique de confidentialité · Contact (e-mail). Mention « Paiement s�
 Short, low-friction, no account creation. Title: « Créons votre dossier ». Sub: « Ces
 informations figureront sur votre devis. »
 
+**Engagement checkbox (top of the page, before the coordonnées)** _(Added 2026-07-16 — client
+feedback)_ : a checkbox, **checked by default**, that commits the visitor before they type
+anything: « Votre compagnie d’assurance vous réclame un devis pour débloquer votre dossier ? »
+
 **Fieldset « Vos coordonnées »:** Prénom · Nom · E-mail (« votre devis sera envoyé à cette
 adresse ») · Téléphone.
 

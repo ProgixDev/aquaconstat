@@ -62,6 +62,10 @@ travaux. »
 `typeLieu` (« Il s'agit de : ») and the syndic follow-up stay — Nino listed neither for removal,
 and `typeLieu` is what reveals the syndic field.
 
+**Added (2026-07-16, client):** an engagement checkbox at the very top of étape 1, before the
+coordonnées, **checked by default** — « Votre compagnie d'assurance vous réclame un devis pour
+débloquer votre dossier ? ». A commitment device, not a gate: it blocks nothing.
+
 ## Desired behavior (the what)
 
 A visitor moves through four light, single-column steps under a persistent numbered progress
