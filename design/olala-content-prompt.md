@@ -138,9 +138,12 @@ par un professionnel à partir de votre questionnaire et de vos photos, au forma
 transmis à votre assurance. » (3 bullets: chiffrage poste par poste · document daté et signé ·
 recevable par votre assurance).
 
-**Section — Tarif (single offer, no plan grid):** price block « 149 € — tout compris », with:
-étude complète de votre dossier · devis détaillé sous 48 h ouvrées · échange par e-mail si une
-précision est nécessaire. Note: « Paiement unique, aucun abonnement. » CTA again.
+**Section — Tarif (single offer, no plan grid):** price anchor above the figure — « Un expert
+qui se déplace facture entre 350 € et 600 €. » _(Added 2026-07-16 — client feedback: 149 €
+floated with no market anchor. The 350–600 € range is the client’s own claim; keep it only as
+long as it is defensible.)_ — then price block « 149 € — tout compris, sans rendez-vous »,
+with: étude complète de votre dossier · devis détaillé sous 48 h ouvrées · échange par e-mail
+si une précision est nécessaire. Note: « Paiement unique, aucun abonnement. » CTA again.
 
 **Section — Réassurance / objections (4 items):**
 _(2026-07-16 — this section is now built as specified. It previously sat beneath three invented

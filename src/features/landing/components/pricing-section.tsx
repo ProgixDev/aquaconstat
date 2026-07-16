@@ -29,6 +29,12 @@ export function PricingSection() {
             <div className="flex justify-center md:justify-start">
               <SectionBadge>Tarif</SectionBadge>
             </div>
+            {/* Price anchor (client feedback, 2026-07-16) — the market range
+                is the client's own claim; adjust here if it changes. */}
+            <p className="text-steel mx-auto mt-4 max-w-3xs text-sm leading-snug md:mx-0">
+              Un expert qui se déplace facture entre{" "}
+              <span className="font-semibold">350 € et 600 €</span>.
+            </p>
             <div className="relative mt-3 inline-block">
               <span
                 aria-hidden
@@ -42,7 +48,9 @@ export function PricingSection() {
                 <PriceFill value="149 €" />
               </div>
             </div>
-            <div className="font-display text-ink-soft mt-2 text-lg italic">— tout compris</div>
+            <div className="font-display text-ink-soft mt-2 text-lg italic">
+              — tout compris, sans rendez-vous
+            </div>
           </div>
 
           <ul className="text-ink-soft border-border flex flex-col gap-2.5 border-t pt-6 text-sm md:border-t-0 md:border-l md:pt-0 md:pl-12">
@@ -56,7 +64,9 @@ export function PricingSection() {
 
           <div className="border-border border-t pt-6 text-center md:border-t-0 md:border-l md:pt-0 md:pl-12 md:text-left">
             <CtaButton href="/dossier" size="lg">
-              Payer et recevoir mon devis sous 48 h
+              {/* No-break space in « 48 h » — a lone « h » on its own line is
+                  what the wrapping pill would otherwise produce at 375px. */}
+              Payer et recevoir mon devis sous 48{" "}h
             </CtaButton>
             <p className="text-muted-foreground mt-3 text-xs">Paiement unique, aucun abonnement.</p>
           </div>
