@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence, m } from "@/components/motion";
+import { m } from "@/components/motion";
 import { cn } from "@/lib/utils";
 import { DropletGlyph } from "@/components/ui/droplet-glyph";
 import { SectionBadge } from "./section-badge";
@@ -13,19 +13,19 @@ const faqs = [
   },
   {
     q: "Quels types de sinistres sont couverts ?",
-    a: "Tous les dégâts des eaux courants : fuite, infiltration, débordement, rupture de canalisation — dans un logement ou un local à usage d’habitation.",
+    a: "Tous les dégâts des eaux courants : fuite, infiltration, débordement, rupture de canalisation — dans un logement ou un local à usage d’habitation, que vous soyez propriétaire, locataire, bailleur ou syndic. Un doute sur votre situation ? Écrivez-nous avant de démarrer : le paiement n’intervient qu’à la dernière étape, vous ne risquez rien en préparant votre dossier.",
   },
   {
     q: "Je ne connais pas les dimensions exactes des surfaces touchées.",
-    a: "Des dimensions approximatives suffisent. Une estimation à 20 cm près convient parfaitement pour établir le devis.",
+    a: "Aucune mesure n’est demandée : le questionnaire vous propose simplement une taille approximative par pièce — petite (moins de 10 m²), moyenne (10 à 20 m²) ou grande. Le professionnel affine ensuite grâce à vos photos ; c’est exactement pour cela qu’elles sont demandées.",
   },
   {
     q: "Et si mon dossier ne peut pas être traité ?",
-    a: "Si votre dossier ne peut pas être étudié à distance, vous êtes intégralement remboursé, sans démarche supplémentaire.",
+    a: "Vous êtes intégralement remboursé — pas un avoir, pas de frais retenus. Si le professionnel estime que votre sinistre ne peut pas être chiffré sérieusement à distance (c’est rare), nous vous prévenons par e-mail et le remboursement est déclenché sur la carte utilisée pour le paiement, sans aucune démarche de votre part. En clair : vous ne payez que si un devis peut réellement vous être livré.",
   },
   {
     q: "Quelle zone est couverte ?",
-    a: "Le service couvre l’ensemble de la France métropolitaine.",
+    a: "Toute la France métropolitaine, quel que soit le type de bien : maison, appartement, en copropriété ou en location. Votre bien est situé ailleurs ? Écrivez-nous d’abord — nous vous confirmerons si votre dossier peut être étudié avant que vous n’engagiez quoi que ce soit.",
   },
   {
     q: "Comment le devis est-il envoyé ?",
@@ -58,8 +58,9 @@ function PlusMinus({ open }: { open: boolean }) {
  * FAQ (spec 002, AC-2) — one column of hairline rows. A two-column grid meant
  * an opening answer stretched its row and left a hole beside it; in one column
  * the list simply grows. Each trigger is wrapped in a heading so the questions
- * are navigable landmarks, and `aria-controls` is only asserted while the panel
- * actually exists.
+ * are navigable landmarks. Answers stay mounted (height 0, aria-hidden) when
+ * collapsed — this is doubt-resolving, SEO-relevant copy, so it must exist in
+ * the DOM, not only after a click.
  */
 export function FaqSection() {
   const [open, setOpen] = useState<number | null>(0);
@@ -114,7 +115,7 @@ export function FaqSection() {
                       type="button"
                       id={`faq-trigger-${i}`}
                       aria-expanded={isOpen}
-                      aria-controls={isOpen ? `faq-panel-${i}` : undefined}
+                      aria-controls={`faq-panel-${i}`}
                       onClick={() => setOpen(isOpen ? null : i)}
                       className="group flex w-full cursor-pointer items-start justify-between gap-6 py-4.5 text-left"
                     >
@@ -129,24 +130,20 @@ export function FaqSection() {
                       <PlusMinus open={isOpen} />
                     </button>
                   </h3>
-                  <AnimatePresence initial={false}>
-                    {isOpen && (
-                      <m.div
-                        id={`faq-panel-${i}`}
-                        role="region"
-                        aria-labelledby={`faq-trigger-${i}`}
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.26, ease: "easeOut" }}
-                        className="overflow-hidden"
-                      >
-                        <p className="text-muted-foreground m-0 max-w-2xl pr-10 pb-5 text-sm leading-relaxed">
-                          {faq.a}
-                        </p>
-                      </m.div>
-                    )}
-                  </AnimatePresence>
+                  <m.div
+                    id={`faq-panel-${i}`}
+                    role="region"
+                    aria-labelledby={`faq-trigger-${i}`}
+                    aria-hidden={!isOpen}
+                    initial={false}
+                    animate={isOpen ? { height: "auto", opacity: 1 } : { height: 0, opacity: 0 }}
+                    transition={{ duration: 0.26, ease: "easeOut" }}
+                    className="overflow-hidden"
+                  >
+                    <p className="text-muted-foreground m-0 max-w-2xl pr-10 pb-5 text-sm leading-relaxed">
+                      {faq.a}
+                    </p>
+                  </m.div>
                 </div>
               );
             })}
