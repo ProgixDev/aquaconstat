@@ -236,7 +236,9 @@ déplacer. Des valeurs approximatives suffisent. »
 - (L’adresse du sinistre est déjà saisie à l’étape 1 — elle sert d’en-tête au devis.)
 
 **Les pièces touchées (dynamique):** « Cochez la ou les pièces endommagées : » — Salon · Chambre ·
-Cuisine · Salle de bain · Couloir/WC.
+Cuisine · Salle de bain · Couloir/WC · Parties communes (Hall, cage d’escalier…) _(the last added
+2026-07-16 — client feedback: the funnel also targets les professionnels de l’immobilier, syndics
+and gérants d’immeubles)_.
 
 For each selected pièce, and only for it:
 

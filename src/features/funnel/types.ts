@@ -1,8 +1,9 @@
 export type TypeLieu = "maison" | "copro" | "locatif";
 export type Statut = "locataire" | "proprio" | "syndic" | "gerant";
 
-/** Étape 2 « Ultra-Light » (spec 003, R2R 2026-07-16). */
-export type PieceKey = "salon" | "chambre" | "cuisine" | "sdb" | "couloirWc";
+/** Étape 2 « Ultra-Light » (spec 003, R2R 2026-07-16). `partiesCommunes` added
+ *  2026-07-16 (client) for the pro audience — syndics and gérants d’immeubles. */
+export type PieceKey = "salon" | "chambre" | "cuisine" | "sdb" | "couloirWc" | "partiesCommunes";
 export type SurfacePart = "plaf" | "murs" | "sol";
 /** An approximate band, not longueur × largeur — enough to price embellishments. */
 export type Taille = "" | "petite" | "moyenne" | "grande";

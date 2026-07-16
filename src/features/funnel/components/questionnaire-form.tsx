@@ -15,6 +15,8 @@ export const pieceNames: Record<PieceKey, string> = {
   cuisine: "Cuisine",
   sdb: "Salle de bain",
   couloirWc: "Couloir/WC",
+  // For the pro audience — syndics and gérants d’immeubles (client, 2026-07-16).
+  partiesCommunes: "Parties communes (Hall, cage d’escalier…)",
 };
 
 const partLabels: [SurfacePart, string][] = [

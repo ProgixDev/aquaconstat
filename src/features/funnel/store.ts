@@ -31,6 +31,7 @@ const initialData: FunnelData = {
     cuisine: false,
     sdb: false,
     couloirWc: false,
+    partiesCommunes: false,
   },
   surfaces: {},
 };

@@ -35,7 +35,9 @@ re-litigated:
   de travaux. »
 
 **Étape 2 is now:** date du sinistre (approximative) → pièces endommagées (Salon · Chambre ·
-Cuisine · Salle de bain · Couloir/WC) → per selected pièce: « Que faut-il refaire ? » (plafond /
+Cuisine · Salle de bain · Couloir/WC · Parties communes (Hall, cage d'escalier…) — the last
+added 2026-07-16, client feedback, for the pro audience: syndics and gérants d'immeubles) → per
+selected pièce: « Que faut-il refaire ? » (plafond /
 murs / sol) + taille approximative (petite < 10 m² · moyenne 10–20 m² · grande > 20 m²). Target:
 under 2 minutes on a phone. Room size is a band, not longueur × largeur.
 
