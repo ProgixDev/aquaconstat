@@ -35,11 +35,17 @@ type FactsProps = {
 
 function Facts({ rows, strongFirst = false }: FactsProps) {
   return (
-    <div className="mt-4 grid grid-cols-[9rem_1fr] gap-x-4 gap-y-2.5 text-sm">
+    // minmax(0,1fr): without it the value column floors at the min-content of an
+    // unbreakable token (camille.moreau@gmail.com ≈ 173px) and pushes the whole
+    // card past a 320px screen. break-words then wraps those tokens. Narrower
+    // label column on mobile buys the value more room.
+    <div className="mt-4 grid grid-cols-[6.5rem_minmax(0,1fr)] gap-x-4 gap-y-2.5 text-sm sm:grid-cols-[9rem_1fr]">
       {rows.map((row, i) => (
         <div key={row.label} className="contents">
           <span className="text-hint">{row.label}</span>
-          <span className={cn(strongFirst && i === 0 && "font-semibold")}>{row.value}</span>
+          <span className={cn("break-words", strongFirst && i === 0 && "font-semibold")}>
+            {row.value}
+          </span>
         </div>
       ))}
     </div>
@@ -102,10 +108,10 @@ export function DossierDetail({ dossier, now }: DossierDetailProps) {
         <div
           role="radiogroup"
           aria-label="Statut du dossier"
-          className="ml-auto flex items-center gap-2.5"
+          className="flex w-full flex-wrap items-center gap-x-2.5 gap-y-2 sm:ml-auto sm:w-auto sm:flex-nowrap"
         >
           <span className="text-hint text-xs font-semibold tracking-wider uppercase">Statut</span>
-          <div className="flex gap-1.5">
+          <div className="flex flex-wrap gap-1.5">
             {statuts.map((s) => (
               <button
                 key={s}
@@ -114,7 +120,7 @@ export function DossierDetail({ dossier, now }: DossierDetailProps) {
                 aria-checked={statut === s}
                 onClick={() => setStatut(s)}
                 className={cn(
-                  "border-input bg-paper text-ink-soft cursor-pointer rounded-full border px-3.5 py-2 font-sans text-xs font-semibold",
+                  "border-input bg-paper text-ink-soft cursor-pointer rounded-full border px-3.5 py-2 font-sans text-xs font-semibold whitespace-nowrap",
                   statut === s && "ring-aqua ring-2",
                 )}
               >
@@ -145,7 +151,7 @@ export function DossierDetail({ dossier, now }: DossierDetailProps) {
           {/* « Assurance » card removed 2026-07-16 — the funnel no longer asks
               for any of it, so the pro can never be shown it. */}
           <SectionCard title="Paiement">
-            <div className="mt-4 grid grid-cols-[9rem_1fr] gap-x-4 gap-y-2.5 text-sm">
+            <div className="mt-4 grid grid-cols-[6.5rem_minmax(0,1fr)] gap-x-4 gap-y-2.5 text-sm sm:grid-cols-[9rem_1fr]">
               <span className="text-hint">Montant</span>
               <span className="font-semibold">149,00 €</span>
               <span className="text-hint">Date</span>

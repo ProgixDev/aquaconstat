@@ -21,12 +21,11 @@ export function AdminHeader() {
         <div className="border-aqua-pale/15 shadow-cta-sm bg-navy/90 flex items-center justify-between gap-3 rounded-full border py-2.5 pr-3 pl-4 backdrop-blur-xl sm:gap-5 sm:pr-4 sm:pl-6">
           <div className="flex min-w-0 items-center gap-3 sm:gap-4">
             <Link href="/" aria-label="AquaConstat — accueil">
-              {/* No CTA competes for the pill here (unlike the marketing
-                  header), so the wordmark stays down to 360px and only drops on
-                  the very narrowest phones. */}
+              {/* Logo + name stay visible at every width; « Déconnexion »
+                  collapses to an icon on the narrowest phones to make room. */}
               <BrandLogo
                 variant="dark"
-                wordmarkClassName="max-[360px]:hidden text-sm tracking-wider sm:text-base sm:tracking-widest"
+                wordmarkClassName="text-sm tracking-wider sm:text-base sm:tracking-widest"
               />
             </Link>
             <span className="border-aqua-pale/25 text-aqua-pale bg-navy-light/25 hidden shrink-0 rounded-full border px-2.5 py-1 text-[0.7rem] font-semibold tracking-widest uppercase sm:inline-block">
@@ -39,9 +38,24 @@ export function AdminHeader() {
           <form action={adminLogoutAction}>
             <button
               type="submit"
-              className="text-aqua-pale hover:text-secondary-foreground cursor-pointer rounded-full px-3 py-1.5 font-sans text-sm font-semibold transition-colors"
+              aria-label="Déconnexion"
+              className="text-aqua-pale hover:text-secondary-foreground flex shrink-0 cursor-pointer items-center gap-1.5 rounded-full px-2 py-1.5 font-sans text-sm font-semibold transition-colors sm:px-3"
             >
-              Déconnexion
+              <svg
+                aria-hidden
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="size-4 min-[380px]:hidden"
+              >
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <path d="m16 17 5-5-5-5" />
+                <path d="M21 12H9" />
+              </svg>
+              <span className="hidden min-[380px]:inline">Déconnexion</span>
             </button>
           </form>
         </div>
