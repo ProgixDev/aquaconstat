@@ -152,7 +152,7 @@ export function DossierDetail({ dossier, now }: DossierDetailProps) {
           <SectionCard title="Paiement">
             <div className="mt-4 grid grid-cols-[6.5rem_minmax(0,1fr)] gap-x-4 gap-y-2.5 text-sm sm:grid-cols-[9rem_1fr]">
               <span className="text-hint">Montant</span>
-              <span className="font-semibold">149,00 €</span>
+              <span className="font-semibold">83,90 €</span>
               <span className="text-hint">Date</span>
               <span>{dossier.paidAt ? formatFrDateTime(dossier.paidAt) : "—"}</span>
               <span className="text-hint">Statut Stripe</span>

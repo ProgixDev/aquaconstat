@@ -41,13 +41,13 @@ test("@cuj CUJ-02: visitor fills the funnel and reaches confirmation", async ({ 
 
   await page.getByRole("link", { name: "Continuer vers le paiement" }).click();
   await expect(page.getByRole("heading", { name: "Vérifiez et payez" })).toBeVisible();
-  await expect(page.getByText("149 € TTC")).toBeVisible();
+  await expect(page.getByText("83,90 € TTC")).toBeVisible();
   // The recap carries the étape-2 answers through (AC-5)
   await expect(page.getByText("14/06/2026")).toBeVisible();
   await expect(page.getByText(/Salle de bain \(plafond · moyenne\)/)).toBeVisible();
   await shot(page, "funnel-etape-4");
 
-  await page.getByRole("button", { name: "Payer 149 € et envoyer mon dossier" }).click();
+  await page.getByRole("button", { name: "Payer 83,90 € et envoyer mon dossier" }).click();
   await expect(
     page.getByRole("heading", { name: /Merci Camille, votre dossier est envoyé/ }),
   ).toBeVisible();

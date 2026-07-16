@@ -134,11 +134,11 @@ export function PaiementForm() {
         <div className="border-border-faint bg-card mt-4 rounded-xl border px-6 pt-6 pb-7">
           <div className="text-ink-soft border-border-soft flex justify-between gap-4 border-b pb-3.5 text-sm">
             <span>Étude du dossier &amp; devis détaillé</span>
-            <span className="text-foreground font-semibold">149 €</span>
+            <span className="text-foreground font-semibold">83,90 €</span>
           </div>
           <div className="flex justify-between gap-4 pt-3.5 text-base font-semibold">
             <span>Total</span>
-            <span>149 € TTC</span>
+            <span>83,90 € TTC</span>
           </div>
 
           <div className="border-border-faint bg-paper mt-5.5 rounded-md border p-4.5">
@@ -206,7 +206,7 @@ export function PaiementForm() {
             onClick={pay}
             className="bg-primary text-primary-foreground shadow-cta-sm mt-5 flex w-full cursor-pointer justify-center rounded-full px-8 py-4.5 font-sans text-base font-semibold"
           >
-            {declined ? "Réessayer le paiement — 149 €" : "Payer 149 € et envoyer mon dossier"}
+            {declined ? "Réessayer le paiement — 83,90 €" : "Payer 83,90 € et envoyer mon dossier"}
           </button>
           <p className="text-hint mt-4 text-center text-xs leading-relaxed">
             En payant, vous acceptez nos CGV. Votre dossier n’est transmis qu’une fois le paiement

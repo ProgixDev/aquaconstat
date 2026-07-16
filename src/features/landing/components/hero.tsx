@@ -121,7 +121,7 @@ export function Hero() {
             </span>
             <span aria-hidden className="bg-aqua-pale/25 hidden h-6 w-px sm:block" />
             <span className="font-display text-secondary-foreground text-lg font-bold">
-              149 € <span className="text-aqua-pale/80 text-xs font-semibold">tout compris</span>
+              83,90 € <span className="text-aqua-pale/80 text-xs font-semibold">tout compris</span>
             </span>
             <CtaButton href="/dossier" size="sm">
               Démarrer mon dossier

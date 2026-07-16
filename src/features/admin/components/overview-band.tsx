@@ -2,7 +2,11 @@ import { cn } from "@/lib/utils";
 import type { DossierRow } from "../data";
 import { slaState } from "../sla";
 
-const PRIX_TTC = 149;
+// Kept in cents: the tile multiplies by the number of paid dossiers, and
+// 83,90 € as a float would drift (3 × 83.9 = 251.70000000000002).
+const PRIX_TTC_CENTS = 8390;
+
+const formatEuros = (cents: number) => `${(cents / 100).toFixed(2).replace(".", ",")} €`;
 
 type OverviewBandProps = {
   dossiers: DossierRow[];
@@ -25,7 +29,7 @@ export function OverviewBand({ dossiers, now }: OverviewBandProps) {
 
   const count = (kind: string) => states.filter((s) => s.kind === kind).length;
   const overdue = count("overdue");
-  const encaisse = dossiers.filter((d) => d.paidAt !== null).length * PRIX_TTC;
+  const encaisse = dossiers.filter((d) => d.paidAt !== null).length * PRIX_TTC_CENTS;
 
   // A restrained palette, not a rainbow: red still owns « alarm » (only when
   // something is actually late), green marks money, aqua marks the day's work,
@@ -66,7 +70,7 @@ export function OverviewBand({ dossiers, now }: OverviewBandProps) {
     {
       key: "revenue",
       label: "Encaissé",
-      value: `${encaisse} €`,
+      value: formatEuros(encaisse),
       hint: `${dossiers.filter((d) => d.paidAt !== null).length} dossiers payés`,
       dot: "bg-success",
       card: "border-border-faint bg-paper",

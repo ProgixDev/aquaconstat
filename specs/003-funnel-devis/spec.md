@@ -95,7 +95,8 @@ in display type, the « la suite » timeline, and the user's e-mail.
 - **AC-4** Photos: selected images preview in a 4/3 grid, can be removed; files over 20 Mo show
   the inline error card with « Réessayer »; the counter line updates.
 - **AC-5** The recap on étape 4 reflects entered data with « Modifier » links to the right
-  steps; « Payer 149 € et envoyer mon dossier » leads to the confirmation page showing a
+  steps; « Payer 83,90 € et envoyer mon dossier » (83,90 € since 2026-07-16, client feedback —
+  was 149 €) leads to the confirmation page showing a
   generated AC-2026-NNNN reference and the entered e-mail (non-happy path: payment-declined
   error banner state exists and is testable).
 - **AC-6** No real payment or upload backend: the card block is a painted door (Stripe
