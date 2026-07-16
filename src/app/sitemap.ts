@@ -6,5 +6,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Fail-closed: no localhost URLs in the sitemap while the real domain
   // is not configured (see site.isPublic).
   if (!site.isPublic) return [];
-  return [{ url: site.url, lastModified: new Date(), changeFrequency: "weekly", priority: 1 }];
+  return [
+    { url: site.url, lastModified: new Date(), changeFrequency: "weekly", priority: 1 },
+    ...["/mentions-legales", "/confidentialite", "/cgv"].map((path) => ({
+      url: `${site.url}${path}`,
+      lastModified: new Date(),
+      changeFrequency: "yearly" as const,
+      priority: 0.2,
+    })),
+  ];
 }
