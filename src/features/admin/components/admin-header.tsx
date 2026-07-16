@@ -20,7 +20,7 @@ export function AdminHeader() {
       <div className="mx-auto w-full max-w-6xl px-6 md:px-10">
         <div className="border-aqua-pale/15 shadow-cta-sm bg-navy/90 flex items-center justify-between gap-3 rounded-full border py-2.5 pr-3 pl-4 backdrop-blur-xl sm:gap-5 sm:pr-4 sm:pl-6">
           <div className="flex min-w-0 items-center gap-3 sm:gap-4">
-            <Link href="/" aria-label="AquaConstat — accueil">
+            <Link href="/" aria-label="Ôlala — accueil">
               {/* Logo + name stay visible at every width; « Déconnexion »
                   collapses to an icon on the narrowest phones to make room. */}
               <BrandLogo

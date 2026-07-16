@@ -19,7 +19,7 @@ export default function NotFound() {
       <div className="mt-10 flex items-center gap-2.5 opacity-70">
         <DropletGlyph size="md" />
         <span className="font-display text-muted-foreground text-xs font-bold tracking-widest">
-          AQUACONSTAT
+          ÔLALA
         </span>
       </div>
     </main>

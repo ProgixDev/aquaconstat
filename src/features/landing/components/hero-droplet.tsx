@@ -7,7 +7,7 @@ const RIPPLES = 4;
 const SPRAY = 10;
 
 /** Broadcast so the rest of the hero (chips, headline) can react to the landing. */
-export const IMPACT_EVENT = "aquaconstat:impact";
+export const IMPACT_EVENT = "olala:impact";
 
 /**
  * Signature hero droplet (design brief §3) — the photoreal raindrop from

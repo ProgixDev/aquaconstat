@@ -28,7 +28,7 @@ export function LoginForm() {
         Espace administration
       </h1>
       <p className="text-aqua-pale/80 mt-2 text-sm leading-relaxed">
-        Cet espace contient les données personnelles de vos clients. Il est réservé à AquaConstat.
+        Cet espace contient les données personnelles de vos clients. Il est réservé à Ôlala.
       </p>
       <div className="mt-5.5 flex flex-col gap-4">
         {/* Sanitised server-side by safeRedirectPath before any redirect. */}

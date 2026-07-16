@@ -1,4 +1,4 @@
-# Claude Design — AquaConstat · Design Direction (paste AFTER the content brief)
+# Claude Design — Ôlala · Design Direction (paste AFTER the content brief)
 
 > You already received the **content brief** (pages, structure, all French copy, fields, states).
 > It is the single source of truth for content — do not invent, remove, or reorder content. This

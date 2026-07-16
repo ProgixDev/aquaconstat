@@ -8,7 +8,7 @@ type BrandLogoProps = {
 };
 
 /**
- * AquaConstat mark — glossy gradient droplet over a ripple, with the
+ * Ôlala mark — glossy gradient droplet over a ripple, with the
  * two-tone Playfair wordmark. `dark` is for navy surfaces.
  */
 export function BrandLogo({ variant = "light", className, wordmarkClassName }: BrandLogoProps) {
@@ -45,9 +45,9 @@ export function BrandLogo({ variant = "light", className, wordmarkClassName }: B
         )}
       >
         <span className="from-aqua-bright to-aqua bg-linear-90 bg-clip-text text-transparent">
-          AQUA
+          Ô
         </span>
-        CONSTAT
+        LALA
       </span>
     </span>
   );

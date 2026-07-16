@@ -2,21 +2,21 @@
 
 - **Status:** active
 - **Type:** feature
-- **Requested by / owner:** Houssem (Progix) — client: Nino (AquaConstat)
+- **Requested by / owner:** Houssem (Progix) — client: Nino (Ôlala)
 - **Date:** 2026-07-15
 - **Slice / areas touched:** `src/features/landing/`, `src/app/page.tsx`, `src/app/globals.css`, `src/app/layout.tsx`, `src/core/site.ts`, `e2e/home.spec.ts`
 
 ## Problem (the why)
 
-AquaConstat sells remote water-damage quotes (149 € TTC, devis sous 48 h ouvrées) to
+Ôlala sells remote water-damage quotes (149 € TTC, devis sous 48 h ouvrées) to
 insurance-stressed homeowners arriving from Meta Ads on mobile. The product needs a
 conversion-focused landing page that establishes trust instantly and funnels visitors into the
 dossier flow. The design was prototyped in Claude Design and approved; the prototype and its
 briefs are the source of truth:
 
 - `design/prototype/accueil.dc.html` — the approved visual (recreate faithfully)
-- `design/aquaconstat-design-prompt.md` — token contract, motion and accessibility rules
-- `design/aquaconstat-content-prompt.md` — all French copy (do not invent or reorder content)
+- `design/olala-design-prompt.md` — token contract, motion and accessibility rules
+- `design/olala-content-prompt.md` — all French copy (do not invent or reorder content)
 
 ## Desired behavior (the what)
 
@@ -33,7 +33,7 @@ dossier » CTA leads to the dossier funnel entry.
 ## Acceptance criteria
 
 - **AC-1** `/` renders all 11 sections above in prototype order, with the exact French copy from
-  `design/aquaconstat-content-prompt.md` (the content brief, not the prototype HTML, is the copy
+  `design/olala-content-prompt.md` (the content brief, not the prototype HTML, is the copy
   source of truth — the hero sub and CTA micro-copy were revised there on 2026-07-15 to state
   each proof once).
 - **AC-2** The FAQ accordion opens one item at a time; clicking an open item closes it;

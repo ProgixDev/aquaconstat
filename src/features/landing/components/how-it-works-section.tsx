@@ -54,7 +54,7 @@ function DevisTeaser() {
         <div className="flex items-center gap-2">
           <DropletGlyph />
           <span className="font-display text-foreground text-[10px] font-bold tracking-widest">
-            AQUACONSTAT
+            ÔLALA
           </span>
           <span className="text-muted-foreground ml-auto text-[10px] font-semibold">PDF</span>
         </div>

@@ -65,7 +65,7 @@ export function SiteFooter() {
               Contact
             </div>
             <div className="mt-4 text-sm leading-relaxed">
-              contact@aquaconstat.fr
+              contact@olala.fr
               <br />
               <span className="text-aqua-pale/80">
                 Une question sur un dossier envoyé ? Répondez à votre e-mail de confirmation.
@@ -74,7 +74,7 @@ export function SiteFooter() {
           </div>
         </div>
         <div className="border-aqua-pale/15 text-aqua-pale/80 mt-10 flex flex-wrap justify-between gap-x-6 gap-y-2 border-t pt-6 text-xs md:mt-12">
-          <span>© 2026 AquaConstat — nom de travail</span>
+          <span>© 2026 Ôlala</span>
           <span>Paiement sécurisé par Stripe</span>
         </div>
       </div>

@@ -2,7 +2,7 @@
 
 - **Status:** active
 - **Type:** feature
-- **Requested by / owner:** Houssem (Progix) — client: Nino (AquaConstat)
+- **Requested by / owner:** Houssem (Progix) — client: Nino (Ôlala)
 - **Date:** 2026-07-15
 - **Slice / areas touched:** `src/features/admin/`, `src/app/admin/`, `src/app/globals.css`
 

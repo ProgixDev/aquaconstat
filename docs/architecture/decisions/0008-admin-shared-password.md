@@ -2,7 +2,7 @@
 
 - **Status:** Accepted
 - **Date:** 2026-07-16
-- **Deciders:** Houssem (Progix) — client: Nino (AquaConstat)
+- **Deciders:** Houssem (Progix) — client: Nino (Ôlala)
 
 ## Context
 

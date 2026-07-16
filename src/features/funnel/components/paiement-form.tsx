@@ -211,7 +211,7 @@ export function PaiementForm() {
             confirmé.
           </p>
           <p className="text-muted-foreground mt-2 text-center text-xs">
-            Paiement sécurisé par Stripe — votre carte n’est jamais stockée par AquaConstat.
+            Paiement sécurisé par Stripe — votre carte n’est jamais stockée par Ôlala.
           </p>
         </div>
       </section>

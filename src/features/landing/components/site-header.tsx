@@ -70,7 +70,7 @@ export function SiteHeader() {
         <div
           className={`border-aqua-pale/15 shadow-cta-sm flex items-center justify-between gap-3 rounded-full border py-2.5 pr-2.5 pl-4 backdrop-blur-xl transition-colors duration-300 sm:gap-5 sm:pl-6 ${pastHero ? "bg-navy/95" : "bg-navy/75"}`}
         >
-          <Link href="/" aria-label="AquaConstat — accueil">
+          <Link href="/" aria-label="Ôlala — accueil">
             {/* The wordmark scales down, then drops on the narrowest phones, so
                 the CTA never gets pushed out of the dock. */}
             <BrandLogo

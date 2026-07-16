@@ -45,7 +45,7 @@ export function DeliverableSection() {
             <div className="flex items-center gap-2">
               <DropletGlyph />
               <span className="font-display text-foreground text-xs font-bold tracking-widest">
-                AQUACONSTAT
+                ÔLALA
               </span>
               <span className="text-muted-foreground ml-auto text-xs">PDF</span>
             </div>

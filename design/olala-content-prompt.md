@@ -1,4 +1,4 @@
-# Claude Design — AquaConstat · Content Brief (CONTENT ONLY)
+# Claude Design — Ôlala · Content Brief (CONTENT ONLY)
 
 > **How to use this document:** this is the single source of truth for the product, pages,
 > structure, copy, fields, and states of the site. **Design direction, visual style, references
@@ -11,7 +11,7 @@
 
 ## 1. What this product is
 
-**AquaConstat** _(working name — final trade name to be confirmed)_ is a simple, responsive
+**Ôlala** _(working name — final trade name to be confirmed)_ is a simple, responsive
 French-market website that lets someone who has suffered a **dégât des eaux** (water damage) get
 a **repair quote remotely, without a professional visiting**, to send to their insurance.
 
@@ -36,7 +36,7 @@ Nothing else.
 
 - Price of the service: use **149 €** everywhere, treat as `[PRIX — à confirmer]`
 - Delivery delay of the quote: use **sous 48 h ouvrées**, treat as `[DÉLAI — à confirmer]`
-- Brand name: **AquaConstat** `[nom de travail]`
+- Brand name: **Ôlala** `[nom de travail]`
 
 ---
 
@@ -71,7 +71,7 @@ Goal: convert cold Meta Ads traffic. Everything answers three questions fast: _q
 c’est, combien ça coûte, pourquoi vous faire confiance._ One single primary CTA repeated down the
 page: **« Démarrer mon dossier »**.
 
-**Header (minimal):** logo AquaConstat + CTA « Démarrer mon dossier ». No nav menu beyond an
+**Header (minimal):** logo Ôlala + CTA « Démarrer mon dossier ». No nav menu beyond an
 anchor or two (Comment ça marche · Tarif · FAQ).
 
 **Hero:**
@@ -145,7 +145,7 @@ traité · zone couverte (France métropolitaine) · comment le devis est-il env
 
 **Final CTA band:** « Votre assurance attend un devis ? Il vous faut 10 minutes. » + CTA.
 
-**Footer:** logo, « AquaConstat — devis dégât des eaux à distance », liens : Mentions légales ·
+**Footer:** logo, « Ôlala — devis dégât des eaux à distance », liens : Mentions légales ·
 CGV · Politique de confidentialité · Contact (e-mail). Mention « Paiement sécurisé par Stripe ».
 
 ---
@@ -261,7 +261,7 @@ photos) with per-section « Modifier » links back into the funnel.
 the Stripe card payment area, button « Payer 149 € et envoyer mon dossier ». Legal micro-copy: «
 En payant, vous acceptez nos CGV. Votre dossier n’est transmis qu’une fois le paiement confirmé. »
 Reassurance line: « Paiement sécurisé par Stripe — votre carte n’est jamais stockée par
-AquaConstat. » Error state: payment declined, inline, with retry — the dossier is never lost.
+Ôlala. » Error state: payment declined, inline, with retry — the dossier is never lost.
 
 ---
 
