@@ -91,19 +91,19 @@ export function HeroIntro() {
           other and made the yellow CTA read as merely one of two options. */}
       {/* Always a vertical stack: pill first, quiet anchor beneath. A wrapping
           row put « Comment ça marche » beside the pill at some widths and
-          under it at others — the stack keeps the pair aligned on the column's
-          left edge at every width (centred on phones, where the pill is
-          full-width). */}
+          under it at others. From sm the column hugs the pill (w-fit) and
+          centres the anchor beneath it, so the pair reads as one composed
+          block; on phones the pill is full-width with the anchor centred. */}
       <m.div
         variants={block}
-        className="mt-8 flex flex-col items-stretch gap-4 sm:mt-10 sm:items-start sm:gap-5 lg:mt-[clamp(1.5rem,4svh,2.5rem)]"
+        className="mt-8 flex flex-col items-stretch gap-4 sm:mt-10 sm:w-fit sm:items-center sm:gap-5 lg:mt-[clamp(1.5rem,4svh,2.5rem)]"
       >
         <CtaButton href="/dossier" size="lg" className="w-full sm:w-auto">
           Commencer mon dossier maintenant — 10 minutes
         </CtaButton>
         <a
           href="#comment-ca-marche"
-          className="text-aqua-pale hover:text-secondary-foreground group inline-flex items-center justify-center gap-2 text-sm font-semibold sm:justify-start"
+          className="text-aqua-pale hover:text-secondary-foreground group inline-flex items-center justify-center gap-2 text-sm font-semibold"
         >
           Comment ça marche
           <svg
