@@ -68,8 +68,14 @@ near the primary action: « Paiement sécurisé par Stripe · Devis envoyé sous
 ## 3. Page 1 — Landing / Présentation
 
 Goal: convert cold Meta Ads traffic. Everything answers three questions fast: _qu’est-ce que
-c’est, combien ça coûte, pourquoi vous faire confiance._ One single primary CTA repeated down the
-page: **« Démarrer mon dossier »**.
+c’est, combien ça coûte, pourquoi vous faire confiance._ The primary CTA is **« Démarrer mon
+dossier »** in the chrome (header, sticky price bar, step 05, footer); the three conversion
+moments carry contextual urgency instead _(Revised 2026-07-16 — client feedback: six identical
+CTAs created no reason to act now)_ :
+
+- Hero : « Commencer mon dossier maintenant — 10 minutes »
+- Tarif : « Payer et recevoir mon devis sous 48 h »
+- CTA final : « Mon assurance attend — je démarre maintenant »
 
 **Header (minimal):** logo Ôlala + CTA « Démarrer mon dossier ». No nav menu beyond an
 anchor or two (Comment ça marche · Tarif · FAQ).
@@ -86,7 +92,8 @@ anchor or two (Comment ça marche · Tarif · FAQ).
   process clauses repeat « Comment ça marche » steps 02, 03 and 05 plus « prêt à être transmis à
   votre assurance » in « Ce que vous recevez ». The headline states the offer, the trust row
   states the proof, and the process is told once, in full, where it belongs.)_
-- Primary CTA: « Démarrer mon dossier » (+ secondary anchor « Comment ça marche »), with **no
+- Primary CTA: « Commencer mon dossier maintenant — 10 minutes » _(Revised 2026-07-16 — client
+  feedback)_ (+ secondary anchor « Comment ça marche »), with **no
   micro-copy underneath** _(Revised 2026-07-15 — the « 149 € · paiement sécurisé Stripe · sans
   création de compte » line was cut for a leaner hero. ⚠️ Open point: the price is therefore no
   longer visible in the hero, though §3 asks the landing to answer « combien ça coûte » fast. It

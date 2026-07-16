@@ -30,7 +30,7 @@ export function FinalCtaSection() {
         </p>
         <div className="mt-8">
           <CtaButton href="/dossier" size="lg">
-            Démarrer mon dossier
+            Mon assurance attend — je démarre maintenant
           </CtaButton>
         </div>
         <div className="text-aqua-pale/85 mt-4 text-xs">

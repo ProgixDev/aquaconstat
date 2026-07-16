@@ -15,7 +15,7 @@ const sizes = {
   lg: "px-8 py-4 text-base shadow-cta",
 } as const;
 
-/** The yellow pill CTA — « Démarrer mon dossier » wherever it appears. */
+/** The yellow pill CTA — copy varies by context (hero, tarif, final band). */
 export function CtaButton({ href, children, size = "md", className }: CtaButtonProps) {
   return (
     <Link

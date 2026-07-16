@@ -97,7 +97,7 @@ export function HeroIntro() {
         className="mt-8 flex flex-col items-stretch gap-4 sm:mt-10 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-8 sm:gap-y-5 lg:mt-[clamp(1.5rem,4svh,2.5rem)]"
       >
         <CtaButton href="/dossier" size="lg" className="w-full text-center sm:w-auto">
-          Démarrer mon dossier
+          Commencer mon dossier maintenant — 10 minutes
         </CtaButton>
         <a
           href="#comment-ca-marche"

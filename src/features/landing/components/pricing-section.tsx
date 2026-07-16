@@ -56,7 +56,7 @@ export function PricingSection() {
 
           <div className="border-border border-t pt-6 text-center md:border-t-0 md:border-l md:pt-0 md:pl-12 md:text-left">
             <CtaButton href="/dossier" size="lg">
-              Démarrer mon dossier
+              Payer et recevoir mon devis sous 48 h
             </CtaButton>
             <p className="text-muted-foreground mt-3 text-xs">Paiement unique, aucun abonnement.</p>
           </div>
