@@ -77,7 +77,10 @@ anchor or two (Comment ça marche · Tarif · FAQ).
 **Hero:**
 
 - Eyebrow: « Dégât des eaux · Devis à distance »
-- H1: « Votre devis dégât des eaux, sans attendre le passage d’un artisan »
+- H1: « Votre assurance vous demande un devis ? Recevez-le en 48 h, sans attendre un artisan »
+  _(Revised 2026-07-16 — client feedback: the old H1 « Votre devis dégât des eaux, sans attendre
+  le passage d’un artisan » spoke about the service; the visitor arrives stressed with the
+  insurer waiting. The headline now leads with their immediate pain.)_
 - Sub: **none** _(Revised 2026-07-15 — the hero sub was cut. It had duplicated the whole page:
   its 48 h / à-distance / Stripe proofs repeated the trust row directly beneath it, and its
   process clauses repeat « Comment ça marche » steps 02, 03 and 05 plus « prêt à être transmis à

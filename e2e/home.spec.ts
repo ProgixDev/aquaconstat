@@ -6,7 +6,9 @@ test("@cuj CUJ-01: visitor lands, understands, starts a dossier", async ({ page 
   await page.goto("/");
 
   await expect(
-    page.getByRole("heading", { name: /votre devis dégât des eaux, sans attendre/i }),
+    page.getByRole("heading", {
+      name: /votre assurance vous demande un devis \? recevez-le en 48 h/i,
+    }),
   ).toBeVisible();
   await expect(page.getByRole("heading", { name: "Questions fréquentes" })).toBeVisible();
   await shot(page, "home-landing");

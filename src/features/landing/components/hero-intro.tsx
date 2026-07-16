@@ -5,17 +5,20 @@ import { m } from "@/components/motion";
 import { CtaButton } from "./cta-button";
 import { IMPACT_EVENT } from "./hero-droplet";
 
-/* « sans attendre » stays one unit so line-balancing can’t split the promise. */
+/* « devis ? » and « en 48 h, » stay single units so line-balancing can’t
+   strand the question mark or split the promise. */
 const words: { text: string; em?: boolean }[] = [
   { text: "Votre" },
-  { text: "devis" },
-  { text: "dégât" },
-  { text: "des" },
-  { text: "eaux," },
-  { text: "sans attendre", em: true },
-  { text: "le" },
-  { text: "passage" },
-  { text: "d’un" },
+  { text: "assurance" },
+  { text: "vous" },
+  { text: "demande" },
+  { text: "un" },
+  { text: "devis ?" },
+  { text: "Recevez-le" },
+  { text: "en 48 h,", em: true },
+  { text: "sans" },
+  { text: "attendre" },
+  { text: "un" },
   { text: "artisan" },
 ];
 
@@ -65,7 +68,9 @@ export function HeroIntro() {
            the stat row into the scroll cue on short laptops. */
         /* 32px on the narrowest phones (else the headline runs to 5 lines at
            320px), 36px from 360px up, then the height-scaled clamp once pinned. */
-        className="font-display text-secondary-foreground max-w-[15ch] text-[2rem] leading-[1.08] font-bold text-balance min-[360px]:text-4xl min-[360px]:leading-[1.06] md:text-6xl lg:text-[clamp(2.75rem,5.5svh,3.75rem)]"
+        /* 20ch keeps the longer question-and-answer headline at ~4 lines —
+           15ch (sized for the old 10-word headline) pushed it to 6. */
+        className="font-display text-secondary-foreground max-w-[20ch] text-[2rem] leading-[1.08] font-bold text-balance min-[360px]:text-4xl min-[360px]:leading-[1.06] md:text-6xl lg:text-[clamp(2.75rem,5.5svh,3.75rem)]"
       >
         {words.map((w, i) => (
           <Fragment key={i}>
