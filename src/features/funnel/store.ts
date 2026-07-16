@@ -23,10 +23,6 @@ const initialData: FunnelData = {
   typeLieu: "",
   syndic: "",
   statut: "",
-  proprietaire: "",
-  resiliationBail: "",
-  locationMeublee: "",
-  occupant: "",
   dateSinistre: "",
   pieces: {
     salon: false,

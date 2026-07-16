@@ -142,7 +142,6 @@ export function DossierDetail({ dossier, now }: DossierDetailProps) {
               { label: "Adresse", value: dossier.adresse },
               { label: "Bâtiment", value: dossier.batiment },
               { label: "Demandeur", value: dossier.demandeur },
-              { label: "Propriétaire", value: dossier.proprietaire },
               { label: "Syndic / gérant", value: dossier.syndic },
             ]}
           />

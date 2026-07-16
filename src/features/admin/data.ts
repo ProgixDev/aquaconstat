@@ -37,7 +37,8 @@ export type DossierDetail = DossierRow & {
   adresse: string;
   batiment: string;
   demandeur: string;
-  proprietaire: string;
+  // proprietaire removed 2026-07-16 — the funnel's statut sub-panels are gone
+  // (client feedback), so the pro can never be shown it.
   syndic: string;
   sinistre: { label: string; value: string }[];
   /** Per pièce: what to redo + the approximate size band (spec 003, R2R 2026-07-16). */
@@ -134,8 +135,7 @@ const detailCamille: Omit<DossierDetail, keyof DossierRow> = {
   telephone: "06 42 17 89 03",
   adresse: "12 rue des Lilas, Bât. B, 3ᵉ étage, 69003 Lyon",
   batiment: "Immeuble en copropriété",
-  demandeur: "Locataire — bail résilié : non · meublée / saisonnière : non",
-  proprietaire: "M. Henri Vasseur — 28 cours Gambetta, 69007 Lyon · 06 71 45 02 88",
+  demandeur: "Locataire",
   syndic: "Cabinet Berthelot — 4 quai Saint-Antoine, 69002 Lyon · 04 72 10 22 30",
   sinistre: [
     { label: "Date du sinistre", value: "14 juin 2026" },

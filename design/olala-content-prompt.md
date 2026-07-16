@@ -192,12 +192,12 @@ Code postal · Ville · « Il s’agit de : » (choix unique — Maison particul
 copropriété · Immeuble locatif) · Nom, adresse et téléphone du syndic ou du gérant (facultatif,
 shown when copropriété/locatif is selected).
 
-**Fieldset « Vous êtes » (choix unique, aligned on the constat amiable):**
+**Fieldset « Vous êtes » (choix unique):** _(All sub-forms removed 2026-07-16 — client
+feedback. The four options no longer reveal anything: no coordonnées du propriétaire, no
+résiliation du bail, no location meublée, no occupant/non-occupant.)_
 
-- Locataire ou occupant non propriétaire → reveals: nom et coordonnées du propriétaire ou du
-  gérant du logement + « La résiliation du bail a-t-elle été demandée ? » (oui / non) +
-  « S’agit-il d’une location meublée ou saisonnière ? » (oui / non)
-- Propriétaire / copropriétaire → occupant / non occupant
+- Locataire ou occupant non propriétaire
+- Propriétaire / copropriétaire
 - Syndic de copropriété
 - Gérant de l’immeuble / agence
 
@@ -322,8 +322,9 @@ Header: référence + demandeur + date + payment badge + statut selector (Nouvea
 Devis envoyé). Sections:
 
 - **Coordonnées & lieu du sinistre** — nom, e-mail, téléphone, adresse complète (bât., étage),
-  type de bâtiment, usage d’habitation, statut du demandeur (avec propriétaire/gérant, bail,
-  meublée/saisonnière le cas échéant), syndic ou gérant.
+  type de bâtiment, usage d’habitation, statut du demandeur _(the propriétaire/gérant, bail and
+  meublée/saisonnière details are gone since 2026-07-16 — the funnel no longer asks for them)_,
+  syndic ou gérant.
 - **Assurance** — assureur, n° de contrat, n° de sinistre, agent/courtier.
 - **Réponses au questionnaire** — grouped exactly like the questionnaire (cause du sinistre au
   format constat amiable, surfaces, état des éléments, précisions libres), scannable label/value

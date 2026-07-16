@@ -2,11 +2,9 @@
 
 import Link from "next/link";
 import { useFunnelStore } from "../provider";
-import type { OuiNon, Statut, TypeLieu } from "../types";
+import type { Statut, TypeLieu } from "../types";
 import { ChoiceCard } from "./choice-card";
-import { ChoicePill } from "./choice-pill";
 import { ContinueCta } from "./continue-cta";
-import { SubPanel } from "./sub-panel";
 import { StepMeta } from "./step-shell";
 import { TextField } from "./text-field";
 
@@ -25,7 +23,7 @@ const statutOptions: [Statut, string][] = [
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-/** Étape 1 — coordonnées, lieu du sinistre, statut, assurance. */
+/** Étape 1 — coordonnées, lieu du sinistre, statut. */
 export function DossierForm() {
   const data = useFunnelStore((s) => s.data);
   const setField = useFunnelStore((s) => s.setField);
@@ -141,80 +139,10 @@ export function DossierForm() {
             </ChoiceCard>
           ))}
         </div>
-        {data.statut === "locataire" && (
-          <SubPanel className="mt-4.5 flex flex-col gap-4.5">
-            <TextField
-              label="Nom et coordonnées du propriétaire ou du gérant du logement"
-              value={data.proprietaire}
-              onChange={(v) => setField("proprietaire", v)}
-            />
-            <div role="radiogroup" aria-label="Résiliation du bail">
-              <div className="text-sm font-semibold">
-                La résiliation du bail a-t-elle été demandée ?
-              </div>
-              <div className="mt-2.5 flex flex-wrap gap-2.5">
-                {(
-                  [
-                    ["oui", "Oui"],
-                    ["non", "Non"],
-                  ] as [OuiNon, string][]
-                ).map(([value, label]) => (
-                  <ChoicePill
-                    key={value}
-                    selected={data.resiliationBail === value}
-                    onClick={() => setField("resiliationBail", value)}
-                  >
-                    {label}
-                  </ChoicePill>
-                ))}
-              </div>
-            </div>
-            <div role="radiogroup" aria-label="Location meublée ou saisonnière">
-              <div className="text-sm font-semibold">
-                S’agit-il d’une location meublée ou saisonnière ?
-              </div>
-              <div className="mt-2.5 flex flex-wrap gap-2.5">
-                {(
-                  [
-                    ["oui", "Oui"],
-                    ["non", "Non"],
-                  ] as [OuiNon, string][]
-                ).map(([value, label]) => (
-                  <ChoicePill
-                    key={value}
-                    selected={data.locationMeublee === value}
-                    onClick={() => setField("locationMeublee", value)}
-                  >
-                    {label}
-                  </ChoicePill>
-                ))}
-              </div>
-            </div>
-          </SubPanel>
-        )}
-        {data.statut === "proprio" && (
-          <SubPanel className="mt-4.5">
-            <div role="radiogroup" aria-label="Vous occupez ce logement">
-              <div className="text-sm font-semibold">Vous occupez ce logement ?</div>
-              <div className="mt-2.5 flex flex-wrap gap-2.5">
-                {(
-                  [
-                    ["oui", "Occupant"],
-                    ["non", "Non occupant"],
-                  ] as ["oui" | "non", string][]
-                ).map(([value, label]) => (
-                  <ChoicePill
-                    key={value}
-                    selected={data.occupant === value}
-                    onClick={() => setField("occupant", value)}
-                  >
-                    {label}
-                  </ChoicePill>
-                ))}
-              </div>
-            </div>
-          </SubPanel>
-        )}
+        {/* The locataire / propriétaire sub-panels (coordonnées du
+            propriétaire, résiliation du bail, location meublée, occupant)
+            were removed 2026-07-16 (client): none of it changes the price of
+            the work, so the statut alone is enough. */}
       </section>
 
       {/* « Votre assurance » removed 2026-07-16 (client): nobody has their n° de

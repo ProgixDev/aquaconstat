@@ -48,7 +48,9 @@ travaux. »
 
 - **Kept 100 %:** « Vos coordonnées » (prénom, nom, e-mail, téléphone) · « Le lieu du sinistre »
   (adresse, bât., étage, code postal, ville) · « Vous êtes » (locataire / propriétaire / syndic /
-  gérant) and its sub-panels.
+  gérant) — its sub-panels were later cut too (2026-07-16, client feedback: coordonnées du
+  propriétaire, résiliation du bail, location meublée, occupant/non-occupant — none of it
+  changes the price of the work).
 - **Removed:** « L'immeuble a-t-il été construit depuis moins de 10 ans ? » · « Le local est-il à
   usage d'habitation ? » · the entire « Votre assurance » fieldset (assureur, n° de contrat, n° de
   sinistre, agent/courtier, adresse) — « un énorme point de blocage pour le client ».
@@ -69,8 +71,9 @@ reassuring « Étape N sur 4 · … » line (2 minutes / ≈ 2 minutes / 4 à 8 
 sécurisé Stripe). _(Revised 2026-07-16 — client feedback: the droplet step indicator + thin
 « liquid » bar read as flat text on mobile, with no visible active step.)_ Answers persist
 while navigating between steps.
-Conditional questions appear based on answers (syndic if copropriété/locatif, sous-questions
-locataire/propriétaire, and a « que faut-il refaire ? » + taille block per selected pièce). Photos are added from the gallery/camera with previews, removable, with an
+Conditional questions appear based on answers (syndic if copropriété/locatif, and a « que
+faut-il refaire ? » + taille block per selected pièce — the sous-questions
+locataire/propriétaire were removed 2026-07-16, client feedback). Photos are added from the gallery/camera with previews, removable, with an
 inline error for oversized files. The payment step shows a recap with « Modifier » links and a
 sober card block; paying shows the confirmation page with a ripple droplet, a reference number
 in display type, the « la suite » timeline, and the user's e-mail.
@@ -83,10 +86,11 @@ in display type, the « la suite » timeline, and the user's e-mail.
   line. (Revised 2026-07-16 — replaces the droplet indicator + liquid bar widths.)
 - **AC-2** Form state persists across step navigation (fill étape 1, go to étape 2, come back —
   values are still there) within a session.
-- **AC-3** Conditional blocks: syndic field only for copropriété/locatif; locataire and
-  propriétaire sub-panels; and — per selected pièce only — a « Que faut-il refaire ? » block
+- **AC-3** Conditional blocks: syndic field only for copropriété/locatif; and — per selected
+  pièce only — a « Que faut-il refaire ? » block
   (plafond / murs / sol) plus an approximate size band. Deselecting a pièce hides its block.
-  (Revised 2026-07-16 — the cause/origine/tiers sub-panels this AC used to require are gone; see
+  (Revised 2026-07-16 — the cause/origine/tiers sub-panels this AC used to require are gone,
+  and so are the locataire/propriétaire sub-panels under « Vous êtes »; see
   the R2R note above.)
 - **AC-4** Photos: selected images preview in a 4/3 grid, can be removed; files over 20 Mo show
   the inline error card with « Réessayer »; the counter line updates.
