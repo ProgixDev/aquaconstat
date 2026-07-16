@@ -201,8 +201,34 @@ export function HeroDroplet() {
       }
     };
 
-    raf = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(raf);
+    // The loop reflows the page every frame (getBoundingClientRect on the
+    // runway), so it only runs while the hero is actually on screen — below
+    // the fold there is nothing to scrub and every frame is wasted work.
+    let running = false;
+    const start = () => {
+      if (running) return;
+      running = true;
+      lastScrollY = window.scrollY; // else the gap reads as velocity and splashes
+      raf = requestAnimationFrame(loop);
+    };
+    const stop = () => {
+      if (!running) return;
+      running = false;
+      cancelAnimationFrame(raf);
+    };
+
+    if (!runway) {
+      start();
+      return stop;
+    }
+    const io = new IntersectionObserver(([entry]) => (entry?.isIntersecting ? start() : stop()), {
+      rootMargin: "120px",
+    });
+    io.observe(runway);
+    return () => {
+      io.disconnect();
+      stop();
+    };
   }, []);
 
   return (

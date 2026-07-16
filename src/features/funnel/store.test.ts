@@ -10,25 +10,32 @@ describe("funnel store", () => {
     expect(store.getState().data.typeLieu).toBe("copro");
   });
 
-  it("toggles causes and pieces independently (AC-3)", () => {
+  it("toggles pièces independently (AC-3)", () => {
     const store = createFunnelStore();
-    store.getState().toggleCause("canal");
     store.getState().togglePiece("sdb");
-    expect(store.getState().data.causes.canal).toBe(true);
-    expect(store.getState().data.causes.gel).toBe(false);
     expect(store.getState().data.pieces.sdb).toBe(true);
-    store.getState().toggleCause("canal");
-    expect(store.getState().data.causes.canal).toBe(false);
+    expect(store.getState().data.pieces.salon).toBe(false);
+    store.getState().togglePiece("sdb");
+    expect(store.getState().data.pieces.sdb).toBe(false);
   });
 
-  it("tracks per-room surfaces (AC-3)", () => {
+  it("tracks what to redo and the size band per room (AC-3)", () => {
     const store = createFunnelStore();
     store.getState().toggleSurfacePart("sdb", "plaf");
-    store.getState().setSurfaceDim("sdb", "longueur", "2,1");
+    store.getState().setRoomTaille("sdb", "moyenne");
     const sdb = store.getState().data.surfaces.sdb;
     expect(sdb?.plaf).toBe(true);
     expect(sdb?.murs).toBe(false);
-    expect(sdb?.longueur).toBe("2,1");
+    expect(sdb?.taille).toBe("moyenne");
+  });
+
+  it("keeps each room's answers separate (AC-3)", () => {
+    const store = createFunnelStore();
+    store.getState().toggleSurfacePart("sdb", "plaf");
+    store.getState().setRoomTaille("couloirWc", "petite");
+    expect(store.getState().data.surfaces.sdb?.taille).toBe("");
+    expect(store.getState().data.surfaces.couloirWc?.plaf).toBe(false);
+    expect(store.getState().data.surfaces.couloirWc?.taille).toBe("petite");
   });
 
   it("keeps oversized photos as errors and counts only ok ones (AC-4)", () => {

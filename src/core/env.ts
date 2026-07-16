@@ -13,6 +13,16 @@ const serverEnvSchema = z.object({
   // browser. The Supabase service_role key bypasses RLS; use it only in trusted
   // server code (e.g. the account-deletion route). Optional until you wire it up.
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(20).optional(),
+  // Admin back-office gate (ADR-0008). Both are `.optional()` on purpose:
+  // this schema is parsed at module load and `pnpm verify` runs `pnpm build`,
+  // so making them required would break the build for anyone without secrets
+  // (agents are hook-blocked from writing .env.local at all).
+  //
+  // Optional does NOT mean lenient. Unset ⇒ every login is denied and every
+  // requireAdminSession() redirects — /admin is simply shut. There is no
+  // "allow when unconfigured" branch anywhere; missing config fails closed.
+  ADMIN_PASSWORD: z.string().min(12).optional(),
+  ADMIN_SESSION_SECRET: z.string().min(32).optional(),
   // Add real server vars here, mirrored in .env.example, e.g.:
   // DATABASE_URL: z.string().url(),
 });

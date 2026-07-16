@@ -18,14 +18,55 @@ confirmation. Prototypes and copy are approved in Claude Design:
 - `design/prototype/etape-4-paiement.dc.html` — récapitulatif + carte (Stripe)
 - `design/prototype/confirmation.dc.html` — ripple success + référence + « la suite »
 
+## R2R — 2026-07-16: questionnaire cut to « Ultra-Light » (client)
+
+Nino reviewed étape 2 and cut every question that does not change the price of the
+embellishments being quoted. **Removed outright:** recherche de fuite (+ par qui), cause
+identifiée, cause réparée, origine du dégât, tiers responsable (+ pourquoi / nom), the cause
+checklist (canalisation / appareil / chéneaux / infiltrations / gel / autre) and its sub-panels,
+état des revêtements, humidité, précisions libres. His reasoning, recorded verbatim so it is not
+re-litigated:
+
+- _Recherche de fuite_ — « Ça n'impacte pas le prix des peintures sur ton devis. »
+- _Cause identifiée / réparée_ — « L'artisan ne réparera pas la fuite, il vient refaire les
+  embellissements (peinture, sol). »
+- _Origine_ — « C'est le rôle du constat amiable, pas du devis. »
+- _Tiers responsable_ — « C'est de l'ordre de l'enquête d'assurance, aucun rapport avec ton devis
+  de travaux. »
+
+**Étape 2 is now:** date du sinistre (approximative) → pièces endommagées (Salon · Chambre ·
+Cuisine · Salle de bain · Couloir/WC) → per selected pièce: « Que faut-il refaire ? » (plafond /
+murs / sol) + taille approximative (petite < 10 m² · moyenne 10–20 m² · grande > 20 m²). Target:
+under 2 minutes on a phone. Room size is a band, not longueur × largeur.
+
+## R2R — 2026-07-16 (same day, follow-up): étape 1 de-risked for conversion
+
+Answering the open question above, Nino cut étape 1 too — to stop people abandoning before they
+pay. « De nombreux clients n'auront pas leur numéro de contrat ou de sinistre sous les yeux au
+moment de faire la démarche en ligne, et ces informations ne sont pas obligatoires sur un devis de
+travaux. »
+
+- **Kept 100 %:** « Vos coordonnées » (prénom, nom, e-mail, téléphone) · « Le lieu du sinistre »
+  (adresse, bât., étage, code postal, ville) · « Vous êtes » (locataire / propriétaire / syndic /
+  gérant) and its sub-panels.
+- **Removed:** « L'immeuble a-t-il été construit depuis moins de 10 ans ? » · « Le local est-il à
+  usage d'habitation ? » · the entire « Votre assurance » fieldset (assureur, n° de contrat, n° de
+  sinistre, agent/courtier, adresse) — « un énorme point de blocage pour le client ».
+- **Consequence:** the funnel no longer mirrors the « constat amiable dégât des eaux ». The intro
+  banner and sub that promised it are gone from étape 1 — the page must not claim a correspondence
+  that no longer exists. The admin « Assurance » card is gone for the same reason: nothing feeds
+  it.
+
+`typeLieu` (« Il s'agit de : ») and the syndic follow-up stay — Nino listed neither for removal,
+and `typeLieu` is what reveals the syndic field.
+
 ## Desired behavior (the what)
 
 A visitor moves through four light, single-column steps under a persistent droplet step
 indicator with a thin gradient « liquid » progress bar (13 % → 38 % → 62 % → 88 %). Completed
 steps become links back (« Dossier ✓ »). Answers persist while navigating between steps.
 Conditional questions appear based on answers (syndic if copropriété/locatif, sous-questions
-locataire/propriétaire, canalisation/infiltrations/autre cause, tiers responsable, surfaces per
-selected pièce). Photos are added from the gallery/camera with previews, removable, with an
+locataire/propriétaire, and a « que faut-il refaire ? » + taille block per selected pièce). Photos are added from the gallery/camera with previews, removable, with an
 inline error for oversized files. The payment step shows a recap with « Modifier » links and a
 sober card block; paying shows the confirmation page with a ripple droplet, a reference number
 in display type, the « la suite » timeline, and the user's e-mail.
@@ -36,10 +77,11 @@ in display type, the « la suite » timeline, and the user's e-mail.
   indicator reflects position and links back to completed steps; the progress bar widths match.
 - **AC-2** Form state persists across step navigation (fill étape 1, go to étape 2, come back —
   values are still there) within a session.
-- **AC-3** Conditional blocks follow the prototype logic: syndic field only for
-  copropriété/locatif; locataire and propriétaire sub-panels; canalisation, infiltrations and
-  « autre cause » sub-panels; « par qui ? » only when recherche de fuite = oui; tiers details
-  only when oui; a surface block per selected pièce.
+- **AC-3** Conditional blocks: syndic field only for copropriété/locatif; locataire and
+  propriétaire sub-panels; and — per selected pièce only — a « Que faut-il refaire ? » block
+  (plafond / murs / sol) plus an approximate size band. Deselecting a pièce hides its block.
+  (Revised 2026-07-16 — the cause/origine/tiers sub-panels this AC used to require are gone; see
+  the R2R note above.)
 - **AC-4** Photos: selected images preview in a 4/3 grid, can be removed; files over 20 Mo show
   the inline error card with « Réessayer »; the counter line updates.
 - **AC-5** The recap on étape 4 reflects entered data with « Modifier » links to the right

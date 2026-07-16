@@ -4,8 +4,16 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useFunnelStore } from "../provider";
-import type { PieceKey } from "../types";
+import type { PieceKey, SurfacePart, Taille } from "../types";
 import { pieceNames } from "./questionnaire-form";
+
+const partOrder: SurfacePart[] = ["plaf", "murs", "sol"];
+const partNames: Record<SurfacePart, string> = { plaf: "plafond", murs: "murs", sol: "sol" };
+const tailleNames: Record<Exclude<Taille, "">, string> = {
+  petite: "petite",
+  moyenne: "moyenne",
+  grande: "grande",
+};
 
 function useRecap() {
   const data = useFunnelStore((s) => s.data);
@@ -32,39 +40,24 @@ function useRecap() {
       ? `${lieuParts.join(", ")}${data.typeLieu ? ` — ${typeLieuLabels[data.typeLieu]}` : ""}`
       : "À compléter à l’étape 1";
 
-  const origineLabels = {
-    moi: "Chez moi",
-    voisin: "Chez un voisin",
-    communes: "Dans les parties communes",
-    ailleurs: "Ailleurs",
-  } as const;
-  const causeLabels: string[] = [];
-  if (data.causes.canal) {
-    const details = [
-      data.canalType === "commune" ? "commune" : data.canalType === "privative" ? "privative" : "",
-      data.canalFlux === "alim" ? "alimentation" : data.canalFlux === "evac" ? "évacuation" : "",
-      data.canalAcces === "acc"
-        ? "accessible"
-        : data.canalAcces === "nonacc"
-          ? "non accessible"
-          : "",
-    ].filter(Boolean);
-    causeLabels.push(`fuite sur canalisation${details.length ? ` ${details.join(", ")}` : ""}`);
-  }
-  if (data.causes.appareil) causeLabels.push("appareil à effet d’eau");
-  if (data.causes.cheneaux) causeLabels.push("chéneaux ou gouttières");
-  if (data.causes.infil) causeLabels.push("infiltrations");
-  if (data.causes.gel) causeLabels.push("gel");
-  if (data.causes.autre) causeLabels.push(data.autreCause || "autre cause");
-  const origine =
-    [data.origine ? origineLabels[data.origine] : "", causeLabels.join(", ")]
-      .filter(Boolean)
-      .join(" — ") || "À compléter à l’étape 2";
+  // « 2026-06-14 » → « 14/06/2026 ». Hand-rolled rather than toLocaleDateString
+  // so the server and client can never disagree on the rendered string.
+  const [y, m, d] = data.dateSinistre.split("-");
+  const date = y && m && d ? `${d}/${m}/${y}` : "À compléter à l’étape 2";
 
   const selectedPieces = (Object.keys(pieceNames) as PieceKey[]).filter((k) => data.pieces[k]);
   const pieces =
     selectedPieces.length > 0
-      ? selectedPieces.map((k) => pieceNames[k]).join(" · ")
+      ? selectedPieces
+          .map((k) => {
+            const room = data.surfaces[k];
+            const parts = partOrder.filter((p) => room?.[p]).map((p) => partNames[p]);
+            const detail = [parts.join(", "), room?.taille ? tailleNames[room.taille] : ""]
+              .filter(Boolean)
+              .join(" · ");
+            return detail ? `${pieceNames[k]} (${detail})` : pieceNames[k];
+          })
+          .join(" · ")
       : "À compléter à l’étape 2";
 
   const photos =
@@ -72,13 +65,13 @@ function useRecap() {
       ? `${photoCount} photo${photoCount > 1 ? "s" : ""} ajoutée${photoCount > 1 ? "s" : ""}`
       : "Aucune photo ajoutée";
 
-  return { coordonnees, lieu, origine, pieces, photos };
+  return { coordonnees, lieu, date, pieces, photos };
 }
 
 const recapRows = [
   { label: "Coordonnées", key: "coordonnees", href: "/dossier" },
   { label: "Lieu du sinistre", key: "lieu", href: "/dossier" },
-  { label: "Origine du sinistre", key: "origine", href: "/dossier/questionnaire" },
+  { label: "Date du sinistre", key: "date", href: "/dossier/questionnaire" },
   { label: "Pièces concernées", key: "pieces", href: "/dossier/questionnaire" },
   { label: "Photos", key: "photos", href: "/dossier/photos" },
 ] as const;

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useFunnelStore } from "../provider";
-import type { OuiNon, OuiNonNsp, Statut, TypeLieu } from "../types";
+import type { OuiNon, Statut, TypeLieu } from "../types";
 import { ChoiceCard } from "./choice-card";
 import { ChoicePill } from "./choice-pill";
 import { ContinueCta } from "./continue-cta";
@@ -43,14 +43,12 @@ export function DossierForm() {
       <h1 className="font-display mt-4.5 text-3xl font-bold md:text-[34px]">
         Créons votre dossier
       </h1>
+      {/* The constat-amiable promise went with the assurance fieldset on
+          2026-07-16: the form no longer mirrors that document, so it must not
+          say it does. */}
       <p className="text-steel mt-3.5 text-base leading-relaxed">
-        Ces informations figureront sur votre devis — les mêmes que celles demandées par votre
-        assurance.
+        Ces informations figureront sur votre devis.
       </p>
-      <div className="bg-info text-info-foreground mt-4.5 rounded-md px-4.5 py-3.5 text-sm leading-relaxed">
-        Les informations demandées reprennent celles du « constat amiable dégât des eaux » — vous
-        pourrez les réutiliser telles quelles avec votre assureur.
-      </div>
 
       <section className="mt-10">
         <h2 className="font-display text-lg font-bold">Vos coordonnées</h2>
@@ -114,47 +112,6 @@ export function DossierForm() {
                 >
                   {label}
                 </ChoiceCard>
-              ))}
-            </div>
-          </div>
-          <div role="radiogroup" aria-label="Construit depuis moins de 10 ans">
-            <div className="text-sm font-semibold">
-              L’immeuble a-t-il été construit depuis moins de 10 ans ?
-            </div>
-            <div className="mt-2.5 flex flex-wrap gap-2.5">
-              {(
-                [
-                  ["oui", "Oui"],
-                  ["non", "Non"],
-                  ["nsp", "Je ne sais pas"],
-                ] as [OuiNonNsp, string][]
-              ).map(([value, label]) => (
-                <ChoicePill
-                  key={value}
-                  selected={data.moins10Ans === value}
-                  onClick={() => setField("moins10Ans", value)}
-                >
-                  {label}
-                </ChoicePill>
-              ))}
-            </div>
-          </div>
-          <div role="radiogroup" aria-label="Local à usage d’habitation">
-            <div className="text-sm font-semibold">Le local est-il à usage d’habitation ?</div>
-            <div className="mt-2.5 flex flex-wrap gap-2.5">
-              {(
-                [
-                  ["oui", "Oui"],
-                  ["non", "Non"],
-                ] as [OuiNon, string][]
-              ).map(([value, label]) => (
-                <ChoicePill
-                  key={value}
-                  selected={data.usageHabitation === value}
-                  onClick={() => setField("usageHabitation", value)}
-                >
-                  {label}
-                </ChoicePill>
               ))}
             </div>
           </div>
@@ -258,46 +215,9 @@ export function DossierForm() {
         )}
       </section>
 
-      <section className="mt-11">
-        <h2 className="font-display text-lg font-bold">Votre assurance</h2>
-        <p className="text-muted-foreground mt-2.5 text-sm">
-          Ces informations figurent sur votre contrat ou votre déclaration de sinistre.
-        </p>
-        <div className="mt-5 grid gap-4.5 sm:grid-cols-2">
-          <TextField
-            label="Assureur"
-            value={data.assureur}
-            onChange={(v) => setField("assureur", v)}
-          />
-          <TextField
-            label="N° de contrat"
-            value={data.numeroContrat}
-            onChange={(v) => setField("numeroContrat", v)}
-          />
-          <TextField
-            label="N° de sinistre"
-            optional
-            value={data.numeroSinistre}
-            onChange={(v) => setField("numeroSinistre", v)}
-            hint="Si votre sinistre est déjà déclaré."
-          />
-          <TextField
-            label="Agent ou courtier + téléphone"
-            optional
-            value={data.agent}
-            onChange={(v) => setField("agent", v)}
-            placeholder="Nom · 04 78 00 00 00"
-          />
-        </div>
-        <TextField
-          label="Adresse de l’assureur / agent / courtier"
-          optional
-          value={data.adresseAssureur}
-          onChange={(v) => setField("adresseAssureur", v)}
-          placeholder="Adresse postale"
-          className="mt-4.5"
-        />
-      </section>
+      {/* « Votre assurance » removed 2026-07-16 (client): nobody has their n° de
+          contrat to hand mid-form, and none of it is required on a devis de
+          travaux. It was the single biggest drop-off risk on the page. */}
 
       <ContinueCta href="/dossier/questionnaire">Continuer vers le questionnaire</ContinueCta>
     </>

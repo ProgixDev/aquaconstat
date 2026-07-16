@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { AnimatePresence, m } from "@/components/motion";
 import { cn } from "@/lib/utils";
+import { DropletGlyph } from "@/components/ui/droplet-glyph";
 import { SectionBadge } from "./section-badge";
 
 const faqs = [
@@ -32,7 +33,34 @@ const faqs = [
   },
 ] as const;
 
-/** FAQ — compact tinted band, animated accordion (spec 002, AC-2). */
+/** Plus that becomes a minus — the vertical stroke collapses, the horizontal stays. */
+function PlusMinus({ open }: { open: boolean }) {
+  return (
+    <span
+      aria-hidden
+      className={cn(
+        "relative mt-0.5 size-5 flex-none transition-colors",
+        open ? "text-link" : "text-hint group-hover:text-link",
+      )}
+    >
+      <span className="absolute top-1/2 left-1/2 h-px w-3.5 -translate-x-1/2 -translate-y-1/2 bg-current" />
+      <span
+        className={cn(
+          "absolute top-1/2 left-1/2 h-3.5 w-px -translate-x-1/2 -translate-y-1/2 bg-current transition-transform duration-300 ease-out",
+          open ? "scale-y-0" : "scale-y-100",
+        )}
+      />
+    </span>
+  );
+}
+
+/**
+ * FAQ (spec 002, AC-2) — one column of hairline rows. A two-column grid meant
+ * an opening answer stretched its row and left a hole beside it; in one column
+ * the list simply grows. Each trigger is wrapped in a heading so the questions
+ * are navigable landmarks, and `aria-controls` is only asserted while the panel
+ * actually exists.
+ */
 export function FaqSection() {
   const [open, setOpen] = useState<number | null>(0);
 
@@ -49,65 +77,80 @@ export function FaqSection() {
         aria-hidden
         className="from-aqua-pale/40 absolute -right-40 -bottom-40 size-140 rounded-full bg-radial to-transparent to-70%"
       />
-      <div className="relative mx-auto max-w-5xl px-6 py-10 md:px-10 md:py-14">
-        <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-3">
-          <div>
+
+      <div className="relative mx-auto max-w-6xl px-6 py-14 md:px-10 md:py-16">
+        <div className="grid gap-x-16 gap-y-8 lg:grid-cols-[0.8fr_1.2fr]">
+          {/* Centred against the list so the column reads as composed rather
+              than top-heavy, and the note becomes the thing it was only
+              describing: a way to actually write to someone. */}
+          <div className="lg:self-center">
             <SectionBadge>FAQ</SectionBadge>
-            <h2 className="font-display mt-3 text-2xl leading-snug font-bold md:text-3xl">
+            <h2 className="font-display mt-4 max-w-xs text-2xl leading-snug font-bold md:text-3xl">
               Questions fréquentes
             </h2>
-          </div>
-          <p className="text-muted-foreground text-sm">
-            Une autre question ? Écrivez-nous à contact@aquaconstat.fr.
-          </p>
-        </div>
-        <div className="mt-7 grid items-start gap-2.5 md:grid-cols-2">
-          {faqs.map((faq, i) => {
-            const isOpen = open === i;
-            return (
-              <div
-                key={faq.q}
-                className={cn(
-                  "bg-paper/85 rounded-lg border backdrop-blur-sm transition-colors",
-                  isOpen ? "border-aqua/50" : "border-border-soft hover:border-aqua/40",
-                )}
-              >
-                <button
-                  type="button"
-                  aria-expanded={isOpen}
-                  aria-controls={`faq-panel-${i}`}
-                  onClick={() => setOpen(isOpen ? null : i)}
-                  className="text-foreground flex w-full cursor-pointer items-center justify-between gap-4 px-4.5 py-3.5 text-left text-sm font-semibold"
-                >
-                  {faq.q}
-                  <m.span
-                    aria-hidden
-                    animate={{ rotate: isOpen ? 45 : 0 }}
-                    transition={{ duration: 0.2, ease: "easeOut" }}
-                    className="bg-muted text-link flex size-6 flex-none items-center justify-center rounded-full text-base font-normal"
-                  >
-                    +
-                  </m.span>
-                </button>
-                <AnimatePresence initial={false}>
-                  {isOpen && (
-                    <m.div
-                      id={`faq-panel-${i}`}
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.22, ease: "easeOut" }}
-                      className="overflow-hidden"
-                    >
-                      <p className="text-muted-foreground m-0 px-4.5 pb-4 text-sm leading-relaxed">
-                        {faq.a}
-                      </p>
-                    </m.div>
-                  )}
-                </AnimatePresence>
+
+            <div className="border-border-soft bg-paper/70 rounded-panel shadow-card mt-7 max-w-xs border p-5 backdrop-blur-sm">
+              <div className="flex items-center gap-2.5 text-sm font-semibold">
+                <DropletGlyph />
+                Une autre question ?
               </div>
-            );
-          })}
+              <a
+                href="mailto:contact@aquaconstat.fr"
+                className="text-link hover:text-link-hover mt-2.5 inline-flex items-center gap-1.5 text-sm font-semibold underline decoration-1 underline-offset-4 transition-colors"
+              >
+                Écrivez-nous à contact@aquaconstat.fr
+                <span aria-hidden>↗</span>
+              </a>
+            </div>
+          </div>
+
+          <div className="border-border-soft divide-border-soft divide-y border-t border-b">
+            {faqs.map((faq, i) => {
+              const isOpen = open === i;
+              return (
+                <div key={faq.q}>
+                  <h3 className="m-0">
+                    <button
+                      type="button"
+                      id={`faq-trigger-${i}`}
+                      aria-expanded={isOpen}
+                      aria-controls={isOpen ? `faq-panel-${i}` : undefined}
+                      onClick={() => setOpen(isOpen ? null : i)}
+                      className="group flex w-full cursor-pointer items-start justify-between gap-6 py-4.5 text-left"
+                    >
+                      <span
+                        className={cn(
+                          "text-base font-semibold transition-colors",
+                          isOpen ? "text-link" : "text-foreground group-hover:text-link",
+                        )}
+                      >
+                        {faq.q}
+                      </span>
+                      <PlusMinus open={isOpen} />
+                    </button>
+                  </h3>
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <m.div
+                        id={`faq-panel-${i}`}
+                        role="region"
+                        aria-labelledby={`faq-trigger-${i}`}
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.26, ease: "easeOut" }}
+                        className="overflow-hidden"
+                      >
+                        <p className="text-muted-foreground m-0 max-w-2xl pr-10 pb-5 text-sm leading-relaxed">
+                          {faq.a}
+                        </p>
+                      </m.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>

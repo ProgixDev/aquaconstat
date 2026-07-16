@@ -1,12 +1,32 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { formatFrDateTime, formatFrShortDate } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { DossierDetail as DossierDetailData, DossierStatut } from "../data";
+import { slaState } from "../sla";
+import { SlaPill } from "./sla-pill";
 import { StatusBadge } from "./status-badge";
 
 const statuts: DossierStatut[] = ["Nouveau", "En cours", "Devis envoyé"];
+
+type Photo = DossierDetailData["photos"][number];
+
+/**
+ * Force a same-origin download with a chosen filename. The `download`
+ * attribute is honoured because the file is served from our own origin
+ * (/public/mock) — cross-origin URLs would open in a tab instead.
+ */
+function triggerDownload(src: string, filename: string) {
+  const a = document.createElement("a");
+  a.href = src;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
 
 type FactsProps = {
   rows: { label: string; value: string }[];
@@ -37,12 +57,34 @@ function SectionCard({ title, children }: { title: string; children: React.React
 
 type DossierDetailProps = {
   dossier: DossierDetailData;
+  /** Server render time, so the deadline reads the same on both sides. */
+  now: number;
 };
 
 /** Dossier detail — record cards, status switcher, photo grid + lightbox (spec 004, AC-3). */
-export function DossierDetail({ dossier }: DossierDetailProps) {
+export function DossierDetail({ dossier, now }: DossierDetailProps) {
   const [statut, setStatut] = useState<DossierStatut>(dossier.statut);
-  const [lightbox, setLightbox] = useState<string | null>(null);
+  const [lightbox, setLightbox] = useState<Photo | null>(null);
+
+  // Name downloads by the dossier so a pro's Downloads folder stays sorted:
+  // AC-2026-0147-02-plafond.jpg.
+  const fileName = (photo: Photo) => `${dossier.ref}-${photo.src.split("/").pop()}`;
+  const downloadOne = (photo: Photo) => triggerDownload(photo.src, fileName(photo));
+  // Staggered so the browser doesn't drop rapid-fire programmatic downloads.
+  // A single zip would be nicer, but that needs a dependency; this stays
+  // no-dep and works for the handful of photos a dossier carries.
+  const downloadAll = () => {
+    dossier.photos.forEach((photo, i) => {
+      window.setTimeout(() => downloadOne(photo), i * 300);
+    });
+  };
+
+  // The deadline follows the dossier: this is the page Nino works from, so the
+  // « en retard de 3 h » has to be here too, not only in the list.
+  const sla = slaState(now, {
+    paidAtMs: dossier.paidAt ? new Date(dossier.paidAt).getTime() : null,
+    sent: statut === "Devis envoyé",
+  });
 
   return (
     <main className="mx-auto w-full max-w-5xl flex-1 px-5 pt-7 pb-16 md:px-12">
@@ -52,8 +94,11 @@ export function DossierDetail({ dossier }: DossierDetailProps) {
       <div className="mt-4 flex flex-wrap items-center gap-3.5">
         <h1 className="font-display text-2xl font-bold tracking-wide">{dossier.ref}</h1>
         <span className="text-base font-semibold">{dossier.nom}</span>
-        <span className="text-muted-foreground text-sm">créé le {dossier.date}</span>
-        <StatusBadge paye={dossier.paye} />
+        <span className="text-muted-foreground text-sm">
+          créé le {formatFrShortDate(dossier.createdAt)}
+        </span>
+        <StatusBadge paye={dossier.paidAt !== null} />
+        <SlaPill state={sla} />
         <div
           role="radiogroup"
           aria-label="Statut du dossier"
@@ -90,7 +135,6 @@ export function DossierDetail({ dossier }: DossierDetailProps) {
               { label: "Téléphone", value: dossier.telephone },
               { label: "Adresse", value: dossier.adresse },
               { label: "Bâtiment", value: dossier.batiment },
-              { label: "Usage", value: dossier.usage },
               { label: "Demandeur", value: dossier.demandeur },
               { label: "Propriétaire", value: dossier.proprietaire },
               { label: "Syndic / gérant", value: dossier.syndic },
@@ -98,28 +142,25 @@ export function DossierDetail({ dossier }: DossierDetailProps) {
           />
         </SectionCard>
         <div className="flex flex-col gap-5">
-          <SectionCard title="Assurance">
-            <Facts
-              strongFirst
-              rows={[
-                { label: "Assureur", value: dossier.assureur },
-                { label: "N° de contrat", value: dossier.numeroContrat },
-                { label: "N° de sinistre", value: dossier.numeroSinistre },
-                { label: "Agent / courtier", value: dossier.agent },
-              ]}
-            />
-          </SectionCard>
+          {/* « Assurance » card removed 2026-07-16 — the funnel no longer asks
+              for any of it, so the pro can never be shown it. */}
           <SectionCard title="Paiement">
             <div className="mt-4 grid grid-cols-[9rem_1fr] gap-x-4 gap-y-2.5 text-sm">
               <span className="text-hint">Montant</span>
               <span className="font-semibold">149,00 €</span>
               <span className="text-hint">Date</span>
-              <span>{dossier.paiementDate}</span>
+              <span>{dossier.paidAt ? formatFrDateTime(dossier.paidAt) : "—"}</span>
               <span className="text-hint">Statut Stripe</span>
               <span>
-                <span className="bg-success-soft text-success-strong inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold">
-                  succeeded · Payé ✓
-                </span>
+                {dossier.paidAt ? (
+                  <span className="bg-success-soft text-success-strong inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold">
+                    succeeded · Payé ✓
+                  </span>
+                ) : (
+                  <span className="bg-destructive/10 text-destructive inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold">
+                    failed · Échoué
+                  </span>
+                )}
               </span>
             </div>
           </SectionCard>
@@ -130,19 +171,15 @@ export function DossierDetail({ dossier }: DossierDetailProps) {
         <div className="mt-4.5 grid gap-6 lg:grid-cols-2">
           <div>
             <div className="text-link text-xs font-semibold tracking-wider uppercase">
-              A · Le sinistre
+              Le sinistre
             </div>
             <Facts rows={dossier.sinistre} />
           </div>
           <div>
             <div className="text-link text-xs font-semibold tracking-wider uppercase">
-              B · Surfaces endommagées
+              Travaux par pièce
             </div>
             <Facts rows={dossier.surfaces} />
-            <div className="text-link mt-5.5 text-xs font-semibold tracking-wider uppercase">
-              C · État des éléments
-            </div>
-            <Facts rows={dossier.etats} />
           </div>
         </div>
       </SectionCard>
@@ -154,29 +191,41 @@ export function DossierDetail({ dossier }: DossierDetailProps) {
           </h2>
           <button
             type="button"
-            className="border-input bg-paper text-link cursor-pointer rounded-full border px-4.5 py-2 font-sans text-sm font-semibold"
+            onClick={downloadAll}
+            className="border-input bg-paper text-link hover:border-aqua cursor-pointer rounded-full border px-4.5 py-2 font-sans text-sm font-semibold transition-colors"
           >
             Tout télécharger
           </button>
         </div>
         <ul className="mt-4 grid grid-cols-2 gap-3.5 sm:grid-cols-3 lg:grid-cols-5">
-          {dossier.photos.map((label) => (
-            <li key={label} className="flex flex-col gap-1.5">
+          {dossier.photos.map((photo) => (
+            <li key={photo.src} className="flex flex-col gap-1.5">
               <button
                 type="button"
-                onClick={() => setLightbox(label)}
-                className="border-border-faint bg-photo-placeholder flex aspect-4/3 cursor-zoom-in items-end justify-center rounded-md border p-0 pb-2.5"
+                onClick={() => setLightbox(photo)}
+                aria-label={`Agrandir — ${photo.label}`}
+                className="border-border-faint bg-muted group relative aspect-4/3 cursor-zoom-in overflow-hidden rounded-md border"
               >
-                <span className="text-muted-foreground font-mono text-[10px] tracking-wide">
-                  {label}
+                <Image
+                  src={photo.src}
+                  alt={photo.label}
+                  fill
+                  sizes="(min-width: 1024px) 20vw, (min-width: 640px) 33vw, 50vw"
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+              </button>
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-hint truncate text-xs" title={photo.label}>
+                  {photo.label}
                 </span>
-              </button>
-              <button
-                type="button"
-                className="text-link cursor-pointer self-start border-none bg-transparent p-0 font-sans text-xs underline"
-              >
-                Télécharger
-              </button>
+                <button
+                  type="button"
+                  onClick={() => downloadOne(photo)}
+                  className="text-link hover:text-navy shrink-0 cursor-pointer border-none bg-transparent p-0 font-sans text-xs font-semibold underline"
+                >
+                  Télécharger
+                </button>
+              </div>
             </li>
           ))}
         </ul>
@@ -185,14 +234,36 @@ export function DossierDetail({ dossier }: DossierDetailProps) {
       {lightbox && (
         <div
           role="dialog"
-          aria-label={lightbox}
+          aria-modal="true"
+          aria-label={lightbox.label}
           onClick={() => setLightbox(null)}
-          className="bg-navy/80 fixed inset-0 z-50 flex cursor-zoom-out items-center justify-center p-8"
+          className="bg-navy/85 fixed inset-0 z-[60] flex cursor-zoom-out flex-col items-center justify-center gap-4 p-6 backdrop-blur-sm"
         >
-          <div className="bg-photo-placeholder flex aspect-4/3 w-[min(54rem,92vw)] flex-col items-center justify-center gap-2.5 rounded-xl shadow-2xl">
-            <span className="text-ink-soft font-mono text-sm">{lightbox}</span>
-            <span className="text-muted-foreground text-xs">cliquez n’importe où pour fermer</span>
+          <div className="bg-navy-deep relative aspect-4/3 w-[min(62rem,94vw)] overflow-hidden rounded-xl shadow-2xl">
+            <Image
+              src={lightbox.src}
+              alt={lightbox.label}
+              fill
+              sizes="94vw"
+              className="object-contain"
+            />
           </div>
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+            <span className="text-secondary-foreground text-sm font-semibold">
+              {lightbox.label}
+            </span>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                downloadOne(lightbox);
+              }}
+              className="bg-primary text-primary-foreground shadow-cta-sm cursor-pointer rounded-full px-4 py-1.5 font-sans text-sm font-semibold"
+            >
+              Télécharger
+            </button>
+          </div>
+          <span className="text-aqua-pale/70 text-xs">cliquez n’importe où pour fermer</span>
         </div>
       )}
     </main>

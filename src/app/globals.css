@@ -219,39 +219,6 @@
   background: repeating-linear-gradient(45deg, #e3f0fc 0 10px, #f0f7fe 10px 20px);
 }
 
-/* Signature landing motion — droplet idle float + trust-chip drift (spec 002, AC-5). */
-@keyframes droplet-float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-9px);
-  }
-}
-
-@keyframes droplet-drift {
-  0%,
-  100% {
-    transform: translate(0, 0) rotate(0deg);
-  }
-  50% {
-    transform: translate(6px, -12px) rotate(1.5deg);
-  }
-}
-
-@utility animate-droplet-float {
-  animation: droplet-float 7s ease-in-out infinite;
-}
-
-@utility animate-droplet-drift {
-  animation: droplet-drift 9s ease-in-out infinite;
-}
-
-@utility animate-droplet-drift-alt {
-  animation: droplet-drift 11s ease-in-out -4s infinite;
-}
-
 /* Hero cinematics — living caustics background, film grain, droplet entrance,
    scroll cue for the pinned runway (spec 002). */
 @keyframes caustics-drift {
@@ -322,9 +289,6 @@
   html {
     scroll-behavior: auto;
   }
-  .animate-droplet-float,
-  .animate-droplet-drift,
-  .animate-droplet-drift-alt,
   .animate-droplet-ripple,
   .animate-droplet-ripple-alt,
   .animate-caustics-drift,

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { AdminHeader, DossierDetail, getDossier } from "@/features/admin";
+import { DossierDetail, getDossier } from "@/features/admin";
 
 type PageProps = {
   params: Promise<{ ref: string }>;
@@ -8,7 +8,9 @@ type PageProps = {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { ref } = await params;
-  const dossier = getDossier(decodeURIComponent(ref));
+  // Gated inside getDossier — metadata runs outside the layout, so without
+  // that this would leak a customer's name into the tab title unauthenticated.
+  const { dossier } = await getDossier(decodeURIComponent(ref));
   return {
     title: dossier ? `${dossier.ref} · ${dossier.nom} — Administration` : "Dossier introuvable",
     robots: { index: false, follow: false },
@@ -17,13 +19,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function AdminDossierDetailPage({ params }: PageProps) {
   const { ref } = await params;
-  const dossier = getDossier(decodeURIComponent(ref));
+  const { dossier, readAt } = await getDossier(decodeURIComponent(ref));
   if (!dossier) notFound();
 
-  return (
-    <div className="flex min-h-dvh flex-col">
-      <AdminHeader />
-      <DossierDetail dossier={dossier} />
-    </div>
-  );
+  return <DossierDetail dossier={dossier} now={readAt} />;
 }

@@ -4,7 +4,7 @@ import { CtaButton } from "./cta-button";
 import { DropletGlyph } from "@/components/ui/droplet-glyph";
 import { HeroDroplet } from "./hero-droplet";
 import { HeroIntro } from "./hero-intro";
-import { ImpactJolt } from "./impact-jolt";
+import { HeroKicker } from "./hero-kicker";
 import { ScrollCue } from "./scroll-cue";
 import { StatCounter } from "./stat-counter";
 
@@ -20,8 +20,12 @@ export function Hero() {
     <div className="relative">
       {/* Scroll runway — on desktop the hero pins while scrolling drives the
           droplet's descent → splash, then the drop swims home on its own. */}
-      <div id="hero-runway" className="bg-navy lg:h-[145vh]">
-        <section className="bg-navy-hero relative overflow-hidden lg:sticky lg:top-0 lg:flex lg:h-svh lg:flex-col lg:justify-center">
+      <div id="hero-runway" className="bg-navy lg:h-[145svh]">
+        {/* The pinned hero centres its content in the space *below* the fixed
+            header (pt ≈ header height), so short laptops can never slide the
+            eyebrow underneath it — a structural guarantee, not a magic number
+            per breakpoint. */}
+        <section className="bg-navy-hero relative overflow-hidden lg:sticky lg:top-0 lg:flex lg:h-svh lg:flex-col lg:justify-center lg:pt-19">
           <div aria-hidden className="absolute inset-0">
             <div className="animate-caustics-drift absolute inset-0 will-change-transform">
               <Image
@@ -36,59 +40,54 @@ export function Hero() {
             <div className="from-navy/80 via-navy/30 to-navy/85 absolute inset-0 bg-linear-180" />
             <div className="bg-grain absolute inset-0 opacity-[0.05] mix-blend-soft-light" />
           </div>
-          <div
-            aria-hidden
-            className="font-display text-secondary-foreground/5 pointer-events-none absolute inset-x-6 bottom-24 text-8xl font-bold whitespace-nowrap italic md:text-9xl"
-          >
-            AquaConstat
-          </div>
 
-          <div className="relative mx-auto w-full max-w-6xl px-6 pt-32 pb-28 md:px-10 md:pt-36 md:pb-32 lg:pt-28 lg:pb-10">
-            <div className="grid items-center gap-14 lg:grid-cols-[1.15fr_0.85fr]">
+          {/* Once pinned, the hero's vertical rhythm is a function of viewport
+              height, not a fixed block: every gap scales with svh, so the
+              content fits a 720p laptop and still breathes on a 1080p display.
+              The pb floor reserves room for the scroll cue. */}
+          <div className="relative mx-auto w-full max-w-6xl px-6 pt-28 pb-28 md:px-10 md:pt-32 md:pb-32 lg:pt-[clamp(0.5rem,2svh,1.5rem)] lg:pb-[clamp(3.5rem,7svh,4.5rem)]">
+            <HeroKicker />
+            <div className="mt-10 grid items-center gap-14 md:mt-12 lg:mt-[clamp(1.5rem,4svh,3rem)] lg:grid-cols-[1.15fr_0.85fr]">
               <HeroIntro />
 
-              <div className="relative mx-auto h-80 w-72 md:h-112 md:w-100" aria-hidden>
+              <div
+                /* The droplet is the hero's flagship visual, so it takes the
+                   height it can get: full 28rem on a tall display, shrinking
+                   only as far as a 720p laptop actually requires. */
+                className="relative mx-auto h-80 w-72 md:h-112 md:w-100 lg:aspect-[25/28] lg:h-[clamp(15rem,42svh,28rem)] lg:w-auto"
+                aria-hidden
+              >
                 <div className="from-aqua-bright/25 absolute top-1/2 left-1/2 h-[120%] w-[130%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-radial to-transparent to-65%" />
                 <HeroDroplet />
-                <ImpactJolt className="absolute top-[8%] -right-4 md:-right-10" delay={60}>
-                  <div className="bg-paper/95 text-foreground shadow-chip animate-droplet-drift flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold whitespace-nowrap">
-                    <DropletGlyph />
-                    Devis sous 48 h ouvrées
-                  </div>
-                </ImpactJolt>
-                <ImpactJolt className="absolute bottom-[10%] -left-6 md:-left-12" delay={140}>
-                  <div className="bg-paper/95 text-foreground shadow-chip animate-droplet-drift-alt flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold whitespace-nowrap">
-                    <DropletGlyph />
-                    100 % en ligne
-                  </div>
-                </ImpactJolt>
               </div>
             </div>
 
-            {/* Proof row — anchored to the right half so it sits under the
-                droplet and balances the headline instead of trailing it. */}
-            <div className="border-aqua-pale/15 mt-16 border-t pt-8 lg:mt-12">
-              <dl className="grid grid-cols-2 grid-rows-[auto_auto] gap-x-7 gap-y-7 sm:grid-cols-3 lg:ml-auto lg:max-w-2xl">
+            {/* Proof row — centred under the split, closing the hero. */}
+            <div className="border-aqua-pale/15 mt-16 border-t pt-8 lg:mt-[clamp(1.75rem,5svh,4rem)] lg:pt-[clamp(1rem,3svh,2rem)]">
+              {/* Mobile: each proof is one horizontal row — big value on the
+                  left, label filling the right — so it stays compact and uses
+                  the full width instead of a tall left-hugging column. From sm
+                  up it becomes the centred three-across bar with vertical
+                  dividers. */}
+              <dl className="divide-aqua-pale/12 mx-auto flex flex-col divide-y sm:w-fit sm:flex-row sm:divide-y-0">
                 {stats.map((stat, i) => (
                   <div
                     key={stat.value}
-                    /* Subgrid keeps every value on one baseline and every label
-                       on the next, even when a label wraps to two lines. The
-                       gap-0 override stops the row gap splitting the pairs. */
                     className={cn(
-                      "row-span-2 grid grid-rows-subgrid gap-0",
-                      i > 0 && "border-aqua-pale/15 sm:border-l sm:pl-7",
+                      "flex items-center justify-between gap-5 py-3.5 first:pt-0 last:pb-0",
+                      "sm:flex-col sm:items-stretch sm:justify-start sm:gap-0 sm:px-7 sm:py-0 sm:text-center",
+                      i > 0 && "sm:border-aqua-pale/15 sm:border-l",
                     )}
                   >
-                    <dt className="text-aqua-pale/80 row-start-2 mt-1.5 text-xs leading-snug">
-                      {stat.label}
-                    </dt>
-                    <dd className="font-display text-secondary-foreground row-start-1 text-2xl font-bold md:text-3xl">
+                    <dd className="font-display text-secondary-foreground text-2xl font-bold md:text-3xl">
                       <StatCounter value={stat.value} />{" "}
                       {"suffix" in stat && (
                         <span className="text-base font-semibold">{stat.suffix}</span>
                       )}
                     </dd>
+                    <dt className="text-aqua-pale/80 max-w-[9.5rem] text-right text-xs leading-snug text-balance sm:mt-1.5 sm:max-w-none sm:text-center">
+                      {stat.label}
+                    </dt>
                   </div>
                 ))}
               </dl>
@@ -99,16 +98,35 @@ export function Hero() {
         </section>
       </div>
 
-      {/* CTA bar docked at the hero/content seam (design brief §2, Image 2 anchor). */}
-      <div className="relative z-10 -mt-9 px-6">
-        <div className="bg-paper border-border-soft shadow-panel mx-auto flex max-w-3xl flex-wrap items-center justify-center gap-x-6 gap-y-3 rounded-full border px-7 py-4">
-          <span className="text-sm">
-            <strong className="font-semibold">Devis détaillé sous 48 h ouvrées</strong>
-            <span className="text-muted-foreground"> — 149 € tout compris</span>
-          </span>
-          <CtaButton href="/dossier" size="sm">
-            Démarrer mon dossier
-          </CtaButton>
+      {/* CTA bar docked at the hero/content seam (design brief §2, Image 2
+          anchor). Dark glass with an aqua core glow: a pale pill read as a
+          system alert and died against the light section it sits on. Deeper
+          than the hero navy + a lit ring, so it stays one object across the
+          seam. This is also where the price re-enters after the hero. */}
+      <div className="relative z-10 -mt-10 px-6">
+        <div className="border-aqua-pale/25 bg-navy-deep/90 shadow-cta relative mx-auto max-w-3xl overflow-hidden rounded-3xl border backdrop-blur-xl sm:rounded-full">
+          <div
+            aria-hidden
+            className="from-aqua/30 via-navy-light/10 absolute inset-0 bg-radial to-transparent to-72%"
+          />
+          {/* Lit top edge — the highlight that makes the pill read as glass. */}
+          <div
+            aria-hidden
+            className="via-aqua-pale/45 absolute inset-x-12 top-0 h-px bg-linear-90 from-transparent to-transparent"
+          />
+          <div className="relative flex flex-wrap items-center justify-center gap-x-5 gap-y-3 px-6 py-3.5">
+            <span className="flex items-center gap-2.5">
+              <DropletGlyph />
+              <span className="text-mist text-sm">Devis détaillé sous 48 h ouvrées</span>
+            </span>
+            <span aria-hidden className="bg-aqua-pale/25 hidden h-6 w-px sm:block" />
+            <span className="font-display text-secondary-foreground text-lg font-bold">
+              149 € <span className="text-aqua-pale/80 text-xs font-semibold">tout compris</span>
+            </span>
+            <CtaButton href="/dossier" size="sm">
+              Démarrer mon dossier
+            </CtaButton>
+          </div>
         </div>
       </div>
     </div>

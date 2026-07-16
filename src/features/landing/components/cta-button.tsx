@@ -5,6 +5,8 @@ type CtaButtonProps = {
   href: string;
   children: React.ReactNode;
   size?: "sm" | "md" | "lg";
+  /** Extra classes — e.g. `w-full text-center` to go full-width on mobile. */
+  className?: string;
 };
 
 const sizes = {
@@ -14,13 +16,14 @@ const sizes = {
 } as const;
 
 /** The yellow pill CTA — « Démarrer mon dossier » wherever it appears. */
-export function CtaButton({ href, children, size = "md" }: CtaButtonProps) {
+export function CtaButton({ href, children, size = "md", className }: CtaButtonProps) {
   return (
     <Link
       href={href}
       className={cn(
         "bg-primary text-primary-foreground inline-block rounded-full font-semibold whitespace-nowrap transition-transform motion-safe:hover:-translate-y-px",
         sizes[size],
+        className,
       )}
     >
       {children}

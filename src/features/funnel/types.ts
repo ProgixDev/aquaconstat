@@ -1,21 +1,18 @@
 export type TypeLieu = "maison" | "copro" | "locatif";
 export type Statut = "locataire" | "proprio" | "syndic" | "gerant";
 export type OuiNon = "oui" | "non";
-export type OuiNonNsp = "oui" | "non" | "nsp";
-export type Origine = "moi" | "voisin" | "communes" | "ailleurs";
-export type CauseKey = "canal" | "appareil" | "cheneaux" | "infil" | "gel" | "autre";
-export type InfilKey = "toiture" | "terrasse" | "facade" | "fenetre" | "joint";
-export type PieceKey = "sdb" | "cuisine" | "salon" | "chambre" | "couloir" | "wc" | "autre";
-export type SurfacePart = "murs" | "plaf" | "sols";
-export type EtatKey = "peintures" | "revetements" | "plinthes" | "parquet";
-export type Etat = "" | "intact" | "abime" | "refaire";
+
+/** Étape 2 « Ultra-Light » (spec 003, R2R 2026-07-16). */
+export type PieceKey = "salon" | "chambre" | "cuisine" | "sdb" | "couloirWc";
+export type SurfacePart = "plaf" | "murs" | "sol";
+/** An approximate band, not longueur × largeur — enough to price embellishments. */
+export type Taille = "" | "petite" | "moyenne" | "grande";
 
 export type RoomSurface = {
-  murs: boolean;
   plaf: boolean;
-  sols: boolean;
-  longueur: string;
-  largeur: string;
+  murs: boolean;
+  sol: boolean;
+  taille: Taille;
 };
 
 export type PhotoItem = {
@@ -25,7 +22,7 @@ export type PhotoItem = {
   status: "ok" | "error";
 };
 
-/** Everything the visitor enters across the four steps (constat amiable fields). */
+/** Everything the visitor enters across the four steps. */
 export type FunnelData = {
   // Étape 1 — dossier
   prenom: string;
@@ -38,39 +35,14 @@ export type FunnelData = {
   codePostal: string;
   ville: string;
   typeLieu: TypeLieu | "";
-  moins10Ans: OuiNonNsp | "";
-  usageHabitation: OuiNon | "";
   syndic: string;
   statut: Statut | "";
   proprietaire: string;
   resiliationBail: OuiNon | "";
   locationMeublee: OuiNon | "";
   occupant: "oui" | "non" | "";
-  assureur: string;
-  numeroContrat: string;
-  numeroSinistre: string;
-  agent: string;
-  adresseAssureur: string;
-  // Étape 2 — questionnaire
+  // Étape 2 — questionnaire (only what changes the price of the work)
   dateSinistre: string;
-  rechercheFuite: OuiNon | "";
-  rechercheFuitePar: string;
-  causeIdentifiee: OuiNon | "";
-  causeReparee: OuiNon | "";
-  origine: Origine | "";
-  originePrecision: string;
-  causes: Record<CauseKey, boolean>;
-  canalType: "commune" | "privative" | "";
-  canalFlux: "alim" | "evac" | "";
-  canalAcces: "acc" | "nonacc" | "";
-  infiltrations: Record<InfilKey, boolean>;
-  autreCause: string;
-  tiersResponsable: OuiNon | "";
-  tiersPourquoi: string;
-  tiersNom: string;
   pieces: Record<PieceKey, boolean>;
   surfaces: Partial<Record<PieceKey, RoomSurface>>;
-  etats: Record<EtatKey, Etat>;
-  humidite: OuiNon | "";
-  precisions: string;
 };

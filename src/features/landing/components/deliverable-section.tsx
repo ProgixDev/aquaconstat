@@ -37,8 +37,11 @@ export function DeliverableSection() {
             ))}
           </ul>
         </div>
-        <div className="flex justify-center lg:justify-end">
-          <div className="bg-card shadow-pdf w-76 -rotate-2 rounded-lg px-7 py-7 transition-transform duration-300 motion-safe:hover:rotate-0">
+        {/* The card is fluid up to its 19rem ideal: as a fixed width it set the
+            grid track wider than a 320px viewport and clipped the headline in
+            the *other* column. */}
+        <div className="flex min-w-0 justify-center lg:justify-end">
+          <div className="bg-card shadow-pdf w-full max-w-76 -rotate-2 rounded-lg px-7 py-7 transition-transform duration-300 motion-safe:hover:rotate-0">
             <div className="flex items-center gap-2">
               <DropletGlyph />
               <span className="font-display text-foreground text-xs font-bold tracking-widest">

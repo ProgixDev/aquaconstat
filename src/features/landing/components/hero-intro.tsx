@@ -4,16 +4,15 @@ import { Fragment, useEffect, useRef } from "react";
 import { m } from "@/components/motion";
 import { CtaButton } from "./cta-button";
 import { IMPACT_EVENT } from "./hero-droplet";
-import { SectionBadge } from "./section-badge";
 
+/* « sans attendre » stays one unit so line-balancing can’t split the promise. */
 const words: { text: string; em?: boolean }[] = [
   { text: "Votre" },
   { text: "devis" },
   { text: "dégât" },
   { text: "des" },
   { text: "eaux," },
-  { text: "sans", em: true },
-  { text: "attendre", em: true },
+  { text: "sans attendre", em: true },
   { text: "le" },
   { text: "passage" },
   { text: "d’un" },
@@ -59,40 +58,60 @@ export function HeroIntro() {
 
   return (
     <m.div variants={container} initial="hidden" animate="visible">
-      <m.div variants={block}>
-        <SectionBadge variant="navy">Dégât des eaux · Devis à distance</SectionBadge>
-      </m.div>
       <h1
         ref={headingRef}
-        className="font-display text-secondary-foreground mt-7 text-4xl leading-[1.08] font-bold md:text-6xl"
+        /* Inside the pinned hero the headline scales with viewport height —
+           it is the tallest term in the column, so a fixed 60px is what pushed
+           the stat row into the scroll cue on short laptops. */
+        /* 32px on the narrowest phones (else the headline runs to 5 lines at
+           320px), 36px from 360px up, then the height-scaled clamp once pinned. */
+        className="font-display text-secondary-foreground max-w-[15ch] text-[2rem] leading-[1.08] font-bold text-balance min-[360px]:text-4xl min-[360px]:leading-[1.06] md:text-6xl lg:text-[clamp(2.75rem,5.5svh,3.75rem)]"
       >
         {words.map((w, i) => (
           <Fragment key={i}>
-            <m.span variants={word} className="inline-block will-change-transform">
+            <m.span
+              variants={word}
+              className="inline-block whitespace-nowrap will-change-transform"
+            >
               {w.em ? <em className="text-aqua-bright">{w.text}</em> : w.text}
             </m.span>
             {i < words.length - 1 ? " " : null}
           </Fragment>
         ))}
       </h1>
-      <m.p
+      {/* Nothing between the headline and the CTA by design: the headline
+          states the offer, the stat row states the proof, and « Comment ça
+          marche » tells the process in full a screen below. */}
+      {/* One primary, one quiet anchor — two matched pills competed with each
+          other and made the yellow CTA read as merely one of two options. */}
+      {/* On a phone the primary CTA goes full-width — a bigger tap target that
+          reads as intentional, not a pill floating mid-line — with the quiet
+          anchor centred beneath it. From sm up it returns to a compact row. */}
+      <m.div
         variants={block}
-        className="text-mist/85 mt-7 max-w-lg text-base leading-relaxed md:text-lg"
+        className="mt-8 flex flex-col items-stretch gap-4 sm:mt-10 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-8 sm:gap-y-5 lg:mt-[clamp(1.5rem,4svh,2.5rem)]"
       >
-        Décrivez votre sinistre, ajoutez vos photos, et recevez sous 48 h ouvrées un devis détaillé
-        à transmettre à votre assurance. 100 % en ligne, depuis votre téléphone.
-      </m.p>
-      <m.div variants={block} className="mt-9 flex flex-wrap items-center gap-4">
-        <CtaButton href="/dossier">Démarrer mon dossier</CtaButton>
+        <CtaButton href="/dossier" size="lg" className="w-full text-center sm:w-auto">
+          Démarrer mon dossier
+        </CtaButton>
         <a
           href="#comment-ca-marche"
-          className="border-aqua-pale/30 text-background hover:border-aqua-pale/60 inline-block rounded-full border px-6 py-3.5 text-sm font-semibold"
+          className="text-aqua-pale hover:text-secondary-foreground group inline-flex items-center justify-center gap-2 text-sm font-semibold sm:justify-start"
         >
           Comment ça marche
+          <svg
+            aria-hidden
+            viewBox="0 0 16 16"
+            className="size-3.5 transition-transform duration-200 group-hover:translate-y-0.5"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M8 3v10M3.5 8.5 8 13l4.5-4.5" />
+          </svg>
         </a>
-      </m.div>
-      <m.div variants={block} className="text-aqua-pale/85 mt-4 text-xs">
-        149 € · paiement sécurisé Stripe · sans création de compte
       </m.div>
     </m.div>
   );

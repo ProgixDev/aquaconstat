@@ -22,6 +22,25 @@ authorization boundary, not the client.**
 `deleteAccount` are server actions; `/account` is a Server Component guarded by the middleware and
 re-checked server-side. The `?next=` redirect target is sanitised by `safeRedirectPath`.
 
+### The admin area does not use Supabase auth (ADR-0008)
+
+`/admin/*` is gated by a **shared password** (`ADMIN_PASSWORD`) with an HMAC-signed `httpOnly`
+cookie — Supabase is not provisioned, and there is one operator and no user table. Three things
+about it generalise to any gate in this repo:
+
+- **The boundary is the data layer, not the layout.** `getDossiers()`/`getDossier()` in
+  `src/features/admin/data.ts` call `requireAdminSession()` themselves. A layout is not a reliable
+  gate: Next skips rendering a layout segment when the client's `Next-Router-State-Tree` header
+  claims it is already mounted, and that header is shape-validated but never authenticated —
+  `generateMetadata` runs outside the layout too. Middleware and the layout are convenience.
+- **Middleware only checks that the cookie exists.** It runs on Edge and cannot import
+  `@/core/env` (`server-only`), so it cannot verify a signature. It redirects; it does not
+  authorize.
+- **Data modules holding PII carry `import "server-only"`.** Without it, a value import from a
+  `"use client"` component ships records into a public `/_next/static` chunk — which the
+  middleware matcher excludes, so no gate can reach it. This is not hypothetical; it is what
+  `data.ts` did until 2026-07-16.
+
 ## Database — secure-by-default rules
 
 Migrations in `supabase/migrations/` run in order. `0001_security_baseline` enforces deny-by-default:

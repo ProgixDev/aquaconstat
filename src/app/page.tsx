@@ -11,7 +11,7 @@ import {
   PricingSection,
   SiteFooter,
   SiteHeader,
-  TestimonialsSection,
+  ReassuranceSection,
 } from "@/features/landing";
 
 export const metadata: Metadata = {
@@ -40,7 +40,7 @@ export default function Home() {
           <PricingSection />
         </Reveal>
         <Reveal>
-          <TestimonialsSection />
+          <ReassuranceSection />
         </Reveal>
         <Reveal>
           <FaqSection />

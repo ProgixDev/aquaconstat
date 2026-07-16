@@ -5,12 +5,16 @@ import { DropletGlyph } from "@/components/ui/droplet-glyph";
 import { useFunnelStore } from "../provider";
 import { ContinueCta } from "./continue-cta";
 
+/** Client copy, 2026-07-16 — two shots, each with the reason it matters. */
 const consignes = [
-  "Une vue générale de chaque pièce touchée",
-  "Les zones endommagées de près",
-  "Les murs",
-  "Le plafond",
-  "Le sol",
+  {
+    lead: "De loin",
+    text: "Une vue générale de chaque pièce touchée (pour voir le volume).",
+  },
+  {
+    lead: "De près",
+    text: "Les zones endommagées (murs, plafond, sol) pour bien voir les détails des dégâts.",
+  },
 ] as const;
 
 const MAX_SIZE = 20 * 1024 * 1024;
@@ -45,19 +49,22 @@ export function PhotosForm() {
         ← Retour au questionnaire
       </Link>
       <h1 className="font-display mt-4.5 text-3xl font-bold md:text-[34px]">Ajoutez vos photos</h1>
-      <p className="text-steel mt-3.5 text-base leading-relaxed">
-        Elles sont consultées par le professionnel pour affiner le devis. Comptez 4 à 8 photos.
+      <p className="text-steel mt-3.5 max-w-2xl text-base leading-relaxed">
+        Elles permettront à l’artisan de chiffrer précisément les travaux sans se déplacer. Ne vous
+        inquiétez pas pour la qualité : de simples photos avec votre téléphone suffisent largement.
       </p>
 
       <div className="bg-info mt-5.5 rounded-lg px-5.5 py-4.5">
         <div className="text-link text-xs font-semibold tracking-widest uppercase">
-          Consignes de prise de vue
+          Consignes de prise de vue (comptez 4 à 8 photos)
         </div>
-        <ul className="text-info-foreground mt-3 grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
+        <ul className="text-info-foreground mt-3 flex flex-col gap-2.5 text-sm">
           {consignes.map((c) => (
-            <li key={c} className="flex items-center gap-2.5">
-              <DropletGlyph />
-              {c}
+            <li key={c.lead} className="flex items-start gap-2.5">
+              <DropletGlyph className="mt-1.5" />
+              <span>
+                <strong className="font-semibold">{c.lead} :</strong> {c.text}
+              </span>
             </li>
           ))}
         </ul>
@@ -69,7 +76,7 @@ export function PhotosForm() {
           Depuis la galerie ou l’appareil photo
         </span>
         <span className="text-muted-foreground text-xs">
-          JPG, PNG ou HEIC · 20 Mo max par photo
+          Formats acceptés : JPG, PNG ou HEIC · 20 Mo max par photo
         </span>
         <input type="file" accept="image/*" multiple onChange={onFiles} className="sr-only" />
       </label>
@@ -125,9 +132,11 @@ export function PhotosForm() {
         ))}
       </ul>
       <div className="text-muted-foreground mt-4 text-sm">
-        {okCount} {okCount > 1 ? "photos ajoutées" : "photo ajoutée"} · minimum 1 photo pour
-        continuer
+        {okCount} {okCount > 1 ? "photos ajoutées" : "photo ajoutée"}
       </div>
+      <p className="text-hint mt-1 text-xs">
+        Au moins 1 photo est requise pour passer à l’étape suivante.
+      </p>
 
       <ContinueCta href="/dossier/paiement">Continuer vers le paiement</ContinueCta>
     </>

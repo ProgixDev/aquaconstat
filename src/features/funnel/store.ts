@@ -1,15 +1,6 @@
 import { devtools } from "zustand/middleware";
 import { createStore } from "zustand/vanilla";
-import type {
-  EtatKey,
-  Etat,
-  FunnelData,
-  InfilKey,
-  PhotoItem,
-  PieceKey,
-  RoomSurface,
-  SurfacePart,
-} from "./types";
+import type { FunnelData, PhotoItem, PieceKey, RoomSurface, SurfacePart, Taille } from "./types";
 
 /**
  * Vanilla store factory — the mandatory SSR-safe pattern (docs/conventions/state.md):
@@ -17,7 +8,7 @@ import type {
  * Holds the whole funnel in memory; the backend spec will own persistence.
  */
 
-const emptyRoom: RoomSurface = { murs: false, plaf: false, sols: false, longueur: "", largeur: "" };
+const emptyRoom: RoomSurface = { plaf: false, murs: false, sol: false, taille: "" };
 
 const initialData: FunnelData = {
   prenom: "",
@@ -30,55 +21,21 @@ const initialData: FunnelData = {
   codePostal: "",
   ville: "",
   typeLieu: "",
-  moins10Ans: "",
-  usageHabitation: "",
   syndic: "",
   statut: "",
   proprietaire: "",
   resiliationBail: "",
   locationMeublee: "",
   occupant: "",
-  assureur: "",
-  numeroContrat: "",
-  numeroSinistre: "",
-  agent: "",
-  adresseAssureur: "",
   dateSinistre: "",
-  rechercheFuite: "",
-  rechercheFuitePar: "",
-  causeIdentifiee: "",
-  causeReparee: "",
-  origine: "",
-  originePrecision: "",
-  causes: {
-    canal: false,
-    appareil: false,
-    cheneaux: false,
-    infil: false,
-    gel: false,
-    autre: false,
-  },
-  canalType: "",
-  canalFlux: "",
-  canalAcces: "",
-  infiltrations: { toiture: false, terrasse: false, facade: false, fenetre: false, joint: false },
-  autreCause: "",
-  tiersResponsable: "",
-  tiersPourquoi: "",
-  tiersNom: "",
   pieces: {
-    sdb: false,
-    cuisine: false,
     salon: false,
     chambre: false,
-    couloir: false,
-    wc: false,
-    autre: false,
+    cuisine: false,
+    sdb: false,
+    couloirWc: false,
   },
   surfaces: {},
-  etats: { peintures: "", revetements: "", plinthes: "", parquet: "" },
-  humidite: "",
-  precisions: "",
 };
 
 export type FunnelState = {
@@ -87,12 +44,9 @@ export type FunnelState = {
   nextPhotoId: number;
   reference: string | null;
   setField: <K extends keyof FunnelData>(key: K, value: FunnelData[K]) => void;
-  toggleCause: (key: keyof FunnelData["causes"]) => void;
-  toggleInfiltration: (key: InfilKey) => void;
   togglePiece: (key: PieceKey) => void;
   toggleSurfacePart: (room: PieceKey, part: SurfacePart) => void;
-  setSurfaceDim: (room: PieceKey, dim: "longueur" | "largeur", value: string) => void;
-  setEtat: (key: EtatKey, value: Etat) => void;
+  setRoomTaille: (room: PieceKey, taille: Taille) => void;
   addPhotos: (files: { name: string; url: string; tooLarge: boolean }[]) => void;
   removePhoto: (id: number) => void;
   retryPhoto: (id: number) => void;
@@ -111,25 +65,6 @@ export function createFunnelStore(seed: Partial<FunnelData> = {}) {
         reference: null,
         setField: (key, value) =>
           set((s) => ({ data: { ...s.data, [key]: value } }), undefined, "funnel/setField"),
-        toggleCause: (key) =>
-          set(
-            (s) => ({
-              data: { ...s.data, causes: { ...s.data.causes, [key]: !s.data.causes[key] } },
-            }),
-            undefined,
-            "funnel/toggleCause",
-          ),
-        toggleInfiltration: (key) =>
-          set(
-            (s) => ({
-              data: {
-                ...s.data,
-                infiltrations: { ...s.data.infiltrations, [key]: !s.data.infiltrations[key] },
-              },
-            }),
-            undefined,
-            "funnel/toggleInfiltration",
-          ),
         togglePiece: (key) =>
           set(
             (s) => ({
@@ -155,25 +90,19 @@ export function createFunnelStore(seed: Partial<FunnelData> = {}) {
             undefined,
             "funnel/toggleSurfacePart",
           ),
-        setSurfaceDim: (room, dim, value) =>
+        setRoomTaille: (room, taille) =>
           set(
             (s) => {
               const current = s.data.surfaces[room] ?? emptyRoom;
               return {
                 data: {
                   ...s.data,
-                  surfaces: { ...s.data.surfaces, [room]: { ...current, [dim]: value } },
+                  surfaces: { ...s.data.surfaces, [room]: { ...current, taille } },
                 },
               };
             },
             undefined,
-            "funnel/setSurfaceDim",
-          ),
-        setEtat: (key, value) =>
-          set(
-            (s) => ({ data: { ...s.data, etats: { ...s.data.etats, [key]: value } } }),
-            undefined,
-            "funnel/setEtat",
+            "funnel/setRoomTaille",
           ),
         addPhotos: (files) =>
           set(
