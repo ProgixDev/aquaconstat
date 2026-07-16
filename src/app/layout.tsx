@@ -26,7 +26,8 @@ export const metadata: Metadata = {
     template: `%s · ${site.name}`,
   },
   description: site.description,
-  alternates: { canonical: "/" },
+  // Fail-closed until the real domain is configured — see site.isPublic.
+  alternates: site.isPublic ? { canonical: "/" } : undefined,
   openGraph: {
     type: "website",
     siteName: site.name,
@@ -40,7 +41,7 @@ export const metadata: Metadata = {
     title: site.title,
     description: site.description,
   },
-  robots: { index: true, follow: true },
+  robots: site.isPublic ? { index: true, follow: true } : { index: false, follow: false },
 };
 
 export default function RootLayout({
