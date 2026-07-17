@@ -11,9 +11,27 @@ import { SectionBadge } from "./section-badge";
  */
 export function EcoSection() {
   return (
-    <section className="bg-card relative overflow-hidden">
+    <section className="bg-eco-band relative overflow-hidden">
       <div aria-hidden className="absolute inset-0">
-        <div className="from-aqua-pale/25 absolute top-1/2 left-1/2 size-[36rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-radial to-transparent to-70%" />
+        {/* A soft green halo cradles the globe — nature emanating from the
+            earth, kept to the one teal-green the palette already carries. */}
+        <div className="from-success/15 absolute top-8 left-1/2 size-80 -translate-x-1/2 rounded-full bg-radial to-transparent to-70% blur-2xl" />
+        {/* Gentle rolling ground: a green hill settling into an aqua one — the
+            nature vibe resolving back into the brand's water. */}
+        <svg
+          className="absolute inset-x-0 bottom-0 h-28 w-full md:h-36"
+          viewBox="0 0 1440 200"
+          preserveAspectRatio="none"
+        >
+          <path
+            d="M0,108 C240,50 480,168 720,128 C960,88 1200,150 1440,98 L1440,200 L0,200 Z"
+            className="fill-success/10"
+          />
+          <path
+            d="M0,150 C300,104 600,186 900,154 C1140,130 1320,172 1440,138 L1440,200 L0,200 Z"
+            className="fill-aqua/10"
+          />
+        </svg>
       </div>
 
       <div className="relative mx-auto max-w-3xl px-6 py-14 text-center md:py-18">

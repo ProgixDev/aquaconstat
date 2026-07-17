@@ -214,6 +214,16 @@
     radial-gradient(55% 50% at 50% 115%, rgb(127 200 248 / 0.18), transparent 70%);
 }
 
+/* « Éco-responsable » band — an aqua sky settling onto a soft green rise, so
+   the nature theme reads without leaving the aquatic palette. The green is a
+   low-alpha teal from --success (the one green already in the system). */
+@utility bg-eco-band {
+  background-color: var(--card);
+  background-image:
+    radial-gradient(115% 75% at 50% -25%, rgb(127 200 248 / 0.26) 0%, transparent 55%),
+    radial-gradient(100% 80% at 50% 128%, rgb(42 157 138 / 0.13) 0%, transparent 62%);
+}
+
 /* Hatched placeholder tile for photos awaiting real storage (specs 003/004). */
 @utility bg-photo-placeholder {
   background: repeating-linear-gradient(45deg, #e3f0fc 0 10px, #f0f7fe 10px 20px);
