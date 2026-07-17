@@ -27,6 +27,11 @@ ship → /update-docs                           status: shipped; learnings disti
 
 ## Index
 
-| #                            | Spec                   | Status  |
-| ---------------------------- | ---------------------- | ------- |
-| [001](001-task-list/spec.md) | Task list demo feature | shipped |
+| #                                  | Spec                                               | Status  |
+| ---------------------------------- | -------------------------------------------------- | ------- |
+| [001](001-task-list/spec.md)       | Task list demo feature                             | shipped |
+| [002](002-landing-accueil/spec.md) | Landing / page d’accueil                           | active  |
+| [003](003-funnel-devis/spec.md)    | Funnel devis (étapes 1–4 + confirmation)           | active  |
+| [004](004-admin/spec.md)           | Admin back-office                                  | active  |
+| [005](005-pages-legales/spec.md)   | Pages légales (mentions, confidentialité, CGV)     | active  |
+| [006](006-backend/spec.md)         | Backend (persistence, paiement, devis, admin réel) | draft   |
