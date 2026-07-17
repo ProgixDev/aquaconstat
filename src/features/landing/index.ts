@@ -6,6 +6,7 @@ export { SiteHeader } from "./components/site-header";
 export { Hero } from "./components/hero";
 export { AudienceSection } from "./components/audience-section";
 export { HowItWorksSection } from "./components/how-it-works-section";
+export { EcoSection } from "./components/eco-section";
 export { PhotoGuideSection } from "./components/photo-guide-section";
 export { DeliverableSection } from "./components/deliverable-section";
 export { PricingSection } from "./components/pricing-section";

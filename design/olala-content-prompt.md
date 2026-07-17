@@ -135,6 +135,12 @@ section now closes on the « Démarrer mon dossier » CTA — previously it ende
 5. « Recevez votre devis » — « Un devis détaillé, préparé par un professionnel, envoyé par
    e-mail sous 48 h ouvrées. »
 
+**Section — Éco-responsable** _(Added 2026-07-16 — client copy; rendered after « Comment ça
+marche », a light compact band, no CTA)_ : titre « 🌱 0 kilomètre parcouru, 100 % d’efficacité. »
+puis « Pourquoi faire rouler un camion pour de simples photos ? En chiffrant votre sinistre à
+distance, Ôlala supprime les trajets inutiles. C’est bon pour votre agenda, et parfait pour la
+planète. »
+
 **Section — Ce que vous recevez :** « Un devis détaillé des travaux de remise en état, établi
 par un professionnel à partir de votre questionnaire et de vos photos, au format PDF, prêt à être
 transmis à votre assurance. » (3 bullets: chiffrage poste par poste · document daté et signé ·

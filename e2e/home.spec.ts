@@ -10,8 +10,14 @@ test("@cuj CUJ-01: visitor lands, understands, starts a dossier", async ({ page 
       name: /votre assurance vous demande un devis \? recevez-le en 48 h/i,
     }),
   ).toBeVisible();
+  // « Éco-responsable » band (client copy, 2026-07-16)
+  await expect(
+    page.getByRole("heading", { name: /0 kilomètre parcouru, 100 % d’efficacité/ }),
+  ).toBeVisible();
   await expect(page.getByRole("heading", { name: "Questions fréquentes" })).toBeVisible();
   await shot(page, "home-landing");
+  await page.getByRole("heading", { name: /0 kilomètre parcouru/ }).scrollIntoViewIfNeeded();
+  await shot(page, "home-eco");
 
   await page.getByRole("link", { name: "Démarrer mon dossier" }).first().click();
   await expect(page).toHaveURL(/\/dossier/);

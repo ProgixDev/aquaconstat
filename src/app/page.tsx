@@ -3,6 +3,7 @@ import { Reveal } from "@/components/ui/reveal";
 import {
   AudienceSection,
   DeliverableSection,
+  EcoSection,
   FaqSection,
   FinalCtaSection,
   Hero,
@@ -30,6 +31,9 @@ export default function Home() {
         </Reveal>
         <Reveal>
           <HowItWorksSection />
+        </Reveal>
+        <Reveal>
+          <EcoSection />
         </Reveal>
         <Reveal>
           <PhotoGuideSection />

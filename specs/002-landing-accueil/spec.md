@@ -24,8 +24,9 @@ briefs are the source of truth:
 A visitor landing on `/` sees, in order: a pill header with logo, anchor nav and CTA; a navy
 cinematic hero (badge, headline, two CTAs, animated droplet, centred stat row
 48 h / 100 % / Stripe — no sub-paragraph and no CTA micro-copy); an audience section (4 profile
-cards); « Comment ça marche » (5 numbered steps); a photo-guidance section; a navy « Ce que vous
-recevez » band with a mock devis PDF card; a « Premiers clients » social-proof band (added
+cards); « Comment ça marche » (5 numbered steps); a light « Éco-responsable » band (added
+2026-07-16, client copy: the remote model's no-truck / greener payoff); a photo-guidance section;
+a navy « Ce que vous recevez » band with a mock devis PDF card; a « Premiers clients » social-proof band (added
 2026-07-16, client feedback); a navy « Réassurance » band (the 4 objections from the content
 brief) — moved before the price on 2026-07-16 (client feedback: objections block the decision
 before the visitor reaches the tarif); a compact pricing bar (82,90 €, with a market anchor);
