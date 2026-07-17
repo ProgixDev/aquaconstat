@@ -1,3 +1,4 @@
+import { EcoAnimation } from "./eco-animation";
 import { SectionBadge } from "./section-badge";
 
 /**
@@ -6,7 +7,7 @@ import { SectionBadge } from "./section-badge";
  * the five at-distance steps, the no-truck argument reinforces « sans
  * déplacement » with a benefit rather than a feature. Kept light and compact —
  * one claim, one paragraph, no CTA (the surrounding sections already carry the
- * conversion weight).
+ * conversion weight). The 🌱 emoji became an animated globe (client request).
  */
 export function EcoSection() {
   return (
@@ -19,8 +20,9 @@ export function EcoSection() {
         <div className="flex justify-center">
           <SectionBadge>Éco-responsable</SectionBadge>
         </div>
-        <h2 className="font-display mt-4 text-3xl leading-snug font-bold md:text-4xl">
-          <span aria-hidden>🌱 </span>0 kilomètre parcouru, 100 % d’efficacité.
+        <EcoAnimation />
+        <h2 className="font-display mt-2 text-3xl leading-snug font-bold md:text-4xl">
+          0 kilomètre parcouru, 100 % d’efficacité.
         </h2>
         <p className="text-steel mx-auto mt-5 max-w-xl text-base leading-relaxed md:text-lg">
           Pourquoi faire rouler un camion pour de simples photos ? En chiffrant votre sinistre à
