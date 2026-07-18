@@ -36,6 +36,11 @@ export function FinalCtaSection() {
         <div className="text-aqua-pale/85 mt-4 text-xs">
           82,90 € · paiement sécurisé Stripe · sans création de compte
         </div>
+        {/* Brand sign-off (client, 2026-07-18) — the slogan closes the page's
+            last argument, quiet under the CTA block. */}
+        <p className="font-display text-aqua-pale/70 mt-8 text-sm font-semibold italic">
+          Ôlala — Du sinistre à la solution.
+        </p>
       </div>
     </section>
   );

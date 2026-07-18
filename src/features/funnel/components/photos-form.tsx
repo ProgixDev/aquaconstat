@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { AnimatePresence, listItem, m } from "@/components/motion";
 import { DropletGlyph } from "@/components/ui/droplet-glyph";
 import { useFunnelStore } from "../provider";
 import { ContinueCta } from "./continue-cta";
@@ -72,66 +73,108 @@ export function PhotosForm() {
         </ul>
       </div>
 
-      <label className="border-aqua/50 bg-paper hover:border-link mt-5.5 flex cursor-pointer flex-col items-center gap-2 rounded-xl border-[1.5px] border-dashed px-6 py-8 text-center">
+      <div className="border-aqua/50 bg-paper mt-5.5 flex flex-col items-center gap-3 rounded-xl border-[1.5px] border-dashed px-6 py-8 text-center">
         <DropletGlyph size="lg" />
-        <span className="text-foreground text-base font-semibold">
-          Depuis la galerie ou l’appareil photo
-        </span>
+        {/* Camera-first (client UX request, 2026-07-18): on smartphones,
+            `capture="environment"` opens the native camera directly on the
+            rear lens — no gallery digging, the « sur photo » promise made
+            instant. Desktop browsers ignore `capture` and fall back to the
+            file dialog, so the same control serves both. */}
+        <label className="bg-primary text-primary-foreground shadow-cta-sm inline-flex cursor-pointer items-center gap-2.5 rounded-full px-6 py-3 text-base font-semibold transition-transform hover:-translate-y-0.5">
+          <svg
+            aria-hidden
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="size-5 flex-none"
+          >
+            <path d="M14.5 4h-5L7.5 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3.5l-2-3Z" />
+            <circle cx="12" cy="13" r="3" />
+          </svg>
+          Prendre une photo
+          <input
+            type="file"
+            accept="image/*"
+            capture="environment"
+            onChange={onFiles}
+            className="sr-only"
+          />
+        </label>
+        {/* Gallery fallback — `capture` locks an input to the camera, so the
+            photos already in the visitor's gallery need their own input. */}
+        <label className="text-link hover:text-link-hover cursor-pointer text-sm font-semibold underline decoration-1 underline-offset-4">
+          ou choisir dans la galerie
+          <input type="file" accept="image/*" multiple onChange={onFiles} className="sr-only" />
+        </label>
         <span className="text-muted-foreground text-xs">
           Formats acceptés : JPG, PNG ou HEIC · 20 Mo max par photo
         </span>
-        <input type="file" accept="image/*" multiple onChange={onFiles} className="sr-only" />
-      </label>
+      </div>
 
+      {/* Thumbnails spring in as they land and fade out on delete; `layout`
+          lets the grid close the gap smoothly instead of snapping. */}
       <ul className="mt-5.5 grid grid-cols-2 gap-3.5 sm:grid-cols-3">
-        {photos.map((photo) => (
-          <li key={photo.id} className="flex flex-col gap-2">
-            {photo.status === "error" ? (
-              <div className="border-destructive/30 bg-destructive-soft flex aspect-4/3 w-full flex-col items-center justify-center gap-1.5 rounded-md border-[1.5px] p-3 text-center">
-                <span className="text-destructive font-mono text-[10px]">{photo.name}</span>
-                <span className="text-destructive text-xs leading-snug font-semibold">
-                  Fichier trop lourd (20 Mo max)
-                </span>
-                <span className="text-destructive/80 text-xs leading-snug">
-                  Réessayez en qualité réduite depuis votre téléphone.
-                </span>
-                <button
-                  type="button"
-                  onClick={() => retryPhoto(photo.id)}
-                  className="border-destructive/60 bg-paper text-destructive mt-0.5 cursor-pointer rounded-full border px-3.5 py-1.5 font-sans text-xs font-semibold"
-                >
-                  Réessayer
-                </button>
-              </div>
-            ) : (
-              <>
-                {/* Object URLs from the visitor's device — next/image can't optimize blob: URLs. */}
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={photo.url}
-                  alt={photo.name}
-                  className="border-border-faint aspect-4/3 w-full rounded-md border object-cover"
-                />
-                <div className="flex items-center justify-between gap-2">
-                  <div className="from-aqua-bright to-aqua h-1 flex-1 rounded-full bg-linear-90" />
-                  <span className="text-success text-xs font-semibold whitespace-nowrap">
-                    Téléchargée
+        <AnimatePresence initial={false}>
+          {photos.map((photo) => (
+            <m.li
+              key={photo.id}
+              layout
+              initial={listItem.initial}
+              animate={listItem.animate}
+              exit={listItem.exit}
+              transition={listItem.transition}
+              className="flex flex-col gap-2"
+            >
+              {photo.status === "error" ? (
+                <div className="border-destructive/30 bg-destructive-soft flex aspect-4/3 w-full flex-col items-center justify-center gap-1.5 rounded-md border-[1.5px] p-3 text-center">
+                  <span className="text-destructive font-mono text-[10px]">{photo.name}</span>
+                  <span className="text-destructive text-xs leading-snug font-semibold">
+                    Fichier trop lourd (20 Mo max)
                   </span>
+                  <span className="text-destructive/80 text-xs leading-snug">
+                    Réessayez en qualité réduite depuis votre téléphone.
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => retryPhoto(photo.id)}
+                    className="border-destructive/60 bg-paper text-destructive mt-0.5 cursor-pointer rounded-full border px-3.5 py-1.5 font-sans text-xs font-semibold"
+                  >
+                    Réessayer
+                  </button>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    URL.revokeObjectURL(photo.url);
-                    removePhoto(photo.id);
-                  }}
-                  className="text-muted-foreground cursor-pointer self-start border-none bg-transparent p-0 font-sans text-xs underline"
-                >
-                  Supprimer
-                </button>
-              </>
-            )}
-          </li>
-        ))}
+              ) : (
+                <>
+                  {/* Object URLs from the visitor's device — next/image can't optimize blob: URLs. */}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={photo.url}
+                    alt={photo.name}
+                    className="border-border-faint aspect-4/3 w-full rounded-md border object-cover"
+                  />
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="from-aqua-bright to-aqua h-1 flex-1 rounded-full bg-linear-90" />
+                    <span className="text-success text-xs font-semibold whitespace-nowrap">
+                      Téléchargée
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      URL.revokeObjectURL(photo.url);
+                      removePhoto(photo.id);
+                    }}
+                    className="text-muted-foreground cursor-pointer self-start border-none bg-transparent p-0 font-sans text-xs underline"
+                  >
+                    Supprimer
+                  </button>
+                </>
+              )}
+            </m.li>
+          ))}
+        </AnimatePresence>
       </ul>
       <div className="text-muted-foreground mt-4 text-sm">
         {okCount} {okCount > 1 ? "photos ajoutées" : "photo ajoutée"}

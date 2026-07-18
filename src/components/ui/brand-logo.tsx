@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 type BrandLogoProps = {
@@ -10,8 +11,9 @@ type BrandLogoProps = {
 };
 
 /**
- * Ôlala mark — glossy gradient droplet over a ripple, with the
- * two-tone Playfair wordmark. `dark` is for navy surfaces.
+ * Ôlala mark — the signature photoreal droplet from the hero (`/droplet.png`),
+ * so the logo and the hero read as one brand, with the two-tone Playfair
+ * wordmark. `dark` is for navy surfaces.
  */
 export function BrandLogo({
   variant = "light",
@@ -21,34 +23,17 @@ export function BrandLogo({
 }: BrandLogoProps) {
   return (
     <span className={cn("flex items-center gap-2.5", className)}>
-      <svg
-        viewBox="0 0 24 26"
-        aria-hidden="true"
-        focusable="false"
-        className={cn("h-[30px] w-auto", markClassName)}
-      >
-        <defs>
-          <linearGradient id="ac-drop-mark" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor="var(--aqua-bright)" />
-            <stop offset="0.55" stopColor="var(--aqua)" />
-            <stop offset="1" stopColor="var(--navy-light)" />
-          </linearGradient>
-        </defs>
-        <ellipse cx="12" cy="24" rx="7" ry="1.6" fill="var(--aqua)" opacity="0.3" />
-        <path
-          d="M12 1.5C12 1.5 4.75 10.3 4.75 15.4a7.25 7.25 0 0 0 14.5 0C19.25 10.3 12 1.5 12 1.5Z"
-          fill="url(#ac-drop-mark)"
-        />
-        <ellipse
-          cx="9.3"
-          cy="13.4"
-          rx="1.9"
-          ry="3.1"
-          transform="rotate(-18 9.3 13.4)"
-          fill="var(--paper)"
-          opacity="0.55"
-        />
-      </svg>
+      {/* The 900×900 asset centres a portrait droplet, so a square box shows it
+          upright; -mx trims the transparent side margins so it sits tight to
+          the wordmark. */}
+      <Image
+        src="/droplet.png"
+        alt=""
+        aria-hidden
+        width={30}
+        height={30}
+        className={cn("-mx-1 h-[30px] w-auto", markClassName)}
+      />
       <span
         className={cn(
           "font-display text-base font-bold tracking-widest",

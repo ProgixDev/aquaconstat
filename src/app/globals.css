@@ -275,6 +275,122 @@
   animation: scroll-cue 1.9s ease-in-out infinite;
 }
 
+/* « Engagement vert » hero pledge — living nature motion: leaves adrift on a
+   breeze around the pill, and a green halo that breathes behind it. Each leaf
+   customises the shared drift via --leaf-* props (distance, sway, spin, clock),
+   so five elements share one keyframe. */
+@keyframes eco-leaf-drift {
+  0% {
+    transform: translate(0, 0) rotate(0deg) scale(0.7);
+    opacity: 0;
+  }
+  15% {
+    opacity: var(--leaf-o, 0.6);
+  }
+  75% {
+    opacity: var(--leaf-o, 0.6);
+  }
+  100% {
+    transform: translate(var(--leaf-x, 14px), -58px) rotate(var(--leaf-r, 45deg)) scale(1);
+    opacity: 0;
+  }
+}
+
+@utility animate-eco-leaf {
+  animation: eco-leaf-drift var(--leaf-t, 7s) ease-in-out var(--leaf-d, 0s) infinite;
+}
+
+@keyframes eco-breathe {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.14);
+    opacity: 0.9;
+  }
+}
+
+@utility animate-eco-breathe {
+  animation: eco-breathe 5s ease-in-out infinite;
+}
+
+/* The pledge blooms into place after the headline choreography has started —
+   a soft rise-and-settle, not a pop. */
+@keyframes eco-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.94);
+  }
+}
+
+@utility animate-eco-rise {
+  animation: eco-rise 1s cubic-bezier(0.16, 1, 0.3, 1) 0.55s backwards;
+}
+
+/* Brand slogan « Du sinistre à la solution » — water-glass type: an aqua
+   gradient clipped into the letters with a slow light shimmer sweeping
+   through, echoing the hero droplet's glint. */
+@keyframes slogan-shimmer {
+  0%,
+  35% {
+    background-position: 130% 0;
+  }
+  65%,
+  100% {
+    background-position: -30% 0;
+  }
+}
+
+@utility text-slogan {
+  background-image: linear-gradient(
+    100deg,
+    var(--aqua-pale) 0%,
+    var(--aqua-bright) 32%,
+    #ffffff 50%,
+    var(--aqua-bright) 68%,
+    var(--aqua-pale) 100%
+  );
+  background-size: 220% 100%;
+  background-position: 130% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: slogan-shimmer 5.5s ease-in-out infinite;
+}
+
+/* A miniature landscape lives inside the pill: rolling hills drifting slowly
+   under a breeze (the strip is 2× wide and pans). */
+@keyframes eco-hills-drift {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-25%);
+  }
+}
+
+@utility animate-eco-hills {
+  animation: eco-hills-drift 18s ease-in-out infinite alternate;
+}
+
+/* Sunlight through the canopy — a skewed green glint sweeps the white glass
+   every few seconds, with a long idle between passes. */
+@keyframes eco-sheen {
+  0%,
+  55% {
+    transform: translateX(-180%) skewX(-16deg);
+  }
+  100% {
+    transform: translateX(380%) skewX(-16deg);
+  }
+}
+
+@utility animate-eco-sheen {
+  animation: eco-sheen 6.5s ease-in-out 2.2s infinite;
+}
+
 /* Confirmation success mark — expanding droplet ripple (spec 003). */
 @keyframes droplet-ripple {
   0% {
@@ -303,7 +419,13 @@
   .animate-droplet-ripple-alt,
   .animate-caustics-drift,
   .animate-hero-drop-in,
-  .animate-scroll-cue {
+  .animate-scroll-cue,
+  .animate-eco-leaf,
+  .animate-eco-breathe,
+  .animate-eco-rise,
+  .animate-eco-sheen,
+  .animate-eco-hills,
+  .text-slogan {
     animation: none;
   }
 }

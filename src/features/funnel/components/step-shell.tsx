@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { StepTransition } from "./step-transition";
 
 const steps = [
   { label: "Dossier", href: "/dossier" },
@@ -105,7 +106,7 @@ export function StepShell({ step, children }: StepShellProps) {
         </ol>
       </nav>
       <main className="bg-card rounded-panel shadow-panel mx-auto mt-6 w-full max-w-2xl flex-1 px-6 pt-10 pb-14 md:px-12">
-        {children}
+        <StepTransition>{children}</StepTransition>
       </main>
     </>
   );

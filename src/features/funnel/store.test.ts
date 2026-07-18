@@ -19,23 +19,23 @@ describe("funnel store", () => {
     expect(store.getState().data.pieces.sdb).toBe(false);
   });
 
-  it("tracks what to redo and the size band per room (AC-3)", () => {
+  it("tracks what to redo and the m² estimate per room (AC-3)", () => {
     const store = createFunnelStore();
     store.getState().toggleSurfacePart("sdb", "plaf");
-    store.getState().setRoomTaille("sdb", "moyenne");
+    store.getState().setRoomSurfaceM2("sdb", "12");
     const sdb = store.getState().data.surfaces.sdb;
     expect(sdb?.plaf).toBe(true);
     expect(sdb?.murs).toBe(false);
-    expect(sdb?.taille).toBe("moyenne");
+    expect(sdb?.surfaceM2).toBe("12");
   });
 
   it("keeps each room's answers separate (AC-3)", () => {
     const store = createFunnelStore();
     store.getState().toggleSurfacePart("sdb", "plaf");
-    store.getState().setRoomTaille("couloirWc", "petite");
-    expect(store.getState().data.surfaces.sdb?.taille).toBe("");
+    store.getState().setRoomSurfaceM2("couloirWc", "8,5");
+    expect(store.getState().data.surfaces.sdb?.surfaceM2).toBe("");
     expect(store.getState().data.surfaces.couloirWc?.plaf).toBe(false);
-    expect(store.getState().data.surfaces.couloirWc?.taille).toBe("petite");
+    expect(store.getState().data.surfaces.couloirWc?.surfaceM2).toBe("8,5");
   });
 
   it("keeps oversized photos as errors and counts only ok ones (AC-4)", () => {

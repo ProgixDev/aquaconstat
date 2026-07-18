@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { CtaButton } from "./cta-button";
 import { DropletGlyph } from "@/components/ui/droplet-glyph";
 import { HeroDroplet } from "./hero-droplet";
+import { HeroEcoPledge } from "./hero-eco-pledge";
 import { HeroIntro } from "./hero-intro";
 import { HeroKicker } from "./hero-kicker";
 import { ScrollCue } from "./scroll-cue";
@@ -45,16 +46,18 @@ export function Hero() {
               height, not a fixed block: every gap scales with svh, so the
               content fits a 720p laptop and still breathes on a 1080p display.
               The pb floor reserves room for the scroll cue. */}
-          <div className="relative mx-auto w-full max-w-6xl px-6 pt-28 pb-28 md:px-10 md:pt-32 md:pb-32 lg:pt-[clamp(0.5rem,2svh,1.5rem)] lg:pb-[clamp(3.5rem,7svh,4.5rem)]">
+          <div className="relative mx-auto w-full max-w-6xl px-6 pt-26 pb-16 md:px-10 md:pt-32 md:pb-32 lg:pt-[clamp(0.5rem,2svh,1.5rem)] lg:pb-[clamp(3.5rem,7svh,4.5rem)]">
             <HeroKicker />
-            <div className="mt-10 grid items-center gap-14 md:mt-12 lg:mt-[clamp(1.5rem,4svh,3rem)] lg:grid-cols-[1.15fr_0.85fr]">
+            <div className="mt-4 grid items-center gap-6 sm:mt-10 sm:gap-12 md:mt-12 lg:mt-[clamp(1.5rem,4svh,3rem)] lg:grid-cols-[1.15fr_0.85fr]">
               <HeroIntro />
 
               <div
                 /* The droplet is the hero's flagship visual, so it takes the
                    height it can get: full 28rem on a tall display, shrinking
-                   only as far as a 720p laptop actually requires. */
-                className="relative mx-auto h-80 w-72 md:h-112 md:w-100 lg:aspect-[25/28] lg:h-[clamp(15rem,42svh,28rem)] lg:w-auto"
+                   only as far as a 720p laptop actually requires. The phone
+                   size is tuned so the droplet reads big yet the green pledge
+                   below it still lands in the fold. */
+                className="relative mx-auto h-56 w-48 md:h-104 md:w-92 lg:aspect-[25/28] lg:h-[clamp(13.5rem,37svh,25rem)] lg:w-auto"
                 aria-hidden
               >
                 <div className="from-aqua-bright/25 absolute top-1/2 left-1/2 h-[120%] w-[130%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-radial to-transparent to-65%" />
@@ -62,14 +65,19 @@ export function Hero() {
               </div>
             </div>
 
-            {/* Proof row — centred under the split, closing the hero. */}
-            <div className="border-aqua-pale/15 mt-16 border-t pt-8 lg:mt-[clamp(1.75rem,5svh,4rem)] lg:pt-[clamp(1rem,3svh,2rem)]">
-              {/* Mobile: each proof is one horizontal row — big value on the
-                  left, label filling the right — so it stays compact and uses
-                  the full width instead of a tall left-hugging column. From sm
-                  up it becomes the centred three-across bar with vertical
-                  dividers. */}
-              <dl className="divide-aqua-pale/12 mx-auto flex flex-col divide-y sm:w-fit sm:flex-row sm:divide-y-0">
+            {/* « Engagement vert » — the client's major selling point, moved
+                front-and-centre right under the hero split (client feedback,
+                2026-07-18): it must jump out on the first screen. The
+                48 h / 100 % / Stripe proof row is demoted just below it. */}
+            <div className="border-aqua-pale/15 mt-5 border-t pt-4 sm:mt-10 sm:pt-7 lg:mt-[clamp(1.25rem,3.5svh,2.75rem)] lg:pt-[clamp(0.75rem,2.5svh,1.5rem)]">
+              <HeroEcoPledge />
+
+              {/* 48 h / 100 % / Stripe — moved below the green line, now the
+                  secondary proof of the hero.
+                  Mobile: each proof is one horizontal row — big value on the
+                  left, label filling the right. From sm up it becomes the
+                  centred three-across bar with vertical dividers. */}
+              <dl className="divide-aqua-pale/12 mx-auto mt-9 flex flex-col divide-y sm:mt-6 sm:w-fit sm:flex-row sm:divide-y-0 lg:mt-[clamp(0.5rem,2svh,1.25rem)]">
                 {stats.map((stat, i) => (
                   <div
                     key={stat.value}

@@ -16,9 +16,10 @@ export const IMPACT_EVENT = "olala:impact";
  * story: descend → cinematic impact (light flash, ballistic spray, layered
  * ripple rings, deep squash-and-stretch) → time-based rise back home. A
  * mirrored reflection and a sharpening contact shadow anticipate the fall.
- * On mobile (no pin) the full cycle auto-plays once shortly after load, and
- * a quick scroll flick still splashes. prefers-reduced-motion gets the
- * static image.
+ * On mobile (no pin) the full cycle plays each time the drop scrolls into
+ * view and the scrolling settles — once per visit, re-armed when it fully
+ * leaves the view, so it replays like the desktop scrub without ever
+ * splashing twice in one visit. prefers-reduced-motion gets the static image.
  */
 export function HeroDroplet() {
   const dropRef = useRef<HTMLDivElement>(null);
@@ -43,7 +44,10 @@ export function HeroDroplet() {
     let phase: "fall" | "returning" | "home" = "fall";
     let returnStart = 0;
     let autoStart = -1;
-    let autoDone = false;
+    let autoWanted = false;
+    let autoSpent = false; // this visit's play used — re-arms on full exit
+    let settledFrames = 0;
+    let hasScrolled = false;
     let raf = 0;
 
     const triggerSplash = (time: number) => {
@@ -73,25 +77,60 @@ export function HeroDroplet() {
       const pinned = desktop.matches && !!rect && rect.height - window.innerHeight > 80;
       if (pinned && rect) {
         p = Math.min(Math.max(-rect.top / (rect.height - window.innerHeight), 0), 1);
-      } else if (!autoDone) {
-        // Mobile: no pin to scrub, so the full story auto-plays once —
-        // a synthetic ramp drives the same fall → impact machinery.
-        if (autoStart < 0) autoStart = time + 900;
-        p = Math.min(Math.max((time - autoStart) / 1300, 0), 1) * 0.7;
-        if (phase === "home") {
-          autoDone = true;
-          p = 0;
+      } else {
+        // Mobile: no pinned runway to scrub, so the story plays whenever the
+        // droplet is in view (autoWanted, from its IntersectionObserver
+        // below) AND the scrolling has stayed settled — starting the ramp
+        // mid-fling burned the play behind a moving viewport, which read as
+        // the animation never working. A single calm frame isn't enough
+        // either: smooth scrolling eases in, so its first frames are slow too.
+        // Like the desktop scrub it replays on every visit: one landed play
+        // per visit (autoSpent), re-armed when the drop fully leaves the view
+        // — so jiggling around it can't chain replays back-to-back. The
+        // droplet sits above the fold on phones, so before any scroll the
+        // dwell is long (~2 s) — the untouched-page play lands *after* the
+        // entrance choreography instead of invisibly inside it. A synthetic
+        // ramp then drives the same fall → impact → return machinery as the
+        // desktop scrub.
+        if (Math.abs(velocity) > 20) hasScrolled = true;
+        settledFrames = Math.abs(velocity) < 8 ? settledFrames + 1 : 0;
+        if (
+          autoWanted &&
+          !autoSpent &&
+          autoStart < 0 &&
+          settledFrames >= (hasScrolled ? 15 : 130)
+        ) {
+          autoStart = time;
+        }
+        if (autoStart >= 0) {
+          p = Math.min(Math.max((time - autoStart) / 1300, 0), 1) * 0.75;
+          if (phase === "home") {
+            autoStart = -1;
+            p = 0;
+          }
         }
       }
 
       const IMPACT = 0.6;
       if (phase === "fall" && p >= IMPACT) {
         // The drop lands — splash, then swim back home on its own clock.
+        // A landed mobile play consumes this visit's latch: only now, so a
+        // fall aborted by scrolling away stays immediately replayable.
+        if (autoStart >= 0) autoSpent = true;
         lastSplash = time;
         triggerSplash(time);
         phase = "returning";
         returnStart = time + 380;
-      } else if (p === 0 && Math.abs(velocity) > 14 && time - lastSplash > 1400) {
+      } else if (
+        desktop.matches &&
+        p === 0 &&
+        Math.abs(velocity) > 14 &&
+        time - lastSplash > 1400
+      ) {
+        // Desktop-only quick-flick splash at the very top of the runway (p===0,
+        // before it pins). On mobile the scroll-into-view arm below is the sole
+        // trigger — letting this fire too made it splash twice on one scroll:
+        // once here (p still 0, page still moving) and again on the ramp.
         lastSplash = time;
         triggerSplash(time);
       }
@@ -217,9 +256,40 @@ export function HeroDroplet() {
       cancelAnimationFrame(raf);
     };
 
+    // Mobile: mark the droplet as "wanted" while it is well in view — the rAF
+    // loop starts the fall once the scrolling has also settled, so the story
+    // plays in front of resting eyes, not behind a moving viewport. One
+    // *landed* play per visit (`autoSpent`, set at the impact, cleared on
+    // full exit): scrolling away and back replays the story like the desktop
+    // scrub, while jiggles around the 55 % line can never chain replays.
+    // Ignored on desktop, where the pinned runway drives progress instead.
+    const dropEl = dropRef.current;
+    const dropIo = new IntersectionObserver(
+      (entries) => {
+        // A fast scroll can batch several crossings into one callback — only
+        // the newest record reflects where the droplet actually is now.
+        const entry = entries[entries.length - 1];
+        if (desktop.matches || !entry) return;
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.55) {
+          autoWanted = true;
+        } else if (!entry.isIntersecting) {
+          // Fully gone — next visit gets a fresh play; a fall cut short
+          // mid-story is aborted (and stays unspent).
+          autoWanted = false;
+          autoSpent = false;
+          if (autoStart >= 0 && phase === "fall") autoStart = -1;
+        }
+      },
+      { threshold: [0, 0.55] },
+    );
+    if (dropEl) dropIo.observe(dropEl);
+
     if (!runway) {
       start();
-      return stop;
+      return () => {
+        dropIo.disconnect();
+        stop();
+      };
     }
     const io = new IntersectionObserver(([entry]) => (entry?.isIntersecting ? start() : stop()), {
       rootMargin: "120px",
@@ -227,6 +297,7 @@ export function HeroDroplet() {
     io.observe(runway);
     return () => {
       io.disconnect();
+      dropIo.disconnect();
       stop();
     };
   }, []);

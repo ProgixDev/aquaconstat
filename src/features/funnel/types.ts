@@ -5,14 +5,14 @@ export type Statut = "locataire" | "proprio" | "syndic" | "gerant";
  *  2026-07-16 (client) for the pro audience — syndics and gérants d’immeubles. */
 export type PieceKey = "salon" | "chambre" | "cuisine" | "sdb" | "couloirWc" | "partiesCommunes";
 export type SurfacePart = "plaf" | "murs" | "sol";
-/** An approximate band, not longueur × largeur — enough to price embellishments. */
-export type Taille = "" | "petite" | "moyenne" | "grande";
 
 export type RoomSurface = {
   plaf: boolean;
   murs: boolean;
   sol: boolean;
-  taille: Taille;
+  /** Estimated floor/ceiling surface in m² (free text, e.g. « 12 ») — replaced
+   *  the petite/moyenne/grande bands (client + FAQ update, 2026-07-18). */
+  surfaceM2: string;
 };
 
 export type PhotoItem = {

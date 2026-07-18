@@ -14,7 +14,9 @@ export function HeroKicker() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.7, ease: "easeOut" }}
-      className="flex items-center gap-6"
+      /* Phones read as one centred column (badge + slogan lockup); sm+ goes
+         editorial — label left, rule, slogan right. */
+      className="flex flex-wrap items-center justify-center gap-x-6 gap-y-1 sm:justify-start"
     >
       {/* The rule must never squeeze the label into wrapping — but only once
           the rule exists (sm+). Holding shrink-0 below sm pushed the label past
@@ -23,6 +25,12 @@ export function HeroKicker() {
         <SectionBadge variant="navy">Dégât des eaux · Devis à distance</SectionBadge>
       </div>
       <span aria-hidden className="bg-aqua-pale/15 hidden h-px flex-1 sm:block" />
+      {/* Brand slogan (client, 2026-07-18) — bookends the kicker rule on sm+
+          (category label left, brand voice right); on phones it takes its own
+          compact line right under the badge. */}
+      <span className="font-display text-slogan w-full text-center text-base font-bold italic sm:w-auto sm:shrink-0 sm:text-left md:text-lg">
+        Du sinistre à la solution
+      </span>
     </m.div>
   );
 }

@@ -3,8 +3,9 @@ import { SectionBadge } from "./section-badge";
 /* ── Real social proof only ──────────────────────────────────────────────
    Fill these with real data as it arrives — never with invented numbers or
    quotes (fake reviews are a deceptive commercial practice). While both stay
-   empty, the section shows the launch offer instead: first clients get a
-   gesture in exchange for a real, publishable testimonial. */
+   empty, the section states the honest position: the first reviews are being
+   written. (The « Offre de lancement » 30 € counterpart was removed on client
+   request, 2026-07-18 — plan change for the commercial operation.) */
 
 /** Verbatims published with the client’s written consent — « Prénom I., Ville ». */
 const temoignages: { quote: string; author: string }[] = [];
@@ -12,14 +13,11 @@ const temoignages: { quote: string; author: string }[] = [];
 /** Real count of processed dossiers — even small (23 dossiers, c’est 23 vraies personnes). */
 const dossiersTraites: number | null = null;
 
-/** Refunded for a published testimonial — amount to validate with the client. */
-const remboursementTemoignage = "30 €";
-
 /**
  * « Premiers clients » — the social-proof band before Tarif. Until real
- * testimonials exist it proposes the deal that creates them; once
- * `temoignages` (and optionally `dossiersTraites`) are filled, it renders
- * the counter and verbatim cards instead.
+ * testimonials exist it states that honestly; once `temoignages` (and
+ * optionally `dossiersTraites`) are filled, it renders the counter and
+ * verbatim cards instead.
  */
 export function SocialProofSection() {
   return (
@@ -52,33 +50,15 @@ export function SocialProofSection() {
             </ul>
           </div>
         ) : (
-          <div className="mt-4 gap-12 md:flex md:items-start md:justify-between">
-            <div className="max-w-xl">
-              <h2 className="font-display text-3xl font-bold md:text-4xl">
-                Nos premiers avis s’écrivent en ce moment.
-              </h2>
-              <p className="text-steel mt-4 text-base leading-relaxed">
-                Ôlala est un service récent, et vous ne lirez ici que de vrais témoignages — il n’y
-                en a donc pas encore. Plutôt que d’inventer des avis, nous préférons vous proposer
-                d’écrire les premiers.
-              </p>
-            </div>
-            <div className="bg-card mt-8 max-w-md rounded-xl p-6 shadow-sm md:mt-0 md:shrink-0">
-              <div className="text-link text-xs font-semibold tracking-widest uppercase">
-                Offre de lancement
-              </div>
-              <p className="text-ink-soft mt-3 text-sm leading-relaxed">
-                Après réception de votre devis, envoyez-nous votre retour : nous vous remboursons{" "}
-                <strong className="font-semibold">{remboursementTemoignage}</strong> et publions
-                votre témoignage ici — prénom et ville uniquement, avec votre accord.
-              </p>
-              <a
-                href="mailto:contact@olala.fr?subject=Mon%20t%C3%A9moignage%20%C3%94lala"
-                className="text-link hover:text-link-hover mt-4 inline-block text-sm font-semibold"
-              >
-                contact@olala.fr
-              </a>
-            </div>
+          <div className="mt-4 max-w-xl">
+            <h2 className="font-display text-3xl font-bold md:text-4xl">
+              Nos premiers avis s’écrivent en ce moment.
+            </h2>
+            <p className="text-steel mt-4 text-base leading-relaxed">
+              Ôlala est un service récent, et vous ne lirez ici que de vrais témoignages — il n’y en
+              a donc pas encore. Plutôt que d’inventer des avis, nous préférons vous proposer
+              d’écrire les premiers.
+            </p>
           </div>
         )}
       </div>

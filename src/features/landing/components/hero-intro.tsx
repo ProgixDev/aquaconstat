@@ -70,7 +70,9 @@ export function HeroIntro() {
            320px), 36px from 360px up, then the height-scaled clamp once pinned. */
         /* 20ch keeps the longer question-and-answer headline at ~4 lines —
            15ch (sized for the old 10-word headline) pushed it to 6. */
-        className="font-display text-secondary-foreground max-w-[20ch] text-[2rem] leading-[1.08] font-bold text-balance min-[360px]:text-4xl min-[360px]:leading-[1.06] md:text-6xl lg:text-[clamp(2.75rem,5.5svh,3.75rem)]"
+        /* Centred on phones to match the centred hero column (CTA, droplet,
+           pledge); left-aligned editorial column from sm up. */
+        className="font-display text-secondary-foreground mx-auto max-w-[20ch] text-center text-[2rem] leading-[1.08] font-bold text-balance min-[360px]:text-4xl min-[360px]:leading-[1.06] sm:mx-0 sm:text-left md:text-6xl lg:text-[clamp(2.75rem,5.5svh,3.75rem)]"
       >
         {words.map((w, i) => (
           <Fragment key={i}>
@@ -96,9 +98,15 @@ export function HeroIntro() {
           block; on phones the pill is full-width with the anchor centred. */}
       <m.div
         variants={block}
-        className="mt-8 flex flex-col items-stretch gap-4 sm:mt-10 sm:w-fit sm:items-center sm:gap-5 lg:mt-[clamp(1.5rem,4svh,2.5rem)]"
+        className="mt-5 flex flex-col items-stretch gap-3 sm:mt-10 sm:w-fit sm:items-center sm:gap-5 lg:mt-[clamp(1.5rem,4svh,2.5rem)]"
       >
-        <CtaButton href="/dossier" size="lg" className="w-full sm:w-auto">
+        {/* Tighter on phones (smaller text + padding) so the pill stops eating
+            the fold; full-size lg from sm up. */}
+        <CtaButton
+          href="/dossier"
+          size="lg"
+          className="w-full py-3 text-sm sm:w-auto sm:py-4 sm:text-base"
+        >
           Commencer mon dossier maintenant — 10 minutes
         </CtaButton>
         <a

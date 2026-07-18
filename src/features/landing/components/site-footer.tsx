@@ -32,7 +32,13 @@ export function SiteFooter() {
         <div className="grid gap-x-8 gap-y-9 sm:grid-cols-2 sm:gap-10 lg:grid-cols-4">
           <div className="max-w-72">
             <BrandLogo variant="dark" />
-            <div className="text-aqua-pale/80 mt-4 text-sm leading-relaxed">
+            {/* Brand signature (client, 2026-07-18) — the full slogan lives
+                here, visible on every device; the header carries a short
+                inline version on desktop only. */}
+            <p className="font-display text-secondary-foreground mt-4 text-lg leading-snug font-bold">
+              Ôlala — Du sinistre à la solution.
+            </p>
+            <div className="text-aqua-pale/80 mt-2 text-sm leading-relaxed">
               Devis dégât des eaux à distance — France métropolitaine.
             </div>
           </div>

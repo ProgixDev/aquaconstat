@@ -25,8 +25,10 @@ export function ChoicePill({
       aria-checked={selected}
       onClick={onClick}
       className={cn(
-        "border-input bg-paper text-foreground flex cursor-pointer items-center gap-2 rounded-full border px-4.5 py-2.5 font-sans text-sm",
-        selected && "ring-aqua ring-2",
+        // transition + active scale: selecting feels tactile — the pill dips
+        // under the finger and the ring eases in rather than popping.
+        "border-input bg-paper text-foreground flex cursor-pointer items-center gap-2 rounded-full border px-4.5 py-2.5 font-sans text-sm transition-all duration-200 active:scale-95",
+        selected ? "ring-aqua border-aqua/60 ring-2" : "hover:border-aqua/60",
       )}
     >
       {dot && (

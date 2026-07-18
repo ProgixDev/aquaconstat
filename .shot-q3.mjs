@@ -1,0 +1,16 @@
+import { chromium } from "@playwright/test";
+const b = await chromium.launch();
+const p = await b.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 });
+await p.goto("http://localhost:3000/dossier/questionnaire", { waitUntil: "load", timeout: 90000 });
+await p.waitForSelector("text=Les pièces touchées", { timeout: 60000 });
+await p.waitForTimeout(500);
+await p.getByRole("button", { name: "Salle de bain" }).click();
+await p.waitForSelector("text=Que faut-il refaire ?", { timeout: 15000 });
+await p.getByRole("button", { name: "Le plafond" }).click();
+await p.fill('input[placeholder="12"]', "14,5");
+await p.waitForTimeout(400);
+await p.locator("text=Surface au sol ou au plafond").first().scrollIntoViewIfNeeded();
+await p.waitForTimeout(300);
+await p.screenshot({ path: "C:/Users/merie/AppData/Local/Temp/questionnaire-m2.png" });
+await b.close();
+console.log("done");

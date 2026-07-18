@@ -4,18 +4,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useFunnelStore } from "../provider";
-import type { PieceKey, SurfacePart, Taille } from "../types";
+import type { PieceKey, SurfacePart } from "../types";
 import { ChoiceCard } from "./choice-card";
 import { pieceNames } from "./questionnaire-form";
 import { StepMeta } from "./step-shell";
 
 const partOrder: SurfacePart[] = ["plaf", "murs", "sol"];
 const partNames: Record<SurfacePart, string> = { plaf: "plafond", murs: "murs", sol: "sol" };
-const tailleNames: Record<Exclude<Taille, "">, string> = {
-  petite: "petite",
-  moyenne: "moyenne",
-  grande: "grande",
-};
 
 function useRecap() {
   const data = useFunnelStore((s) => s.data);
@@ -54,7 +49,7 @@ function useRecap() {
           .map((k) => {
             const room = data.surfaces[k];
             const parts = partOrder.filter((p) => room?.[p]).map((p) => partNames[p]);
-            const detail = [parts.join(", "), room?.taille ? tailleNames[room.taille] : ""]
+            const detail = [parts.join(", "), room?.surfaceM2 ? `≈ ${room.surfaceM2} m²` : ""]
               .filter(Boolean)
               .join(" · ");
             return detail ? `${pieceNames[k]} (${detail})` : pieceNames[k];

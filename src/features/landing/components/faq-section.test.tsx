@@ -19,7 +19,7 @@ function renderFaq() {
 describe("FaqSection", () => {
   it("renders all questions with the first answer open", () => {
     renderFaq();
-    expect(screen.getAllByRole("button")).toHaveLength(6);
+    expect(screen.getAllByRole("button")).toHaveLength(5);
     expect(screen.getByRole("button", { name: firstQuestion })).toHaveAttribute(
       "aria-expanded",
       "true",
@@ -38,7 +38,7 @@ describe("FaqSection", () => {
       "aria-expanded",
       "false",
     );
-    expect(screen.getByText(/fuite, infiltration, débordement/i)).toBeInTheDocument();
+    expect(screen.getByText(/fuite, infiltration — dans un logement/i)).toBeInTheDocument();
   });
 
   it("closes an open item when clicked again", () => {

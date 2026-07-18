@@ -74,19 +74,14 @@ export function SiteHeader() {
             {/* Brand enlarged so it imposes at a glance (client feedback,
                 2026-07-18) — bigger droplet + wordmark on both platforms. The
                 wordmark stays visible on phones and only drops below 360px,
-                where the CTA would otherwise be pushed out of the dock. */}
+                where the CTA would otherwise be pushed out of the dock. The
+                slogan lives in the mobile menu + footer, not the dock (client
+                preference, 2026-07-18). */}
             <BrandLogo
               variant="dark"
               markClassName="h-9 sm:h-11"
               wordmarkClassName="max-[359px]:hidden text-xl tracking-wide sm:text-2xl sm:tracking-widest"
             />
-            {/* Slogan (client, 2026-07-18) — desktop-only tagline beside the
-                wordmark; hidden below lg so the dock stays clean where the nav
-                and CTA need the room. */}
-            <span aria-hidden className="bg-aqua-pale/25 hidden h-6 w-px lg:block" />
-            <span className="text-aqua-pale/80 hidden text-sm font-medium lg:block">
-              Du sinistre à la solution
-            </span>
           </Link>
           <nav className="text-aqua-pale hidden items-center gap-8 text-sm md:flex">
             {links.map((link) => (
@@ -157,6 +152,11 @@ export function SiteHeader() {
                   {link.label}
                 </a>
               ))}
+              {/* Brand slogan (client, 2026-07-18) — closes the menu panel;
+                  phones have no room for it in the dock itself. */}
+              <div className="border-aqua-pale/10 text-aqua-pale/70 font-display mt-1 border-t px-4 pt-3 pb-1 text-sm font-semibold">
+                Ôlala — Du sinistre à la solution.
+              </div>
             </m.nav>
           )}
         </AnimatePresence>

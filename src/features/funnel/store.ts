@@ -1,6 +1,6 @@
 import { devtools } from "zustand/middleware";
 import { createStore } from "zustand/vanilla";
-import type { FunnelData, PhotoItem, PieceKey, RoomSurface, SurfacePart, Taille } from "./types";
+import type { FunnelData, PhotoItem, PieceKey, RoomSurface, SurfacePart } from "./types";
 
 /**
  * Vanilla store factory — the mandatory SSR-safe pattern (docs/conventions/state.md):
@@ -8,7 +8,7 @@ import type { FunnelData, PhotoItem, PieceKey, RoomSurface, SurfacePart, Taille 
  * Holds the whole funnel in memory; the backend spec will own persistence.
  */
 
-const emptyRoom: RoomSurface = { plaf: false, murs: false, sol: false, taille: "" };
+const emptyRoom: RoomSurface = { plaf: false, murs: false, sol: false, surfaceM2: "" };
 
 const initialData: FunnelData = {
   assuranceReclame: true,
@@ -44,7 +44,7 @@ export type FunnelState = {
   setField: <K extends keyof FunnelData>(key: K, value: FunnelData[K]) => void;
   togglePiece: (key: PieceKey) => void;
   toggleSurfacePart: (room: PieceKey, part: SurfacePart) => void;
-  setRoomTaille: (room: PieceKey, taille: Taille) => void;
+  setRoomSurfaceM2: (room: PieceKey, surfaceM2: string) => void;
   addPhotos: (files: { name: string; url: string; tooLarge: boolean }[]) => void;
   removePhoto: (id: number) => void;
   retryPhoto: (id: number) => void;
@@ -88,19 +88,19 @@ export function createFunnelStore(seed: Partial<FunnelData> = {}) {
             undefined,
             "funnel/toggleSurfacePart",
           ),
-        setRoomTaille: (room, taille) =>
+        setRoomSurfaceM2: (room, surfaceM2) =>
           set(
             (s) => {
               const current = s.data.surfaces[room] ?? emptyRoom;
               return {
                 data: {
                   ...s.data,
-                  surfaces: { ...s.data.surfaces, [room]: { ...current, taille } },
+                  surfaces: { ...s.data.surfaces, [room]: { ...current, surfaceM2 } },
                 },
               };
             },
             undefined,
-            "funnel/setRoomTaille",
+            "funnel/setRoomSurfaceM2",
           ),
         addPhotos: (files) =>
           set(

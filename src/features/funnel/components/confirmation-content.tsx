@@ -86,6 +86,11 @@ export function ConfirmationContent() {
           ← Retour à l’accueil
         </Link>
       </div>
+      {/* Closing brand moment (client, 2026-07-18) — the slogan lands right
+          where the promise was just delivered. */}
+      <p className="font-display text-hint mt-10 text-sm font-semibold italic">
+        Ôlala — Du sinistre à la solution.
+      </p>
     </main>
   );
 }

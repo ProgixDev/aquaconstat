@@ -20,7 +20,7 @@ const steps = [
   },
   {
     title: "Décrivez le sinistre",
-    text: "Un questionnaire guidé : les pièces touchées, ce qu’il faut refaire, la taille des pièces.",
+    text: "Un questionnaire guidé : les pièces touchées, ce qu’il faut refaire, la surface approximative.",
     kind: "Durée",
     meta: "≈ 2 min",
   },

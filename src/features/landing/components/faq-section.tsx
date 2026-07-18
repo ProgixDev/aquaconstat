@@ -13,15 +13,11 @@ const faqs = [
   },
   {
     q: "Quels types de sinistres sont couverts ?",
-    a: "Tous les dégâts des eaux courants : fuite, infiltration, débordement, rupture de canalisation — dans un logement ou un local à usage d’habitation, que vous soyez propriétaire, locataire, bailleur ou syndic. Un doute sur votre situation ? Écrivez-nous avant de démarrer : le paiement n’intervient qu’à la dernière étape, vous ne risquez rien en préparant votre dossier.",
+    a: "Tous les dégâts des eaux courants : fuite, infiltration — dans un logement ou un local à usage d’habitation, que vous soyez propriétaire, locataire, bailleur ou syndic. Un doute sur votre situation ? Écrivez-nous avant de démarrer : le paiement n’intervient qu’à la dernière étape, vous ne risquez rien en préparant votre dossier.",
   },
   {
-    q: "Je ne connais pas les dimensions exactes des surfaces touchées.",
-    a: "Aucune mesure n’est demandée : le questionnaire vous propose simplement une taille approximative par pièce — petite (moins de 10 m²), moyenne (10 à 20 m²) ou grande. Le professionnel affine ensuite grâce à vos photos ; c’est exactement pour cela qu’elles sont demandées.",
-  },
-  {
-    q: "Et si mon dossier ne peut pas être traité ?",
-    a: "Vous êtes intégralement remboursé — pas un avoir, pas de frais retenus. Si le professionnel estime que votre sinistre ne peut pas être chiffré sérieusement à distance (c’est rare), nous vous prévenons par e-mail et le remboursement est déclenché sur la carte utilisée pour le paiement, sans aucune démarche de votre part. En clair : vous ne payez que si un devis peut réellement vous être livré.",
+    q: "Dois-je prendre des mesures précises des pièces ?",
+    a: "Rien de complexe : nous vous demandons simplement d’estimer la surface globale au sol ou au plafond de la pièce touchée (par exemple : 12 m²). Pour le reste, le questionnaire vous guide avec des tailles approximatives par zone.",
   },
   {
     q: "Quelle zone est couverte ?",
