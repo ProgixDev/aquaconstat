@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useFunnelStore } from "../provider";
 import type { PieceKey, SurfacePart } from "../types";
+import { BackLink } from "./back-link";
 import { ChoiceCard } from "./choice-card";
 import { pieceNames } from "./questionnaire-form";
 import { StepMeta } from "./step-shell";
@@ -97,9 +98,7 @@ export function PaiementForm() {
 
   return (
     <>
-      <Link href="/dossier/photos" className="text-muted-foreground hover:text-foreground text-sm">
-        ← Retour aux photos
-      </Link>
+      <BackLink href="/dossier/photos">Retour aux photos</BackLink>
       <h1 className="font-display mt-4.5 text-3xl font-bold md:text-[34px]">Vérifiez et payez</h1>
       <StepMeta step={4} />
 

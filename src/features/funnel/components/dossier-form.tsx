@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { useFunnelStore } from "../provider";
 import type { Statut, TypeLieu } from "../types";
+import { BackLink } from "./back-link";
 import { ChoiceCard } from "./choice-card";
 import { ContinueCta } from "./continue-cta";
 import { StepMeta } from "./step-shell";
@@ -36,9 +36,7 @@ export function DossierForm() {
 
   return (
     <>
-      <Link href="/" className="text-muted-foreground hover:text-foreground text-sm">
-        ← Retour à l’accueil
-      </Link>
+      <BackLink href="/">Retour à l’accueil</BackLink>
       <h1 className="font-display mt-4.5 text-3xl font-bold md:text-[34px]">
         Créons votre dossier
       </h1>

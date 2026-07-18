@@ -6,10 +6,12 @@ import { AnimatePresence, m } from "@/components/motion";
 import { BrandLogo } from "@/components/ui/brand-logo";
 import { CtaButton } from "./cta-button";
 
+/* Absolute (« /#… ») so the dock works from the funnel pages too, where the
+   header now also lives — a bare « #tarif » goes nowhere outside the landing. */
 const links = [
-  { href: "#comment-ca-marche", label: "Comment ça marche" },
-  { href: "#tarif", label: "Tarif" },
-  { href: "#faq", label: "FAQ" },
+  { href: "/#comment-ca-marche", label: "Comment ça marche" },
+  { href: "/#tarif", label: "Tarif" },
+  { href: "/#faq", label: "FAQ" },
 ] as const;
 
 /**
@@ -19,8 +21,12 @@ const links = [
  *
  * Below md the inline nav collapses into a menu button — otherwise the three
  * section links have no home on a phone at all.
+ *
+ * `docked=false` renders it sticky, in the page flow — the funnel uses this:
+ * always visible (client, 2026-07-18), it reserves its own space so the form
+ * below always starts clear of it.
  */
-export function SiteHeader() {
+export function SiteHeader({ docked = true }: { docked?: boolean }) {
   const [hidden, setHidden] = useState(false);
   const [pastHero, setPastHero] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -60,15 +66,18 @@ export function SiteHeader() {
 
   return (
     <m.header
-      animate={{ y: hidden ? -110 : 0 }}
+      animate={{ y: docked && hidden ? -110 : 0 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
-      className="fixed inset-x-0 top-0 z-50 pt-4"
+      className={docked ? "fixed inset-x-0 top-0 z-50 pt-4" : "sticky top-0 z-50 pt-4"}
     >
       {/* Same container as the hero (max-w-6xl, px-6/md:px-10) so the dock’s
           edges line up with the kicker rule and the stat row rule below. */}
       <div className="mx-auto w-full max-w-6xl px-6 md:px-10">
         <div
-          className={`border-aqua-pale/15 shadow-cta-sm flex items-center justify-between gap-3 rounded-full border py-2.5 pr-2.5 pl-4 backdrop-blur-xl transition-colors duration-300 sm:gap-5 sm:pl-6 ${pastHero ? "bg-navy/95" : "bg-navy/75"}`}
+          /* Docked: translucent glass over the navy hero. Static (funnel):
+             solid navy — 75 % alpha over the light funnel ground washed the
+             dock into grey. */
+          className={`border-aqua-pale/15 shadow-cta-sm flex items-center justify-between gap-3 rounded-full border py-2.5 pr-2.5 pl-4 backdrop-blur-xl transition-colors duration-300 sm:gap-5 sm:pl-6 ${docked ? (pastHero ? "bg-navy/95" : "bg-navy/75") : "bg-navy"}`}
         >
           <Link href="/" aria-label="Ôlala — accueil" className="flex items-center gap-3">
             {/* Brand enlarged so it imposes at a glance (client feedback,
@@ -79,8 +88,8 @@ export function SiteHeader() {
                 preference, 2026-07-18). */}
             <BrandLogo
               variant="dark"
-              markClassName="h-9 sm:h-11"
-              wordmarkClassName="max-[359px]:hidden text-xl tracking-wide sm:text-2xl sm:tracking-widest"
+              markClassName="h-11 sm:h-14"
+              wordmarkClassName="max-[359px]:hidden text-2xl tracking-wide sm:text-3xl sm:tracking-widest"
             />
           </Link>
           <nav className="text-aqua-pale hidden items-center gap-8 text-sm md:flex">

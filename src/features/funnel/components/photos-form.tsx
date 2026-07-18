@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { AnimatePresence, listItem, m } from "@/components/motion";
 import { DropletGlyph } from "@/components/ui/droplet-glyph";
 import { useFunnelStore } from "../provider";
+import { BackLink } from "./back-link";
 import { ContinueCta } from "./continue-cta";
 import { StepMeta } from "./step-shell";
 
@@ -44,12 +44,7 @@ export function PhotosForm() {
 
   return (
     <>
-      <Link
-        href="/dossier/questionnaire"
-        className="text-muted-foreground hover:text-foreground text-sm"
-      >
-        ← Retour au questionnaire
-      </Link>
+      <BackLink href="/dossier/questionnaire">Retour au questionnaire</BackLink>
       <h1 className="font-display mt-4.5 text-3xl font-bold md:text-[34px]">Ajoutez vos photos</h1>
       <StepMeta step={3} />
       <p className="text-steel mt-3.5 max-w-2xl text-base leading-relaxed">
