@@ -161,11 +161,6 @@ export function SiteHeader({ docked = true }: { docked?: boolean }) {
                   {link.label}
                 </a>
               ))}
-              {/* Brand slogan (client, 2026-07-18) — closes the menu panel;
-                  phones have no room for it in the dock itself. */}
-              <div className="border-aqua-pale/10 text-aqua-pale/70 font-display mt-1 border-t px-4 pt-3 pb-1 text-sm font-semibold">
-                Ôlala — Du sinistre à la solution.
-              </div>
             </m.nav>
           )}
         </AnimatePresence>
