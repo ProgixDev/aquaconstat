@@ -71,11 +71,14 @@ export function SiteHeader() {
           className={`border-aqua-pale/15 shadow-cta-sm flex items-center justify-between gap-3 rounded-full border py-2.5 pr-2.5 pl-4 backdrop-blur-xl transition-colors duration-300 sm:gap-5 sm:pl-6 ${pastHero ? "bg-navy/95" : "bg-navy/75"}`}
         >
           <Link href="/" aria-label="Ôlala — accueil">
-            {/* The wordmark scales down, then drops on the narrowest phones, so
-                the CTA never gets pushed out of the dock. */}
+            {/* Brand enlarged so it imposes at a glance (client feedback,
+                2026-07-18) — bigger droplet + wordmark on both platforms. The
+                wordmark stays visible on phones and only drops below 360px,
+                where the CTA would otherwise be pushed out of the dock. */}
             <BrandLogo
               variant="dark"
-              wordmarkClassName="max-[374px]:hidden text-sm tracking-wider sm:text-base sm:tracking-widest"
+              markClassName="h-9 sm:h-11"
+              wordmarkClassName="max-[359px]:hidden text-xl tracking-wide sm:text-2xl sm:tracking-widest"
             />
           </Link>
           <nav className="text-aqua-pale hidden items-center gap-8 text-sm md:flex">

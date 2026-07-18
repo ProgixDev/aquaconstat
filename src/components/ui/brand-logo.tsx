@@ -3,6 +3,8 @@ import { cn } from "@/lib/utils";
 type BrandLogoProps = {
   variant?: "light" | "dark";
   className?: string;
+  /** Extra classes for the droplet mark — sizes it per surface (`h-*`, width auto). */
+  markClassName?: string;
   /** Extra classes for the wordmark — lets tight bars scale or drop it. */
   wordmarkClassName?: string;
 };
@@ -11,10 +13,20 @@ type BrandLogoProps = {
  * Ôlala mark — glossy gradient droplet over a ripple, with the
  * two-tone Playfair wordmark. `dark` is for navy surfaces.
  */
-export function BrandLogo({ variant = "light", className, wordmarkClassName }: BrandLogoProps) {
+export function BrandLogo({
+  variant = "light",
+  className,
+  markClassName,
+  wordmarkClassName,
+}: BrandLogoProps) {
   return (
     <span className={cn("flex items-center gap-2.5", className)}>
-      <svg width="28" height="30" viewBox="0 0 24 26" aria-hidden="true" focusable="false">
+      <svg
+        viewBox="0 0 24 26"
+        aria-hidden="true"
+        focusable="false"
+        className={cn("h-[30px] w-auto", markClassName)}
+      >
         <defs>
           <linearGradient id="ac-drop-mark" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0" stopColor="var(--aqua-bright)" />
