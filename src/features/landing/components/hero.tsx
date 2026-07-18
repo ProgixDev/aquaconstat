@@ -26,7 +26,7 @@ export function Hero() {
             header (pt ≈ header height), so short laptops can never slide the
             eyebrow underneath it — a structural guarantee, not a magic number
             per breakpoint. */}
-        <section className="bg-navy-hero relative overflow-hidden lg:sticky lg:top-0 lg:flex lg:h-svh lg:flex-col lg:justify-center lg:pt-19">
+        <section className="bg-navy-hero relative overflow-hidden lg:sticky lg:top-0 lg:flex lg:h-svh lg:flex-col lg:justify-center lg:pt-24">
           <div aria-hidden className="absolute inset-0">
             <div className="animate-caustics-drift absolute inset-0 will-change-transform">
               <Image

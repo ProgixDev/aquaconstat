@@ -25,15 +25,27 @@ export function BrandLogo({
     <span className={cn("flex items-center gap-2.5", className)}>
       {/* The 900×900 asset centres a portrait droplet, so a square box shows it
           upright; -mx trims the transparent side margins so it sits tight to
-          the wordmark. */}
-      <Image
-        src="/droplet.png"
-        alt=""
-        aria-hidden
-        width={30}
-        height={30}
-        className={cn("-mx-1 h-[30px] w-auto", markClassName)}
-      />
+          the wordmark. On navy, a soft aqua halo lifts the drop off the bar so
+          the mark reads instantly (client, 2026-07-18). */}
+      <span className="relative flex items-center">
+        {variant === "dark" && (
+          <span
+            aria-hidden
+            className="from-aqua-bright/40 absolute -inset-1.5 rounded-full bg-radial to-transparent to-70% blur-md"
+          />
+        )}
+        <Image
+          src="/droplet.png"
+          alt=""
+          aria-hidden
+          width={30}
+          height={30}
+          className={cn(
+            "relative -mx-1 h-[30px] w-auto drop-shadow-[0_2px_6px_rgba(127,200,248,0.45)]",
+            markClassName,
+          )}
+        />
+      </span>
       <span
         className={cn(
           "font-display text-base font-bold tracking-widest",
