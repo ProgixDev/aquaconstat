@@ -26,14 +26,17 @@ export default function Home() {
       <SiteHeader />
       <main>
         <Hero />
+        {/* « Engagement vert » raised directly under the hero + CTA (client
+            feedback, 2026-07-17): the eco argument is a major selling point and
+            must land as the first thing after the hero, not deep in the page. */}
+        <Reveal>
+          <EcoSection />
+        </Reveal>
         <Reveal>
           <AudienceSection />
         </Reveal>
         <Reveal>
           <HowItWorksSection />
-        </Reveal>
-        <Reveal>
-          <EcoSection />
         </Reveal>
         <Reveal>
           <PhotoGuideSection />
