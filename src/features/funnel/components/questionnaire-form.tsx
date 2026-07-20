@@ -9,6 +9,7 @@ import { ContinueCta } from "./continue-cta";
 import { SubPanel } from "./sub-panel";
 import { StepMeta } from "./step-shell";
 import { TextField } from "./text-field";
+import { missingForQuestionnaire } from "../validation";
 
 export const pieceNames: Record<PieceKey, string> = {
   salon: "Salon",
@@ -56,9 +57,12 @@ export function QuestionnaireForm() {
       <section className="mt-9">
         <h2 className="font-display text-lg font-bold">Les infos de base</h2>
         <div className="mt-4">
+          {/* Wording aligned with the insurer's official declaration (client,
+              2026-07-18) — no longer an « approximate » date. */}
           <TextField
-            label="Date du sinistre (approximative)"
+            label="Date du sinistre déclaré à votre assureur"
             type="date"
+            hint="Telle qu’indiquée dans votre déclaration."
             value={data.dateSinistre}
             onChange={(v) => setField("dateSinistre", v)}
           />
@@ -140,7 +144,9 @@ export function QuestionnaireForm() {
         </div>
       </section>
 
-      <ContinueCta href="/dossier/photos">Continuer vers les photos</ContinueCta>
+      <ContinueCta href="/dossier/photos" missing={missingForQuestionnaire(data)}>
+        Continuer vers les photos
+      </ContinueCta>
     </>
   );
 }

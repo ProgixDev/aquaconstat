@@ -2,10 +2,12 @@
 
 import { AnimatePresence, listItem, m } from "@/components/motion";
 import { DropletGlyph } from "@/components/ui/droplet-glyph";
+import { readCaptureDate } from "@/lib/exif";
 import { useFunnelStore } from "../provider";
 import { BackLink } from "./back-link";
 import { ContinueCta } from "./continue-cta";
 import { StepMeta } from "./step-shell";
+import { missingForPhotos } from "../validation";
 
 /** Client copy, 2026-07-16 — two shots, each with the reason it matters. */
 const consignes = [
@@ -21,7 +23,22 @@ const consignes = [
 
 const MAX_SIZE = 20 * 1024 * 1024;
 
-/** Étape 3 — consignes, upload dropzone, preview grid with error state. */
+/** « 2026-07-18T14:23:05 » → « 18/07/2026 à 14 h 23 ». Hand-rolled rather than
+ *  toLocaleString so server and client can never disagree on the string. */
+function formatCapture(iso: string): string | null {
+  const match = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(iso);
+  if (!match) return null;
+  const [, y, mo, d, h, mi] = match;
+  return `${d}/${mo}/${y} à ${h} h ${mi}`;
+}
+
+/**
+ * Étape 3 — consignes, live capture, preview grid with error state.
+ *
+ * Camera only (client, 2026-07-18): the gallery route is gone, so every photo
+ * is shot on the spot. Its EXIF `DateTimeOriginal` is read on the device and
+ * kept with the dossier — the visitor never types a date for the photos.
+ */
 export function PhotosForm() {
   const photos = useFunnelStore((s) => s.photos);
   const addPhotos = useFunnelStore((s) => s.addPhotos);
@@ -30,16 +47,22 @@ export function PhotosForm() {
 
   const okCount = photos.filter((p) => p.status === "ok").length;
 
-  const onFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onFiles = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
-    addPhotos(
-      files.map((f) => ({
-        name: f.name,
-        url: f.size > MAX_SIZE ? "" : URL.createObjectURL(f),
-        tooLarge: f.size > MAX_SIZE,
-      })),
+    e.target.value = ""; // reset before awaiting, so the same shot can be retaken
+    const prepared = await Promise.all(
+      files.map(async (f) => {
+        const tooLarge = f.size > MAX_SIZE;
+        // The store keeps the Blob (IndexedDB) and mints the preview URL.
+        return {
+          name: f.name,
+          blob: f,
+          tooLarge,
+          takenAt: tooLarge ? null : await readCaptureDate(f),
+        };
+      }),
     );
-    e.target.value = "";
+    addPhotos(prepared);
   };
 
   return (
@@ -98,14 +121,9 @@ export function PhotosForm() {
             className="sr-only"
           />
         </label>
-        {/* Gallery fallback — `capture` locks an input to the camera, so the
-            photos already in the visitor's gallery need their own input. */}
-        <label className="text-link hover:text-link-hover cursor-pointer text-sm font-semibold underline decoration-1 underline-offset-4">
-          ou choisir dans la galerie
-          <input type="file" accept="image/*" multiple onChange={onFiles} className="sr-only" />
-        </label>
-        <span className="text-muted-foreground text-xs">
-          Formats acceptés : JPG, PNG ou HEIC · 20 Mo max par photo
+        <span className="text-muted-foreground max-w-sm text-xs leading-relaxed">
+          Les photos doivent être prises sur place, maintenant : la date et l’heure de prise de vue
+          sont enregistrées automatiquement avec votre dossier.
         </span>
       </div>
 
@@ -155,6 +173,12 @@ export function PhotosForm() {
                       Téléchargée
                     </span>
                   </div>
+                  {/* Proof the shot is live — read from the file, never typed. */}
+                  {photo.takenAt && formatCapture(photo.takenAt) && (
+                    <div className="text-hint text-[11px] leading-snug">
+                      Prise le {formatCapture(photo.takenAt)}
+                    </div>
+                  )}
                   <button
                     type="button"
                     onClick={() => {
@@ -178,7 +202,9 @@ export function PhotosForm() {
         Au moins 1 photo est requise pour passer à l’étape suivante.
       </p>
 
-      <ContinueCta href="/dossier/paiement">Continuer vers le paiement</ContinueCta>
+      <ContinueCta href="/dossier/paiement" missing={missingForPhotos(okCount)}>
+        Continuer vers le paiement
+      </ContinueCta>
     </>
   );
 }
