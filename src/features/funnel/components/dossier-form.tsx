@@ -7,6 +7,7 @@ import { ChoiceCard } from "./choice-card";
 import { ContinueCta } from "./continue-cta";
 import { StepMeta } from "./step-shell";
 import { TextField } from "./text-field";
+import { emailPattern, missingForDossier } from "../validation";
 
 const typeLieuOptions: [TypeLieu, string][] = [
   ["maison", "Maison particulière"],
@@ -21,12 +22,11 @@ const statutOptions: [Statut, string][] = [
   ["gerant", "Gérant de l’immeuble / agence"],
 ];
 
-const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
 /** Étape 1 — coordonnées, lieu du sinistre, statut. */
 export function DossierForm() {
   const data = useFunnelStore((s) => s.data);
   const setField = useFunnelStore((s) => s.setField);
+  const missing = missingForDossier(data);
 
   const emailError =
     data.email !== "" && !emailPattern.test(data.email)
@@ -160,7 +160,9 @@ export function DossierForm() {
           contrat to hand mid-form, and none of it is required on a devis de
           travaux. It was the single biggest drop-off risk on the page. */}
 
-      <ContinueCta href="/dossier/questionnaire">Continuer vers le questionnaire</ContinueCta>
+      <ContinueCta href="/dossier/questionnaire" missing={missing}>
+        Continuer vers le questionnaire
+      </ContinueCta>
     </>
   );
 }

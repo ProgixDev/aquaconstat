@@ -3,7 +3,15 @@ export type Statut = "locataire" | "proprio" | "syndic" | "gerant";
 
 /** Étape 2 « Ultra-Light » (spec 003, R2R 2026-07-16). `partiesCommunes` added
  *  2026-07-16 (client) for the pro audience — syndics and gérants d’immeubles. */
-export type PieceKey = "salon" | "chambre" | "cuisine" | "sdb" | "couloirWc" | "partiesCommunes";
+export const pieceKeys = [
+  "salon",
+  "chambre",
+  "cuisine",
+  "sdb",
+  "couloirWc",
+  "partiesCommunes",
+] as const;
+export type PieceKey = (typeof pieceKeys)[number];
 export type SurfacePart = "plaf" | "murs" | "sol";
 
 export type RoomSurface = {
@@ -20,6 +28,10 @@ export type PhotoItem = {
   name: string;
   url: string;
   status: "ok" | "error";
+  /** Shutter time read from the photo's EXIF (« 2026-07-18T14:23:05 »), or
+   *  null when the file carries none. The visitor never types it — étape 3
+   *  forces a live capture (client, 2026-07-18). */
+  takenAt: string | null;
 };
 
 /** Everything the visitor enters across the four steps. */

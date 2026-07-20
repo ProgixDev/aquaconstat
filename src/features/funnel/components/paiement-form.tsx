@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useFunnelStore } from "../provider";
 import type { PieceKey, SurfacePart } from "../types";
+import { formatMissing, missingForPayment } from "../validation";
 import { BackLink } from "./back-link";
 import { ChoiceCard } from "./choice-card";
 import { pieceNames } from "./questionnaire-form";
@@ -78,6 +79,8 @@ const recapRows = [
 export function PaiementForm() {
   const router = useRouter();
   const recap = useRecap();
+  const data = useFunnelStore((s) => s.data);
+  const okPhotoCount = useFunnelStore((s) => s.photos.filter((p) => p.status === "ok").length);
   const submitPayment = useFunnelStore((s) => s.submitPayment);
   const [declined] = useState(false);
   const [cardNumber, setCardNumber] = useState("");
@@ -89,7 +92,11 @@ export function PaiementForm() {
   // gathered at the moment of payment, not carried over from a past visit.
   const [cgvAccepted, setCgvAccepted] = useState(false);
   const [retractationWaived, setRetractationWaived] = useState(false);
-  const canPay = cgvAccepted && retractationWaived;
+  // Last line of defence: the step CTAs already gate progression, but the
+  // payment page is reachable by direct URL. Charging 82,90 € for a dossier
+  // that can't be quoted is the one failure we must never allow.
+  const incomplete = missingForPayment(data, okPhotoCount);
+  const canPay = cgvAccepted && retractationWaived && incomplete.length === 0;
 
   const pay = () => {
     submitPayment();
@@ -220,6 +227,18 @@ export function PaiementForm() {
               droit de rétractation de 14 jours pour que mon devis soit traité et livré sous 48 h.
             </ChoiceCard>
           </div>
+
+          {incomplete.length > 0 && (
+            <div className="border-border-faint bg-info mt-5 rounded-md border px-4.5 py-4">
+              <div className="text-info-foreground text-sm font-semibold">
+                Votre dossier est incomplet
+              </div>
+              <p className="text-info-foreground/80 mt-1.5 text-sm leading-relaxed">
+                Avant le paiement, il manque {formatMissing(incomplete)}. Revenez à l’étape
+                concernée : vos réponses sont conservées.
+              </p>
+            </div>
+          )}
 
           <button
             type="button"
