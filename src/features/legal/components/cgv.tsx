@@ -29,9 +29,11 @@ export function Cgv() {
               une commande de chiffrage sur le Site.
             </>,
             <>
-              <strong>Le Prestataire :</strong> la société émettrice des devis officiels de travaux
-              : SAS BATITEC, société immatriculée sous le numéro SIRET 910 044 163 00012 (code APE
-              4333Z), dont le siège social est situé au 35 rue des Cailloux, 92400 Clichy.
+              Les prestations techniques de chiffrage, d’évaluation des dommages et d’établissement
+              des devis officiels de travaux de rénovation sont réalisées en partenariat exclusif
+              pour le compte de la SAS BEERI CAPITAL par un réseau d’entreprises du bâtiment
+              qualifiées, toutes immatriculées sous le code APE 4333Z (Travaux de revêtement des
+              sols et des murs) ou équivalent.
             </>,
           ]}
         />
