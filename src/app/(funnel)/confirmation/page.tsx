@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { ConfirmationContent } from "@/features/funnel";
 
 export const metadata: Metadata = {
@@ -6,5 +7,10 @@ export const metadata: Metadata = {
 };
 
 export default function ConfirmationPage() {
-  return <ConfirmationContent />;
+  return (
+    // ConfirmationContent reads ?session_id via useSearchParams.
+    <Suspense>
+      <ConfirmationContent />
+    </Suspense>
+  );
 }

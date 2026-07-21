@@ -30,23 +30,32 @@ describe("funnel store", () => {
     expect(store.getState().data.pieces.sdb).toBe(false);
   });
 
-  it("tracks what to redo and the m² estimate per room (AC-3)", () => {
+  it("gives each checked part its own m² field (AC-3)", () => {
     const store = createFunnelStore();
     store.getState().toggleSurfacePart("sdb", "plaf");
-    store.getState().setRoomSurfaceM2("sdb", "12");
+    store.getState().toggleSurfacePart("sdb", "sol");
+    store.getState().setPartSurfaceM2("sdb", "plaf", "12");
+    store.getState().setPartSurfaceM2("sdb", "sol", "8");
     const sdb = store.getState().data.surfaces.sdb;
-    expect(sdb?.plaf).toBe(true);
-    expect(sdb?.murs).toBe(false);
-    expect(sdb?.surfaceM2).toBe("12");
+    expect(sdb?.parts).toEqual({ plaf: "12", sol: "8" });
+    expect("murs" in (sdb?.parts ?? {})).toBe(false);
+  });
+
+  it("unchecking a part drops it and its m² (AC-3)", () => {
+    const store = createFunnelStore();
+    store.getState().toggleSurfacePart("sdb", "plaf");
+    store.getState().setPartSurfaceM2("sdb", "plaf", "12");
+    store.getState().toggleSurfacePart("sdb", "plaf");
+    expect(store.getState().data.surfaces.sdb?.parts).toEqual({});
   });
 
   it("keeps each room's answers separate (AC-3)", () => {
     const store = createFunnelStore();
     store.getState().toggleSurfacePart("sdb", "plaf");
-    store.getState().setRoomSurfaceM2("couloirWc", "8,5");
-    expect(store.getState().data.surfaces.sdb?.surfaceM2).toBe("");
-    expect(store.getState().data.surfaces.couloirWc?.plaf).toBe(false);
-    expect(store.getState().data.surfaces.couloirWc?.surfaceM2).toBe("8,5");
+    store.getState().toggleSurfacePart("couloirWc", "sol");
+    store.getState().setPartSurfaceM2("couloirWc", "sol", "8,5");
+    expect(store.getState().data.surfaces.sdb?.parts).toEqual({ plaf: "" });
+    expect(store.getState().data.surfaces.couloirWc?.parts).toEqual({ sol: "8,5" });
   });
 
   it("keeps oversized photos as errors and counts only ok ones (AC-4)", () => {

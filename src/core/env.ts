@@ -23,8 +23,28 @@ const serverEnvSchema = z.object({
   // "allow when unconfigured" branch anywhere; missing config fails closed.
   ADMIN_PASSWORD: z.string().min(12).optional(),
   ADMIN_SESSION_SECRET: z.string().min(32).optional(),
-  // Add real server vars here, mirrored in .env.example, e.g.:
-  // DATABASE_URL: z.string().url(),
+
+  // Funnel checkout + transactional e-mail (spec 006, email-first variant).
+  // All optional: when a key is absent the corresponding provider runs in
+  // SIMULATION mode (a local demo checkout / e-mails logged to the server),
+  // so the whole flow works in dev with no accounts. Paste the real keys and
+  // it goes live with no code change — the providers detect them at runtime.
+  STRIPE_SECRET_KEY: z.string().min(20).optional(),
+  RESEND_API_KEY: z.string().min(10).optional(),
+  // SMTP transport (client's choice, 2026-07-21 — Gmail/OVH-style rather than
+  // Resend). When SMTP_HOST + SMTP_USER + SMTP_PASSWORD are all set, e-mail
+  // goes out over SMTP; it takes precedence over Resend. Port derives `secure`
+  // (465 ⇒ implicit TLS, otherwise STARTTLS) unless you know you need otherwise.
+  SMTP_HOST: z.string().min(1).optional(),
+  SMTP_PORT: z.coerce.number().int().positive().max(65535).default(587),
+  SMTP_USER: z.string().min(1).optional(),
+  SMTP_PASSWORD: z.string().min(1).optional(),
+  // Where paid dossiers are e-mailed (Nino's inbox). Falls back to a demo
+  // address in simulation.
+  OPERATOR_EMAIL: z.string().email().optional(),
+  // From-address for transactional e-mail. Over SMTP this should be an address
+  // your provider lets SMTP_USER send as (often SMTP_USER itself).
+  EMAIL_FROM: z.string().min(3).optional(),
 });
 
 export const env = serverEnvSchema.parse(process.env);

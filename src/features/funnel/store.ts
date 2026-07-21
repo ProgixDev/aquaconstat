@@ -1,6 +1,6 @@
 import { createJSONStorage, devtools, persist, type StateStorage } from "zustand/middleware";
 import { createStore } from "zustand/vanilla";
-import { deletePhoto, savePhotos, type StoredPhoto } from "./photo-storage";
+import { clearPhotos, deletePhoto, savePhotos, type StoredPhoto } from "./photo-storage";
 import type { FunnelData, PhotoItem, PieceKey, RoomSurface, SurfacePart } from "./types";
 
 /**
@@ -40,7 +40,7 @@ function resolveStorage(): StateStorage {
   }
 }
 
-const emptyRoom: RoomSurface = { plaf: false, murs: false, sol: false, surfaceM2: "" };
+const emptyRoom: RoomSurface = { parts: {} };
 
 const initialData: FunnelData = {
   assuranceReclame: true,
@@ -66,6 +66,7 @@ const initialData: FunnelData = {
     partiesCommunes: false,
   },
   surfaces: {},
+  photosAttestation: false,
 };
 
 export type FunnelState = {
@@ -73,10 +74,14 @@ export type FunnelState = {
   photos: PhotoItem[];
   nextPhotoId: number;
   reference: string | null;
+  /** False until the provider has restored data + photos from storage. The
+   *  confirmation page waits on this before reading the dossier to send —
+   *  otherwise it could fire on an empty, not-yet-rehydrated store. */
+  hydrated: boolean;
   setField: <K extends keyof FunnelData>(key: K, value: FunnelData[K]) => void;
   togglePiece: (key: PieceKey) => void;
   toggleSurfacePart: (room: PieceKey, part: SurfacePart) => void;
-  setRoomSurfaceM2: (room: PieceKey, surfaceM2: string) => void;
+  setPartSurfaceM2: (room: PieceKey, part: SurfacePart, surfaceM2: string) => void;
   addPhotos: (
     files: { name: string; blob: Blob; tooLarge: boolean; takenAt: string | null }[],
   ) => void;
@@ -85,6 +90,9 @@ export type FunnelState = {
   removePhoto: (id: number) => void;
   retryPhoto: (id: number) => void;
   submitPayment: () => string;
+  /** Wipes the dossier after a confirmed send — so a refresh can't resend it
+   *  and the next visitor on this device starts clean. */
+  clearFunnel: () => void;
 };
 
 export type FunnelStore = ReturnType<typeof createFunnelStore>;
@@ -98,6 +106,7 @@ export function createFunnelStore(seed: Partial<FunnelData> = {}) {
           photos: [],
           nextPhotoId: 1,
           reference: null,
+          hydrated: false,
           setField: (key, value) =>
             set((s) => ({ data: { ...s.data, [key]: value } }), undefined, "funnel/setField"),
           togglePiece: (key) =>
@@ -108,7 +117,23 @@ export function createFunnelStore(seed: Partial<FunnelData> = {}) {
               undefined,
               "funnel/togglePiece",
             ),
+          // Checking a part adds its m² field (empty); unchecking removes the
+          // part and drops any surface typed there.
           toggleSurfacePart: (room, part) =>
+            set(
+              (s) => {
+                const current = s.data.surfaces[room] ?? emptyRoom;
+                const parts = { ...current.parts };
+                if (part in parts) delete parts[part];
+                else parts[part] = "";
+                return {
+                  data: { ...s.data, surfaces: { ...s.data.surfaces, [room]: { parts } } },
+                };
+              },
+              undefined,
+              "funnel/toggleSurfacePart",
+            ),
+          setPartSurfaceM2: (room, part, surfaceM2) =>
             set(
               (s) => {
                 const current = s.data.surfaces[room] ?? emptyRoom;
@@ -117,27 +142,13 @@ export function createFunnelStore(seed: Partial<FunnelData> = {}) {
                     ...s.data,
                     surfaces: {
                       ...s.data.surfaces,
-                      [room]: { ...current, [part]: !current[part] },
+                      [room]: { parts: { ...current.parts, [part]: surfaceM2 } },
                     },
                   },
                 };
               },
               undefined,
-              "funnel/toggleSurfacePart",
-            ),
-          setRoomSurfaceM2: (room, surfaceM2) =>
-            set(
-              (s) => {
-                const current = s.data.surfaces[room] ?? emptyRoom;
-                return {
-                  data: {
-                    ...s.data,
-                    surfaces: { ...s.data.surfaces, [room]: { ...current, surfaceM2 } },
-                  },
-                };
-              },
-              undefined,
-              "funnel/setRoomSurfaceM2",
+              "funnel/setPartSurfaceM2",
             ),
           // Not a `set` updater: minting object URLs and writing to IndexedDB are
           // side effects, and an updater must stay pure (React may re-run it).
@@ -199,6 +210,14 @@ export function createFunnelStore(seed: Partial<FunnelData> = {}) {
             const reference = `AC-2026-${String(Math.floor(1000 + Math.random() * 9000))}`;
             set({ reference }, undefined, "funnel/submitPayment");
             return reference;
+          },
+          clearFunnel: () => {
+            set(
+              { data: { ...initialData }, photos: [], nextPhotoId: 1, reference: null },
+              undefined,
+              "funnel/clearFunnel",
+            );
+            void clearPhotos();
           },
         }),
         {

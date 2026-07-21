@@ -42,6 +42,11 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   // Don't advertise the framework version.
   poweredByHeader: false,
+  experimental: {
+    // The confirmation page posts the downscaled dossier photos to the
+    // send-e-mail action; 4–8 photos exceed the 1 MB server-action default.
+    serverActions: { bodySizeLimit: "25mb" },
+  },
   images: {
     // Unsplash photography (hero atmosphere + photo-guide examples).
     remotePatterns: [{ protocol: "https", hostname: "images.unsplash.com" }],

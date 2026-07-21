@@ -5,6 +5,7 @@ import { DropletGlyph } from "@/components/ui/droplet-glyph";
 import { readCaptureDate } from "@/lib/exif";
 import { useFunnelStore } from "../provider";
 import { BackLink } from "./back-link";
+import { ChoiceCard } from "./choice-card";
 import { ContinueCta } from "./continue-cta";
 import { StepMeta } from "./step-shell";
 import { missingForPhotos } from "../validation";
@@ -44,6 +45,8 @@ export function PhotosForm() {
   const addPhotos = useFunnelStore((s) => s.addPhotos);
   const removePhoto = useFunnelStore((s) => s.removePhoto);
   const retryPhoto = useFunnelStore((s) => s.retryPhoto);
+  const attested = useFunnelStore((s) => s.data.photosAttestation);
+  const setField = useFunnelStore((s) => s.setField);
 
   const okCount = photos.filter((p) => p.status === "ok").length;
 
@@ -97,7 +100,9 @@ export function PhotosForm() {
             `capture="environment"` opens the native camera directly on the
             rear lens — no gallery digging, the « sur photo » promise made
             instant. Desktop browsers ignore `capture` and fall back to the
-            file dialog, so the same control serves both. */}
+            file dialog, where `multiple` lets several be picked at once. On
+            mobile the visitor taps the button once per shot — reason the label
+            switches to « une autre photo » after the first. */}
         <label className="bg-primary text-primary-foreground shadow-cta-sm inline-flex cursor-pointer items-center gap-2.5 rounded-full px-6 py-3 text-base font-semibold transition-transform hover:-translate-y-0.5">
           <svg
             aria-hidden
@@ -112,18 +117,19 @@ export function PhotosForm() {
             <path d="M14.5 4h-5L7.5 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3.5l-2-3Z" />
             <circle cx="12" cy="13" r="3" />
           </svg>
-          Prendre une photo
+          {okCount > 0 ? "Prendre une autre photo" : "Prendre une photo"}
           <input
             type="file"
             accept="image/*"
             capture="environment"
+            multiple
             onChange={onFiles}
             className="sr-only"
           />
         </label>
         <span className="text-muted-foreground max-w-sm text-xs leading-relaxed">
-          Les photos doivent être prises sur place, maintenant : la date et l’heure de prise de vue
-          sont enregistrées automatiquement avec votre dossier.
+          Prenez plusieurs photos, sur place et maintenant : la date et l’heure de prise de vue sont
+          enregistrées automatiquement avec votre dossier. Reprenez le bouton pour chaque cliché.
         </span>
       </div>
 
@@ -202,7 +208,21 @@ export function PhotosForm() {
         Au moins 1 photo est requise pour passer à l’étape suivante.
       </p>
 
-      <ContinueCta href="/dossier/paiement" missing={missingForPhotos(okCount)}>
+      {/* Honour declaration (client, 2026-07-21) — live capture can't be
+          guaranteed on every device, so the visitor attests the photos are
+          genuine and just taken. Required before payment. */}
+      <div className="mt-6">
+        <ChoiceCard
+          checkbox
+          selected={attested}
+          onClick={() => setField("photosAttestation", !attested)}
+        >
+          Je déclare sur l’honneur que ces photos ont été prises par mes soins, sur le lieu du
+          sinistre, et qu’elles reflètent fidèlement l’état réel des dégâts constatés.
+        </ChoiceCard>
+      </div>
+
+      <ContinueCta href="/dossier/paiement" missing={missingForPhotos(okCount, attested)}>
         Continuer vers le paiement
       </ContinueCta>
     </>

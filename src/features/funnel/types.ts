@@ -14,13 +14,12 @@ export const pieceKeys = [
 export type PieceKey = (typeof pieceKeys)[number];
 export type SurfacePart = "plaf" | "murs" | "sol";
 
+/** Per-part estimated surface in m². A part present as a key is selected (the
+ *  visitor checked it); its value is the surface touched there, as free text
+ *  (e.g. « 12 »). One m² field per checked part (client, 2026-07-21) — replaced
+ *  the plaf/murs/sol booleans and the single room-level surfaceM2. */
 export type RoomSurface = {
-  plaf: boolean;
-  murs: boolean;
-  sol: boolean;
-  /** Estimated floor/ceiling surface in m² (free text, e.g. « 12 ») — replaced
-   *  the petite/moyenne/grande bands (client + FAQ update, 2026-07-18). */
-  surfaceM2: string;
+  parts: Partial<Record<SurfacePart, string>>;
 };
 
 export type PhotoItem = {
@@ -57,4 +56,9 @@ export type FunnelData = {
   dateSinistre: string;
   pieces: Record<PieceKey, boolean>;
   surfaces: Partial<Record<PieceKey, RoomSurface>>;
+  // Étape 3 — photos
+  /** Honour declaration (client, 2026-07-21): live capture can't be *guaranteed*
+   *  (desktop file picker, gallery escape hatches), so the visitor attests the
+   *  photos were just taken on site. Required before payment. */
+  photosAttestation: boolean;
 };

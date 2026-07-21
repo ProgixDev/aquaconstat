@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { PaiementForm, StepShell } from "@/features/funnel";
 
 export const metadata: Metadata = {
@@ -8,7 +9,11 @@ export const metadata: Metadata = {
 export default function PaiementPage() {
   return (
     <StepShell step={4}>
-      <PaiementForm />
+      {/* PaiementForm reads ?canceled via useSearchParams — Suspense keeps the
+          page out of the static-prerender CSR bailout. */}
+      <Suspense>
+        <PaiementForm />
+      </Suspense>
     </StepShell>
   );
 }

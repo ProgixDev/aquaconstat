@@ -42,12 +42,16 @@ export function missingForQuestionnaire(data: FunnelData): string[] {
 
 function hasWorkToDo(data: FunnelData, key: (typeof pieceKeys)[number]): boolean {
   const room = data.surfaces[key];
-  return Boolean(room?.plaf || room?.murs || room?.sol);
+  return room ? Object.keys(room.parts).length > 0 : false;
 }
 
-/** Étape 3 — the artisan quotes from the photos; without one there is no devis. */
-export function missingForPhotos(okPhotoCount: number): string[] {
-  return okPhotoCount === 0 ? ["au moins 1 photo du sinistre"] : [];
+/** Étape 3 — the artisan quotes from the photos; without one there is no devis.
+ *  The honour declaration is required too (client, 2026-07-21). */
+export function missingForPhotos(okPhotoCount: number, attested: boolean): string[] {
+  const missing: string[] = [];
+  if (okPhotoCount === 0) missing.push("au moins 1 photo du sinistre");
+  if (!attested) missing.push("votre déclaration sur l’honneur");
+  return missing;
 }
 
 /** Everything étape 4 needs before money can change hands. */
@@ -55,7 +59,7 @@ export function missingForPayment(data: FunnelData, okPhotoCount: number): strin
   return [
     ...missingForDossier(data),
     ...missingForQuestionnaire(data),
-    ...missingForPhotos(okPhotoCount),
+    ...missingForPhotos(okPhotoCount, data.photosAttestation),
   ];
 }
 

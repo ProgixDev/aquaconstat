@@ -27,6 +27,13 @@ const partLabels: [SurfacePart, string][] = [
   ["sol", "Le sol"],
 ];
 
+/** Label for the per-part m² field, e.g. « Surface touchée au plafond ». */
+const partSurfaceLabels: Record<SurfacePart, string> = {
+  plaf: "Surface touchée au plafond",
+  murs: "Surface touchée aux murs",
+  sol: "Surface touchée au sol",
+};
+
 /**
  * Étape 2 « Ultra-Light » (spec 003, R2R 2026-07-16) — only what changes the
  * price of the work: when it happened, which rooms, what to redo in each, and
@@ -41,7 +48,7 @@ export function QuestionnaireForm() {
   const setField = useFunnelStore((s) => s.setField);
   const togglePiece = useFunnelStore((s) => s.togglePiece);
   const toggleSurfacePart = useFunnelStore((s) => s.toggleSurfacePart);
-  const setRoomSurfaceM2 = useFunnelStore((s) => s.setRoomSurfaceM2);
+  const setPartSurfaceM2 = useFunnelStore((s) => s.setPartSurfaceM2);
 
   const selected = (Object.keys(pieceNames) as PieceKey[]).filter((key) => data.pieces[key]);
 
@@ -116,7 +123,7 @@ export function QuestionnaireForm() {
                           <ChoicePill
                             key={part}
                             square
-                            selected={Boolean(room?.[part])}
+                            selected={room ? part in room.parts : false}
                             onClick={() => toggleSurfacePart(key, part)}
                           >
                             {label}
@@ -125,16 +132,35 @@ export function QuestionnaireForm() {
                       </div>
                     </div>
 
-                    <div className="mt-4">
-                      <TextField
-                        label="Surface au sol ou au plafond (m², approximative)"
-                        inputMode="decimal"
-                        placeholder="12"
-                        hint="Une estimation suffit — par exemple : 12 m²."
-                        value={room?.surfaceM2 ?? ""}
-                        onChange={(v) => setRoomSurfaceM2(key, v)}
-                        className="max-w-xs"
-                      />
+                    {/* One m² field per checked part (client, 2026-07-21): check
+                        « Le plafond » and « Le sol » and you get two fields —
+                        surface au plafond, surface au sol. Each springs in with
+                        its pill and leaves when the part is unchecked. */}
+                    <div className="mt-2 flex flex-col gap-3 empty:mt-0">
+                      <AnimatePresence initial={false}>
+                        {partLabels
+                          .filter(([part]) => room && part in room.parts)
+                          .map(([part]) => (
+                            <m.div
+                              key={part}
+                              layout
+                              initial={listItem.initial}
+                              animate={listItem.animate}
+                              exit={listItem.exit}
+                              transition={listItem.transition}
+                            >
+                              <TextField
+                                label={`${partSurfaceLabels[part]} (m², approximative)`}
+                                inputMode="decimal"
+                                placeholder="12"
+                                hint="Une estimation suffit — par exemple : 12 m²."
+                                value={room?.parts[part] ?? ""}
+                                onChange={(v) => setPartSurfaceM2(key, part, v)}
+                                className="max-w-xs"
+                              />
+                            </m.div>
+                          ))}
+                      </AnimatePresence>
                     </div>
                   </SubPanel>
                 </m.div>

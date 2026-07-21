@@ -32,7 +32,6 @@ export function DossierForm() {
     data.email !== "" && !emailPattern.test(data.email)
       ? "Vérifiez le format de l’adresse — par exemple : camille.moreau@gmail.com"
       : undefined;
-  const showSyndic = data.typeLieu === "copro" || data.typeLieu === "locatif";
 
   return (
     <>
@@ -126,14 +125,6 @@ export function DossierForm() {
               ))}
             </div>
           </div>
-          {showSyndic && (
-            <TextField
-              label="Nom, adresse et téléphone du syndic ou du gérant"
-              optional
-              value={data.syndic}
-              onChange={(v) => setField("syndic", v)}
-            />
-          )}
         </div>
       </section>
 

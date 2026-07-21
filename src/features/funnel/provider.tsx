@@ -25,22 +25,29 @@ export function FunnelStoreProvider({ children }: FunnelStoreProviderProps) {
   const [store] = useState<FunnelStore>(() => createFunnelStore());
 
   useEffect(() => {
-    void store.persist.rehydrate();
-
     let urls: string[] = [];
     let cancelled = false;
-    void loadPhotos().then((records) => {
-      if (cancelled || records.length === 0) return;
-      const photos: PhotoItem[] = records.map((r) => ({
-        id: r.id,
-        name: r.name,
-        status: r.status,
-        takenAt: r.takenAt,
-        url: r.blob ? URL.createObjectURL(r.blob) : "",
-      }));
-      urls = photos.map((p) => p.url).filter(Boolean);
-      store.getState().hydratePhotos(photos);
-    });
+
+    void (async () => {
+      // Answers first (localStorage), then photos (IndexedDB) with fresh
+      // object URLs. `hydrated` flips only once both are restored, so anything
+      // waiting on the dossier (the confirmation page) never reads it empty.
+      await store.persist.rehydrate();
+      const records = await loadPhotos();
+      if (cancelled) return;
+      if (records.length > 0) {
+        const photos: PhotoItem[] = records.map((r) => ({
+          id: r.id,
+          name: r.name,
+          status: r.status,
+          takenAt: r.takenAt,
+          url: r.blob ? URL.createObjectURL(r.blob) : "",
+        }));
+        urls = photos.map((p) => p.url).filter(Boolean);
+        store.getState().hydratePhotos(photos);
+      }
+      store.setState({ hydrated: true });
+    })();
 
     return () => {
       cancelled = true;
@@ -51,6 +58,15 @@ export function FunnelStoreProvider({ children }: FunnelStoreProviderProps) {
   }, [store]);
 
   return <FunnelStoreContext.Provider value={store}>{children}</FunnelStoreContext.Provider>;
+}
+
+/** The raw store — for imperative reads (getState) where a selector won't do. */
+export function useFunnelStoreApi(): FunnelStore {
+  const store = useContext(FunnelStoreContext);
+  if (!store) {
+    throw new Error("useFunnelStoreApi must be used within a FunnelStoreProvider.");
+  }
+  return store;
 }
 
 /** Always subscribe through a selector — whole-store subscriptions fail review. */

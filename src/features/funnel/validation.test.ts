@@ -32,6 +32,7 @@ const empty: FunnelData = {
     partiesCommunes: false,
   },
   surfaces: {},
+  photosAttestation: false,
 };
 
 const filled: FunnelData = {
@@ -46,7 +47,8 @@ const filled: FunnelData = {
   statut: "locataire",
   dateSinistre: "2026-07-10",
   pieces: { ...empty.pieces, sdb: true },
-  surfaces: { sdb: { plaf: true, murs: false, sol: false, surfaceM2: "12" } },
+  surfaces: { sdb: { parts: { plaf: "12" } } },
+  photosAttestation: true,
 };
 
 describe("missingForDossier", () => {
@@ -76,7 +78,7 @@ describe("missingForQuestionnaire", () => {
   it("rejects a room with nothing to redo — it prices nothing", () => {
     const noWork: FunnelData = {
       ...filled,
-      surfaces: { sdb: { plaf: false, murs: false, sol: false, surfaceM2: "12" } },
+      surfaces: { sdb: { parts: {} } },
     };
     expect(missingForQuestionnaire(noWork)).toEqual([
       "ce qu’il faut refaire dans chaque pièce cochée",
@@ -90,8 +92,16 @@ describe("missingForQuestionnaire", () => {
 
 describe("missingForPhotos", () => {
   it("requires at least one usable photo", () => {
-    expect(missingForPhotos(0)).toEqual(["au moins 1 photo du sinistre"]);
-    expect(missingForPhotos(1)).toEqual([]);
+    expect(missingForPhotos(0, true)).toEqual(["au moins 1 photo du sinistre"]);
+    expect(missingForPhotos(1, true)).toEqual([]);
+  });
+
+  it("requires the honour declaration (client, 2026-07-21)", () => {
+    expect(missingForPhotos(1, false)).toEqual(["votre déclaration sur l’honneur"]);
+    expect(missingForPhotos(0, false)).toEqual([
+      "au moins 1 photo du sinistre",
+      "votre déclaration sur l’honneur",
+    ]);
   });
 });
 

@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { startCheckout } from "../actions";
 import { useFunnelStore } from "../provider";
 import type { PieceKey, SurfacePart } from "../types";
 import { formatMissing, missingForPayment } from "../validation";
@@ -50,10 +51,13 @@ function useRecap() {
       ? selectedPieces
           .map((k) => {
             const room = data.surfaces[k];
-            const parts = partOrder.filter((p) => room?.[p]).map((p) => partNames[p]);
-            const detail = [parts.join(", "), room?.surfaceM2 ? `≈ ${room.surfaceM2} m²` : ""]
-              .filter(Boolean)
-              .join(" · ");
+            const parts = partOrder
+              .filter((p) => room && p in room.parts)
+              .map((p) => {
+                const m2 = room?.parts[p];
+                return m2 ? `${partNames[p]} ≈ ${m2} m²` : partNames[p];
+              });
+            const detail = parts.join(", ");
             return detail ? `${pieceNames[k]} (${detail})` : pieceNames[k];
           })
           .join(" · ")
@@ -75,17 +79,15 @@ const recapRows = [
   { label: "Photos", key: "photos", href: "/dossier/photos" },
 ] as const;
 
-/** Étape 4 — récapitulatif + carte (painted-door Stripe, spec 003 AC-6). */
+/** Étape 4 — récapitulatif + consentements, puis redirection vers le paiement. */
 export function PaiementForm() {
-  const router = useRouter();
   const recap = useRecap();
   const data = useFunnelStore((s) => s.data);
   const okPhotoCount = useFunnelStore((s) => s.photos.filter((p) => p.status === "ok").length);
-  const submitPayment = useFunnelStore((s) => s.submitPayment);
-  const [declined] = useState(false);
-  const [cardNumber, setCardNumber] = useState("");
-  const [expiry, setExpiry] = useState("");
-  const [cvc, setCvc] = useState("");
+  // A cancelled checkout returns here with ?canceled=1 — the dossier is intact.
+  const canceled = useSearchParams().get("canceled") === "1";
+  const [starting, setStarting] = useState(false);
+  const [error, setError] = useState(false);
   // Vente à distance (client, 2026-07-16): the CGV acceptance and the
   // renonciation au droit de rétractation are two distinct express consents —
   // bundling them would weaken the waiver. Local state on purpose: consent is
@@ -96,11 +98,21 @@ export function PaiementForm() {
   // payment page is reachable by direct URL. Charging 82,90 € for a dossier
   // that can't be quoted is the one failure we must never allow.
   const incomplete = missingForPayment(data, okPhotoCount);
-  const canPay = cgvAccepted && retractationWaived && incomplete.length === 0;
+  const canPay = cgvAccepted && retractationWaived && incomplete.length === 0 && !starting;
 
-  const pay = () => {
-    submitPayment();
-    router.push("/confirmation");
+  const pay = async () => {
+    setError(false);
+    setStarting(true);
+    try {
+      // The card itself is collected on Stripe's hosted page (or the demo
+      // stand-in) — never here. A full navigation, since the URL is external
+      // when Stripe is live.
+      const { url } = await startCheckout(data.email);
+      window.location.assign(url);
+    } catch {
+      setError(true);
+      setStarting(false);
+    }
   };
 
   return (
@@ -150,62 +162,47 @@ export function PaiementForm() {
             <span>82,90 € TTC</span>
           </div>
 
-          <div className="border-border-faint bg-paper mt-5.5 rounded-md border p-4.5">
-            <div className="flex items-center justify-between gap-3">
-              <span className="text-hint text-xs font-semibold tracking-widest uppercase">
-                Carte bancaire
-              </span>
-              <span className="text-muted-foreground text-xs">
-                Powered by <span className="text-ink-soft font-semibold">Stripe</span>
-              </span>
-            </div>
-            <div className="mt-3.5 flex flex-col gap-3">
-              <label className="text-steel flex flex-col gap-1.5 text-xs font-semibold">
-                Numéro de carte
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  placeholder="1234 1234 1234 1234"
-                  value={cardNumber}
-                  onChange={(e) => setCardNumber(e.target.value)}
-                  className="border-input bg-paper text-foreground rounded-sm border px-3.5 py-3 font-sans text-base tracking-wide"
-                />
-              </label>
-              <div className="grid grid-cols-2 gap-3">
-                <label className="text-steel flex flex-col gap-1.5 text-xs font-semibold">
-                  Expiration
-                  <input
-                    type="text"
-                    inputMode="numeric"
-                    placeholder="MM / AA"
-                    value={expiry}
-                    onChange={(e) => setExpiry(e.target.value)}
-                    className="border-input bg-paper text-foreground rounded-sm border px-3.5 py-3 font-sans text-base"
-                  />
-                </label>
-                <label className="text-steel flex flex-col gap-1.5 text-xs font-semibold">
-                  CVC
-                  <input
-                    type="text"
-                    inputMode="numeric"
-                    placeholder="123"
-                    value={cvc}
-                    onChange={(e) => setCvc(e.target.value)}
-                    className="border-input bg-paper text-foreground rounded-sm border px-3.5 py-3 font-sans text-base"
-                  />
-                </label>
-              </div>
+          {/* The card is entered on Stripe's own secure page, opened when you
+              click « Payer » — Ôlala never sees or stores it. */}
+          <div className="border-border-faint bg-paper mt-5.5 flex items-start gap-3 rounded-md border p-4.5">
+            <svg
+              aria-hidden
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="text-link mt-0.5 size-5 flex-none"
+            >
+              <rect x="3" y="11" width="18" height="10" rx="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+            <div className="text-steel text-sm leading-relaxed">
+              Le paiement s’effectue sur la page sécurisée de{" "}
+              <span className="text-ink-soft font-semibold">Stripe</span>. Votre carte n’est jamais
+              vue ni conservée par Ôlala.
             </div>
           </div>
 
-          {declined && (
+          {canceled && (
+            <div className="border-border-faint bg-info mt-4 rounded-md border px-4.5 py-4">
+              <div className="text-info-foreground text-sm font-semibold">
+                Paiement interrompu — aucun montant n’a été débité.
+              </div>
+              <p className="text-info-foreground/80 mt-1.5 text-sm leading-relaxed">
+                Votre dossier est conservé. Vous pouvez réessayer quand vous voulez.
+              </p>
+            </div>
+          )}
+
+          {error && (
             <div className="border-destructive/30 bg-destructive-soft mt-4 rounded-md border-[1.5px] px-4.5 py-4">
               <div className="text-destructive text-sm font-semibold">
-                Votre banque a refusé le paiement.
+                Impossible d’ouvrir le paiement pour le moment.
               </div>
               <p className="text-destructive/80 mt-1.5 text-sm leading-relaxed">
-                Aucun montant n’a été débité. Vérifiez le numéro de carte ou essayez une autre carte
-                — votre dossier est conservé, rien n’est perdu.
+                Réessayez dans un instant — votre dossier est conservé.
               </p>
             </div>
           )}
@@ -246,7 +243,7 @@ export function PaiementForm() {
             disabled={!canPay}
             className="bg-primary text-primary-foreground shadow-cta-sm mt-5 flex w-full cursor-pointer justify-center rounded-full px-8 py-4.5 font-sans text-base font-semibold disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {declined ? "Réessayer le paiement — 82,90 €" : "Payer 82,90 € et envoyer mon dossier"}
+            {starting ? "Redirection vers le paiement…" : "Payer 82,90 € et envoyer mon dossier"}
           </button>
           <p className="text-hint mt-4 text-center text-xs leading-relaxed">
             Votre dossier n’est transmis qu’une fois le paiement confirmé.

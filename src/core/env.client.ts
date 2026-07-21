@@ -17,6 +17,9 @@ const clientEnvSchema = z.object({
       message:
         "That looks like a SERVICE ROLE / secret key — never expose it. Use the anon/publishable key; the service key bypasses RLS.",
     }),
+  // Base URL for Stripe's success/cancel redirects. Public and safe. Defaults
+  // to localhost so dev works without config; set to the real origin in prod.
+  NEXT_PUBLIC_SITE_URL: z.string().url(),
 });
 
 // NEXT_PUBLIC_* must be referenced statically for Next.js to inline them.
@@ -24,4 +27,5 @@ export const clientEnv = clientEnvSchema.parse({
   NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL ?? "https://localhost.supabase.co",
   NEXT_PUBLIC_SUPABASE_ANON_KEY:
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "public-anon-key-placeholder",
+  NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
 });
