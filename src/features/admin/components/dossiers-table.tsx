@@ -14,8 +14,7 @@ type Filter = "tous" | "retard" | DossierStatut;
 const filters: { key: Filter; label: string }[] = [
   { key: "tous", label: "Tous" },
   { key: "retard", label: "En retard" },
-  { key: "Nouveau", label: "Nouveau" },
-  { key: "En cours", label: "En cours" },
+  { key: "En attente", label: "En attente" },
   { key: "Devis envoyé", label: "Devis envoyé" },
 ];
 

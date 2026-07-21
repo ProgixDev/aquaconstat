@@ -2,8 +2,7 @@ import { cn } from "@/lib/utils";
 import type { DossierStatut } from "../data";
 
 const statutStyles: Record<DossierStatut, string> = {
-  Nouveau: "bg-mist text-link",
-  "En cours": "bg-border-soft text-ink-soft",
+  "En attente": "bg-mist text-link",
   "Devis envoyé": "bg-success-soft text-success-strong",
 };
 

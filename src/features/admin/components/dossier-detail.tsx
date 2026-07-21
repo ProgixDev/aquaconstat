@@ -10,7 +10,7 @@ import { slaState } from "../sla";
 import { SlaPill } from "./sla-pill";
 import { StatusBadge } from "./status-badge";
 
-const statuts: DossierStatut[] = ["Nouveau", "En cours", "Devis envoyé"];
+const statuts: DossierStatut[] = ["En attente", "Devis envoyé"];
 
 type Photo = DossierDetailData["photos"][number];
 

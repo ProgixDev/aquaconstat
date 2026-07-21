@@ -14,7 +14,10 @@
 import "server-only";
 import { requireAdminSession } from "./session";
 
-export type DossierStatut = "Nouveau" | "En cours" | "Devis envoyé";
+// Two states only (client, 2026-07-21): a dossier is « En attente » of its
+// devis until Nino sends it. The intermediate « En cours » step was dropped and
+// « Nouveau » renamed to « En attente ».
+export type DossierStatut = "En attente" | "Devis envoyé";
 
 export type DossierRow = {
   ref: string;
@@ -62,7 +65,7 @@ const rows: DossierRow[] = [
     ville: "Villeurbanne",
     createdAt: "2026-07-14T08:55:00Z",
     paidAt: "2026-07-14T09:12:00Z", // deadline jeudi 16 → à rendre aujourd’hui
-    statut: "Nouveau",
+    statut: "En attente",
   },
   {
     ref: "AC-2026-0151",
@@ -70,7 +73,7 @@ const rows: DossierRow[] = [
     ville: "Nantes",
     createdAt: "2026-07-13T16:20:00Z",
     paidAt: "2026-07-13T16:40:00Z", // deadline mercredi 15 → en retard
-    statut: "Nouveau",
+    statut: "En attente",
   },
   {
     ref: "AC-2026-0150",
@@ -78,7 +81,7 @@ const rows: DossierRow[] = [
     ville: "Bordeaux",
     createdAt: "2026-07-11T10:05:00Z",
     paidAt: null, // paiement échoué → bloqué, jamais « en retard »
-    statut: "Nouveau",
+    statut: "En attente",
   },
   {
     ref: "AC-2026-0149",
@@ -86,7 +89,7 @@ const rows: DossierRow[] = [
     ville: "Toulouse",
     createdAt: "2026-07-15T10:48:00Z",
     paidAt: "2026-07-15T11:05:00Z", // deadline vendredi 17 → dans les temps
-    statut: "En cours",
+    statut: "En attente",
   },
   {
     ref: "AC-2026-0148",
@@ -94,7 +97,7 @@ const rows: DossierRow[] = [
     ville: "Rennes",
     createdAt: "2026-07-16T08:05:00Z",
     paidAt: "2026-07-16T08:20:00Z", // deadline lundi 20 (week-end sauté)
-    statut: "Nouveau",
+    statut: "En attente",
   },
   {
     ref: "AC-2026-0147",
@@ -102,7 +105,7 @@ const rows: DossierRow[] = [
     ville: "Lyon",
     createdAt: "2026-07-14T14:10:00Z",
     paidAt: "2026-07-14T14:32:00Z", // deadline jeudi 16 → à rendre aujourd’hui
-    statut: "En cours",
+    statut: "En attente",
   },
   {
     ref: "AC-2026-0146",
