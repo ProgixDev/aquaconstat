@@ -30,6 +30,10 @@ const serverEnvSchema = z.object({
   // so the whole flow works in dev with no accounts. Paste the real keys and
   // it goes live with no code change — the providers detect them at runtime.
   STRIPE_SECRET_KEY: z.string().min(20).optional(),
+  // Verifies the Stripe webhook signature (spec 006). Without it the webhook
+  // route rejects every call — payment confirmation then only happens via the
+  // demo/simulation path, never a forgeable unsigned POST.
+  STRIPE_WEBHOOK_SECRET: z.string().min(10).optional(),
   RESEND_API_KEY: z.string().min(10).optional(),
   // SMTP transport (client's choice, 2026-07-21 — Gmail/OVH-style rather than
   // Resend). When SMTP_HOST + SMTP_USER + SMTP_PASSWORD are all set, e-mail
