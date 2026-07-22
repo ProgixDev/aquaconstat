@@ -27,7 +27,7 @@ function useRecap() {
       .join(" · ") || "À compléter à l’étape 1";
 
   const typeLieuLabels = {
-    maison: "maison particulière",
+    maison: "maison individuelle",
     copro: "immeuble en copropriété",
     locatif: "immeuble locatif",
   } as const;

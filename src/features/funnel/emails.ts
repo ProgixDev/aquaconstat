@@ -18,7 +18,7 @@ export type EmailContent = { subject: string; html: string; text: string };
 export type PhotoSummary = { name: string; takenAt: string | null };
 
 const typeLieuLabels: Record<string, string> = {
-  maison: "Maison particulière",
+  maison: "Maison individuelle",
   copro: "Immeuble en copropriété",
   locatif: "Immeuble locatif",
 };

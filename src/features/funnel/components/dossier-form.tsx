@@ -10,7 +10,7 @@ import { TextField } from "./text-field";
 import { emailPattern, missingForDossier } from "../validation";
 
 const typeLieuOptions: [TypeLieu, string][] = [
-  ["maison", "Maison particulière"],
+  ["maison", "Maison individuelle"],
   ["copro", "Immeuble en copropriété"],
   ["locatif", "Immeuble locatif"],
 ];

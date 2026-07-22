@@ -59,7 +59,7 @@ export type DossierDetail = DossierRow & {
 // Display copy. Duplicated from the funnel on purpose: a feature may never
 // import another feature, and this is the admin's own wording.
 const typeLieuLabels: Record<string, string> = {
-  maison: "Maison particulière",
+  maison: "Maison individuelle",
   copro: "Immeuble en copropriété",
   locatif: "Immeuble locatif",
 };
