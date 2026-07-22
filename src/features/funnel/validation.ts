@@ -15,8 +15,10 @@ export const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 /** Étape 1 — who the visitor is and where the damage is. */
 export function missingForDossier(data: FunnelData): string[] {
   const missing: string[] = [];
-  if (!data.prenom.trim()) missing.push("votre prénom");
+  // Same order as the fields on screen (nom, then prénom) so the « il manque… »
+  // line reads top-to-bottom against the form.
   if (!data.nom.trim()) missing.push("votre nom");
+  if (!data.prenom.trim()) missing.push("votre prénom");
   if (!emailPattern.test(data.email)) missing.push("un e-mail valide");
   if (!data.adresse.trim()) missing.push("l’adresse du sinistre");
   if (!data.codePostal.trim()) missing.push("le code postal");

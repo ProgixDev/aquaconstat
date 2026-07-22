@@ -63,8 +63,10 @@ export function DossierForm() {
       <section className="mt-10">
         <h2 className="font-display text-lg font-bold">Vos coordonnées</h2>
         <div className="mt-5 grid gap-4.5 sm:grid-cols-2">
-          <TextField label="Prénom" value={data.prenom} onChange={(v) => setField("prenom", v)} />
+          {/* Nom before prénom (client, 2026-07-22) — the order used on the
+              devis and on an insurance declaration. */}
           <TextField label="Nom" value={data.nom} onChange={(v) => setField("nom", v)} />
+          <TextField label="Prénom" value={data.prenom} onChange={(v) => setField("prenom", v)} />
           <TextField
             label="E-mail"
             type="email"
