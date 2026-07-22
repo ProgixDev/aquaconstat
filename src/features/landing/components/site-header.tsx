@@ -9,6 +9,7 @@ import { CtaButton } from "./cta-button";
 /* Absolute (« /#… ») so the dock works from the funnel pages too, where the
    header now also lives — a bare « #tarif » goes nowhere outside the landing. */
 const links = [
+  { href: "/#qui-sommes-nous", label: "Qui sommes-nous ?" },
   { href: "/#comment-ca-marche", label: "Comment ça marche" },
   { href: "/#tarif", label: "Tarif" },
   { href: "/#faq", label: "FAQ" },

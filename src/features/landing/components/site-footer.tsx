@@ -50,6 +50,7 @@ export function SiteFooter() {
                 column — a full-width target next to a sibling column reads as a
                 mis-hit waiting to happen. */}
             <nav className="mt-3 flex flex-col items-start gap-1 text-sm">
+              <FooterLink href="#qui-sommes-nous">Qui sommes-nous ?</FooterLink>
               <FooterLink href="#comment-ca-marche">Comment ça marche</FooterLink>
               <FooterLink href="#tarif">Tarif</FooterLink>
               <FooterLink href="#faq">FAQ</FooterLink>

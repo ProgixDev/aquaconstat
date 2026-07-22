@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Reveal } from "@/components/ui/reveal";
 import {
+  AboutSection,
   AudienceSection,
   DeliverableSection,
   EcoSection,
@@ -34,6 +35,11 @@ export default function Home() {
         </Reveal>
         <Reveal>
           <AudienceSection />
+        </Reveal>
+        {/* « Qui sommes-nous ? » (client, 2026-07-22) — who it is for, then who
+            we are, then how it works. */}
+        <Reveal>
+          <AboutSection />
         </Reveal>
         <Reveal>
           <HowItWorksSection />
