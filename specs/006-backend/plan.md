@@ -18,10 +18,12 @@ server-side. Admin readers switch from the fixture to the store and show photos 
 action.
 
 Because photos are stored (client, 2026-07-22, Pro plan), there is **no tab-close gap** — the
-earlier e-mail-only tradeoff is gone. The one obligation it adds is a **retention policy**: a
-`pg_cron` job auto-deletes photos + rows after a window (paid: ~12 mo, never-paid: ~7 d) and a
-delete-on-request removes a dossier's row + bucket objects. The bucket is private; the admin reaches
-photos only through signed URLs (the security baseline denies anon/authenticated by default).
+earlier e-mail-only tradeoff is gone. The one obligation it adds is a **retention policy**: paid
+dossiers are purged after **12 months**, never-paid after **7 days**, plus a delete-on-request
+helper. That sweep runs in **server code behind `POST /api/retention`** (a `CRON_SECRET` bearer),
+**not** a pg_cron SQL job — Supabase refuses direct deletes from `storage.objects` ("Use the Storage
+API instead"), so photos can only be removed through the API. The bucket is private; the admin
+reaches photos only through signed URLs (the security baseline denies anon/authenticated by default).
 
 ## Decisions (resolving spec open questions)
 

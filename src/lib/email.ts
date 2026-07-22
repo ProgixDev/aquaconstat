@@ -32,6 +32,10 @@ const isSmtpLive = Boolean(env.SMTP_HOST && env.SMTP_USER && env.SMTP_PASSWORD);
 const isResendLive = Boolean(env.RESEND_API_KEY);
 export const isEmailLive = isSmtpLive || isResendLive;
 
+/** Where paid dossiers land. Falls back to a demo inbox in simulation so the
+ *  funnel is walkable before OPERATOR_EMAIL is configured. */
+export const operatorAddress = env.OPERATOR_EMAIL ?? "operateur@olala.demo";
+
 // Over SMTP the sender must be an address the account may send as, so it
 // defaults to SMTP_USER; Resend allows its onboarding sandbox address.
 const DEFAULT_FROM =

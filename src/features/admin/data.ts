@@ -1,23 +1,30 @@
 /**
- * Mock dossiers (spec 004) — replaced by the Supabase backend spec.
+ * Admin dossier reads — now backed by the real store (spec 006).
  *
- * `server-only` is load-bearing, not decoration. This module holds dossier PII,
- * and until 2026-07-16 the list was value-imported by a "use client" table,
- * which shipped all 9 records into a public /_next/static chunk — a path the
- * middleware matcher deliberately excludes, so no gate could ever have closed
- * it. Importing this from a client component is now a build error.
+ * `server-only` is load-bearing, not decoration: this module handles dossier
+ * PII, and until 2026-07-16 the list was value-imported by a "use client" table,
+ * which shipped every record into a public /_next/static chunk. Importing this
+ * from a client component is a build error.
  *
  * The exported readers are also the AUTHORIZATION BOUNDARY: they call
  * requireAdminSession() themselves rather than trusting a layout to have done
  * it (see session.ts for why a layout is not a reliable gate).
+ *
+ * The nine-row fixture that used to live here moved into the store's in-memory
+ * adapter, which stands in whenever Supabase is not configured — so this file
+ * is the same code path in dev and in production.
  */
 import "server-only";
+import {
+  dossierStore,
+  signDossierPhotos,
+  type DossierData,
+  type DossierRecord,
+  type DossierStatut,
+} from "@/lib/dossiers";
 import { requireAdminSession } from "./session";
 
-// Two states only (client, 2026-07-21): a dossier is « En attente » of its
-// devis until Nino sends it. The intermediate « En cours » step was dropped and
-// « Nouveau » renamed to « En attente ».
-export type DossierStatut = "En attente" | "Devis envoyé";
+export type { DossierStatut };
 
 export type DossierRow = {
   ref: string;
@@ -26,9 +33,9 @@ export type DossierRow = {
   /** ISO 8601. The display string is derived, never stored alongside. */
   createdAt: string;
   /**
-   * ISO 8601 when Stripe confirmed payment; null when it failed. The 48 h
-   * ouvrées clock starts here — and « is it paid » is read from this, so there
-   * is no separate boolean that can contradict it.
+   * ISO 8601 when Stripe confirmed payment; null when it has not (yet). The
+   * 48 h ouvrées clock starts here — and « is it paid » is read from this, so
+   * there is no separate boolean that can contradict it.
    */
   paidAt: string | null;
   statut: DossierStatut;
@@ -40,146 +47,141 @@ export type DossierDetail = DossierRow & {
   adresse: string;
   batiment: string;
   demandeur: string;
-  // proprietaire removed 2026-07-16 — the funnel's statut sub-panels are gone
-  // (client feedback), so the pro can never be shown it.
   syndic: string;
   sinistre: { label: string; value: string }[];
-  /** Per pièce: what to redo + the approximate size band (spec 003, R2R 2026-07-16). */
+  /** Per pièce: what to redo + the m² touched on each part. */
   surfaces: { label: string; value: string }[];
-  /** Mock uploads under /public/mock/dossier — served same-origin so the
-      « Télécharger » action is a real download, not a painted door. */
+  /** Signed, short-lived URLs from the private bucket (or the mock paths in
+      simulation) — never a public object URL. */
   photos: { label: string; src: string }[];
 };
 
-/**
- * Fixture anchored to a fixed « today » of 2026-07-16 so the cockpit shows a
- * legible spread (late / due today / on track / blocked / sent) and so tests
- * stay deterministic. It ages: read far enough past that date and everything
- * unsent reads as late. That is the fixture, not the SLA rule — the backend
- * spec replaces this module wholesale.
- */
-const rows: DossierRow[] = [
-  {
-    ref: "AC-2026-0152",
-    nom: "Nadia Belkacem",
-    ville: "Villeurbanne",
-    createdAt: "2026-07-14T08:55:00Z",
-    paidAt: "2026-07-14T09:12:00Z", // deadline jeudi 16 → à rendre aujourd’hui
-    statut: "En attente",
-  },
-  {
-    ref: "AC-2026-0151",
-    nom: "Thomas Lefebvre",
-    ville: "Nantes",
-    createdAt: "2026-07-13T16:20:00Z",
-    paidAt: "2026-07-13T16:40:00Z", // deadline mercredi 15 → en retard
-    statut: "En attente",
-  },
-  {
-    ref: "AC-2026-0150",
-    nom: "Marie-Claude Perrin",
-    ville: "Bordeaux",
-    createdAt: "2026-07-11T10:05:00Z",
-    paidAt: null, // paiement échoué → bloqué, jamais « en retard »
-    statut: "En attente",
-  },
-  {
-    ref: "AC-2026-0149",
-    nom: "Julien Roche",
-    ville: "Toulouse",
-    createdAt: "2026-07-15T10:48:00Z",
-    paidAt: "2026-07-15T11:05:00Z", // deadline vendredi 17 → dans les temps
-    statut: "En attente",
-  },
-  {
-    ref: "AC-2026-0148",
-    nom: "Sophie Anselme",
-    ville: "Rennes",
-    createdAt: "2026-07-16T08:05:00Z",
-    paidAt: "2026-07-16T08:20:00Z", // deadline lundi 20 (week-end sauté)
-    statut: "En attente",
-  },
-  {
-    ref: "AC-2026-0147",
-    nom: "Camille Moreau",
-    ville: "Lyon",
-    createdAt: "2026-07-14T14:10:00Z",
-    paidAt: "2026-07-14T14:32:00Z", // deadline jeudi 16 → à rendre aujourd’hui
-    statut: "En attente",
-  },
-  {
-    ref: "AC-2026-0146",
-    nom: "Karim Haddad",
-    ville: "Marseille",
-    createdAt: "2026-07-09T09:30:00Z",
-    paidAt: "2026-07-09T09:44:00Z",
-    statut: "Devis envoyé",
-  },
-  {
-    ref: "AC-2026-0145",
-    nom: "Élise Fontaine",
-    ville: "Dijon",
-    createdAt: "2026-07-08T15:12:00Z",
-    paidAt: "2026-07-08T15:30:00Z",
-    statut: "Devis envoyé",
-  },
-  {
-    ref: "AC-2026-0144",
-    nom: "Paul Guérin",
-    ville: "Angers",
-    createdAt: "2026-07-06T11:02:00Z",
-    paidAt: "2026-07-06T11:18:00Z",
-    statut: "Devis envoyé",
-  },
-];
-
-const detailCamille: Omit<DossierDetail, keyof DossierRow> = {
-  email: "camille.moreau@gmail.com",
-  telephone: "06 42 17 89 03",
-  adresse: "12 rue des Lilas, Bât. B, 3ᵉ étage, 69003 Lyon",
-  batiment: "Immeuble en copropriété",
-  demandeur: "Locataire",
-  syndic: "Cabinet Berthelot — 4 quai Saint-Antoine, 69002 Lyon · 04 72 10 22 30",
-  sinistre: [
-    { label: "Date du sinistre", value: "14 juin 2026" },
-    { label: "Pièces endommagées", value: "Salle de bain · Couloir/WC" },
-  ],
-  surfaces: [
-    { label: "Salle de bain", value: "Plafond, murs — moyenne (10 à 20 m²)" },
-    { label: "Couloir/WC", value: "Murs — petite (moins de 10 m²)" },
-  ],
-  photos: [
-    { label: "vue générale — salle de bain", src: "/mock/dossier/01-vue-generale.jpg" },
-    { label: "plafond — salle de bain", src: "/mock/dossier/02-plafond.jpg" },
-    { label: "zone endommagée — gros plan", src: "/mock/dossier/03-zone-endommagee.jpg" },
-    { label: "mur — couloir", src: "/mock/dossier/04-mur-couloir.jpg" },
-    { label: "photo-05 — reprise", src: "/mock/dossier/05-reprise.jpg" },
-  ],
+// Display copy. Duplicated from the funnel on purpose: a feature may never
+// import another feature, and this is the admin's own wording.
+const typeLieuLabels: Record<string, string> = {
+  maison: "Maison particulière",
+  copro: "Immeuble en copropriété",
+  locatif: "Immeuble locatif",
 };
+
+const statutLabels: Record<string, string> = {
+  locataire: "Locataire",
+  proprio: "Propriétaire / copropriétaire",
+  syndic: "Syndic de copropriété",
+  gerant: "Gérant de l’immeuble / agence",
+};
+
+const pieceOrder = ["salon", "chambre", "cuisine", "sdb", "couloirWc", "partiesCommunes"] as const;
+const pieceLabels: Record<string, string> = {
+  salon: "Salon",
+  chambre: "Chambre",
+  cuisine: "Cuisine",
+  sdb: "Salle de bain",
+  couloirWc: "Couloir/WC",
+  partiesCommunes: "Parties communes (Hall, cage d’escalier…)",
+};
+
+const partOrder = ["plaf", "murs", "sol"] as const;
+const partLabels: Record<string, string> = { plaf: "Plafond", murs: "Murs", sol: "Sol" };
+
+/** « 2026-07-10 » → « 10 juillet 2026 ». */
+const MONTHS = [
+  "janvier",
+  "février",
+  "mars",
+  "avril",
+  "mai",
+  "juin",
+  "juillet",
+  "août",
+  "septembre",
+  "octobre",
+  "novembre",
+  "décembre",
+];
+function frDate(iso: string): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso);
+  if (!m) return iso || "—";
+  return `${Number(m[3])} ${MONTHS[Number(m[2]) - 1]} ${m[1]}`;
+}
+
+function touchedPieces(data: DossierData): string[] {
+  return pieceOrder.filter((k) => data.pieces[k]).map((k) => pieceLabels[k]!);
+}
+
+function toRow(record: DossierRecord): DossierRow {
+  return {
+    ref: record.reference,
+    nom: record.nom,
+    ville: record.ville,
+    createdAt: record.createdAt,
+    paidAt: record.paidAt,
+    statut: record.statut,
+  };
+}
+
+export type DossiersRead = { dossiers: DossierRow[]; readAt: number };
+export type DossierRead = { dossier: DossierDetail | undefined; readAt: number };
 
 /**
  * `readAt` travels with the data rather than being stamped in the page.
  *
- * Every SLA countdown is relative to a clock, so the clock is part of the
- * read, not something a component invents: `Date.now()` during render is
- * impure (react-hooks/purity rightly rejects it) and would also give the
- * server and the client two different answers to hydrate against.
+ * Every SLA countdown is relative to a clock, so the clock is part of the read,
+ * not something a component invents: `Date.now()` during render is impure
+ * (react-hooks/purity rightly rejects it) and would also give the server and
+ * the client two different answers to hydrate against.
  */
-export type DossiersRead = { dossiers: DossierRow[]; readAt: number };
-export type DossierRead = { dossier: DossierDetail | undefined; readAt: number };
-
-/** Every dossier. Gated: this is the boundary, not the layout. */
 export async function getDossiers(): Promise<DossiersRead> {
   await requireAdminSession();
-  return { dossiers: rows, readAt: Date.now() };
+  const records = await dossierStore.list();
+  return { dossiers: records.map(toRow), readAt: Date.now() };
 }
 
-/** All rows resolve to the same fully-detailed mock record, re-keyed per row. */
+/** One dossier, with its photos resolved to signed URLs. Gated like the list. */
 export async function getDossier(ref: string): Promise<DossierRead> {
   await requireAdminSession();
-  const row = rows.find((d) => d.ref === ref);
-  return {
-    dossier: row ? { ...detailCamille, ...row } : undefined,
-    readAt: Date.now(),
+  const record = await dossierStore.get(ref);
+  if (!record) return { dossier: undefined, readAt: Date.now() };
+
+  const d = record.data;
+  const photos = await signDossierPhotos(record.photos);
+  const pieces = touchedPieces(d);
+
+  const dossier: DossierDetail = {
+    ...toRow(record),
+    email: d.email || "—",
+    telephone: d.telephone || "—",
+    adresse:
+      [
+        d.adresse,
+        d.batiment && `Bât. ${d.batiment}`,
+        d.etage && `${d.etage} étage`,
+        [d.codePostal, d.ville].filter(Boolean).join(" "),
+      ]
+        .filter(Boolean)
+        .join(", ") || "—",
+    batiment: d.typeLieu ? (typeLieuLabels[d.typeLieu] ?? d.typeLieu) : "—",
+    demandeur: d.statut ? (statutLabels[d.statut] ?? d.statut) : "—",
+    syndic: d.syndic || "—",
+    sinistre: [
+      { label: "Date du sinistre", value: d.dateSinistre ? frDate(d.dateSinistre) : "—" },
+      { label: "Pièces endommagées", value: pieces.length ? pieces.join(" · ") : "—" },
+      { label: "Photos attestées sur l’honneur", value: d.photosAttestation ? "Oui" : "Non" },
+    ],
+    surfaces: pieceOrder
+      .filter((k) => d.pieces[k])
+      .map((k) => {
+        const room = d.surfaces[k];
+        const parts = partOrder
+          .filter((p) => room && p in room.parts)
+          .map((p) => {
+            const m2 = room?.parts[p];
+            return m2 ? `${partLabels[p]} ≈ ${m2} m²` : partLabels[p]!;
+          });
+        return { label: pieceLabels[k]!, value: parts.length ? parts.join(", ") : "—" };
+      }),
+    photos: photos.map((p) => ({ label: p.name, src: p.url })),
   };
+
+  return { dossier, readAt: Date.now() };
 }

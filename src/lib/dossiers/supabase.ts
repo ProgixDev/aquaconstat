@@ -3,6 +3,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import type {
   DossierData,
   DossierMatch,
+  DossierPhoto,
   DossierRecord,
   DossierStatut,
   DossierStore,
@@ -27,6 +28,7 @@ type Row = {
   devis_envoye_at: string | null;
   stripe_session_id: string | null;
   data: DossierData;
+  photos: DossierPhoto[] | null;
 };
 
 function toRecord(r: Row): DossierRecord {
@@ -41,6 +43,7 @@ function toRecord(r: Row): DossierRecord {
     devisEnvoyeAt: r.devis_envoye_at,
     stripeSessionId: r.stripe_session_id,
     data: r.data,
+    photos: r.photos ?? [],
   };
 }
 
@@ -48,19 +51,25 @@ export const supabaseStore: DossierStore = {
   async create(input: NewDossier) {
     const d = input.data;
     const supabase = createAdminClient();
-    const { error } = await supabase.from("dossiers").upsert(
-      {
-        reference: input.reference,
-        nom: d.nom,
-        ville: d.ville,
-        email: d.email,
-        statut: "En attente",
-        stripe_session_id: input.stripeSessionId ?? null,
-        data: d,
-      },
-      { onConflict: "reference", ignoreDuplicates: true },
-    );
+    // Plain insert, not upsert: a duplicate reference must FAIL so the caller
+    // retries with a new one rather than two dossiers colliding on one ref.
+    const { error } = await supabase.from("dossiers").insert({
+      reference: input.reference,
+      nom: d.nom,
+      ville: d.ville,
+      email: d.email,
+      statut: "En attente",
+      stripe_session_id: input.stripeSessionId ?? null,
+      data: d,
+      photos: input.photos ?? [],
+    });
     if (error) throw new Error(`dossiers.create failed: ${error.message}`);
+  },
+
+  async attachPhotos(reference: string, photos: DossierPhoto[]) {
+    const supabase = createAdminClient();
+    const { error } = await supabase.from("dossiers").update({ photos }).eq("reference", reference);
+    if (error) throw new Error(`dossiers.attachPhotos failed: ${error.message}`);
   },
 
   async markPaid(match: DossierMatch, paidAtISO: string) {

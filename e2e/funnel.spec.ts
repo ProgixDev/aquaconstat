@@ -101,6 +101,30 @@ test("@cuj CUJ-02: visitor fills the funnel and reaches confirmation", async ({ 
   await expect(
     page.getByRole("heading", { name: /Merci Camille, votre dossier est envoyé/ }),
   ).toBeVisible();
-  await expect(page.getByText(/^AC-2026-\d{4}$/)).toBeVisible();
+  const reference = (await page.getByText(/^AC-2026-\d{4}$/).innerText()).trim();
   await shot(page, "funnel-confirmation");
+
+  // Spec 006 — the dossier is persisted at checkout and marked paid on
+  // confirmation, so it must now be a REAL row in the back-office.
+  await page.goto("/admin/connexion");
+  await page.getByLabel("Mot de passe").fill(process.env.ADMIN_PASSWORD!);
+  await page.getByRole("button", { name: "Se connecter" }).click();
+  await expect(page.getByRole("heading", { name: "Dossiers reçus" })).toBeVisible();
+
+  await page.getByLabel("Rechercher par nom ou référence").fill(reference);
+  const row = page.getByRole("link", { name: new RegExp(reference) });
+  await expect(row).toBeVisible();
+  await expect(page.getByText("Payé ✓")).toBeVisible();
+  await shot(page, "admin-dossier-reel");
+
+  // « Devis envoyé » persists — it used to be local state that forgot on reload.
+  await row.click();
+  await expect(page.getByRole("heading", { name: reference })).toBeVisible();
+  await page.getByRole("radio", { name: "Devis envoyé" }).click();
+  await page.reload();
+  await expect(page.getByRole("radio", { name: "Devis envoyé" })).toHaveAttribute(
+    "aria-checked",
+    "true",
+  );
+  await shot(page, "admin-devis-envoye");
 });

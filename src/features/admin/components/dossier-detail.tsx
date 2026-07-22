@@ -2,9 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { formatFrDateTime, formatFrShortDate } from "@/lib/format";
 import { cn } from "@/lib/utils";
+import { setDossierStatut } from "../actions";
 import type { DossierDetail as DossierDetailData, DossierStatut } from "../data";
 import { slaState } from "../sla";
 import { SlaPill } from "./sla-pill";
@@ -71,6 +72,31 @@ type DossierDetailProps = {
 export function DossierDetail({ dossier, now }: DossierDetailProps) {
   const [statut, setStatut] = useState<DossierStatut>(dossier.statut);
   const [lightbox, setLightbox] = useState<Photo | null>(null);
+  const [statutError, setStatutError] = useState<string | null>(null);
+  const [saving, startSaving] = useTransition();
+
+  /**
+   * Optimistic, then reconciled: the pill flips immediately, and rolls back with
+   * a reason if the server refuses (e.g. « Devis envoyé » on an unpaid dossier).
+   * Before spec 006 this was local state only — it forgot on reload.
+   */
+  const changeStatut = (next: DossierStatut) => {
+    if (next === statut || saving) return;
+    const previous = statut;
+    setStatut(next);
+    setStatutError(null);
+    startSaving(async () => {
+      const result = await setDossierStatut(dossier.ref, next);
+      if (!result.ok) {
+        setStatut(previous);
+        setStatutError(
+          result.error === "unpaid"
+            ? "Ce dossier n’est pas payé : le devis ne peut pas être marqué envoyé."
+            : "La mise à jour n’a pas pu être enregistrée.",
+        );
+      }
+    });
+  };
 
   // Name downloads by the dossier so a pro's Downloads folder stays sorted:
   // AC-2026-0147-02-plafond.jpg.
@@ -118,9 +144,10 @@ export function DossierDetail({ dossier, now }: DossierDetailProps) {
                 type="button"
                 role="radio"
                 aria-checked={statut === s}
-                onClick={() => setStatut(s)}
+                disabled={saving}
+                onClick={() => changeStatut(s)}
                 className={cn(
-                  "border-input bg-paper text-ink-soft cursor-pointer rounded-full border px-3.5 py-2 font-sans text-xs font-semibold whitespace-nowrap",
+                  "border-input bg-paper text-ink-soft cursor-pointer rounded-full border px-3.5 py-2 font-sans text-xs font-semibold whitespace-nowrap disabled:cursor-not-allowed disabled:opacity-60",
                   statut === s && "ring-aqua ring-2",
                 )}
               >
@@ -130,6 +157,11 @@ export function DossierDetail({ dossier, now }: DossierDetailProps) {
           </div>
         </div>
       </div>
+      {statutError && (
+        <p role="status" className="text-destructive mt-2 text-right text-xs">
+          {statutError}
+        </p>
+      )}
 
       <div className="mt-6 grid items-start gap-5 lg:grid-cols-2">
         <SectionCard title="Coordonnées & lieu du sinistre">

@@ -43,6 +43,9 @@ const serverEnvSchema = z.object({
   SMTP_PORT: z.coerce.number().int().positive().max(65535).default(587),
   SMTP_USER: z.string().min(1).optional(),
   SMTP_PASSWORD: z.string().min(1).optional(),
+  // Bearer secret for POST /api/retention (the RGPD purge). Unset ⇒ the route
+  // refuses every call, so an unscheduled deployment cannot be swept by anyone.
+  CRON_SECRET: z.string().min(16).optional(),
   // Where paid dossiers are e-mailed (Nino's inbox). Falls back to a demo
   // address in simulation.
   OPERATOR_EMAIL: z.string().email().optional(),

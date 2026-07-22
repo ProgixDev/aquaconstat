@@ -25,42 +25,45 @@ Keep the seam green at every step: nothing here breaks the simulation path.
 - [x] T5b Migration `0006_dossier_photos.sql` — `photos jsonb` column + **private** `dossier-photos`
       bucket (20 MB, images only). Applied via MCP; advisors still clean. · done: bucket `public:false`
       confirmed.
-- [ ] T5c `src/lib/dossiers/photos.ts` — `uploadPhotos(reference, files)`, `signPhotoUrls(paths)`,
+- [x] T5c `src/lib/dossiers/photos.ts` — `uploadPhotos(reference, files)`, `signPhotoUrls(paths)`,
       `deletePhotos(reference)`. Live = service-role storage; simulation = no-op (photos stay
       browser-e-mailed, admin shows the seed mocks). Add `photos: DossierPhoto[]` to `DossierRecord`.
       · done: typechecks; memory adapter returns seed photo urls.
 
 ## Phase 2 — capture + confirm payment (AC-3, AC-4, AC-5)
 
-- [ ] T6 `startCheckout(dossier + photos)` in `funnel/actions.ts` — zod-parse the dossier,
+- [x] T6 `startCheckout(dossier + photos)` in `funnel/actions.ts` — zod-parse the dossier,
       `createDossier` (« En attente »), **upload photos to the bucket (live)**, put reference in Stripe
       metadata, return URL. Wire `paiement-form.tsx` to send the downscaled photos. · done: unit —
       invalid dossier rejected; sim returns demo URL; live uploads keyed by reference.
-- [ ] T7 `src/app/api/stripe/webhook/route.ts` — verify signature (`STRIPE_WEBHOOK_SECRET`);
+- [x] T7 `src/app/api/stripe/webhook/route.ts` — verify signature (`STRIPE_WEBHOOK_SECRET`);
       on `checkout.session.completed` → `markPaid` + customer confirmation + **operator e-mail with the
       photos fetched from the bucket**; idempotent. · done: `webhook.test.ts` — good event pays once;
       **bad signature → 400, no markPaid** (AC-4).
-- [ ] T8 `confirmAndSend` (demo/sim only) — mark the demo dossier paid (token already verified), keep
+- [x] T8 `confirmAndSend` (demo/sim only) — mark the demo dossier paid (token already verified), keep
       the browser-sent operator e-mail **with photos** (sim has no bucket). · done: existing
       confirmation e2e still green; customer e-mail asserted (AC-5).
 
 ## Phase 3 — admin on real data (AC-6, AC-7, AC-8)
 
-- [ ] T9 `admin/data.ts` — `getDossiers`/`getDossier` read the **store** (live→Supabase,
+- [x] T9 `admin/data.ts` — `getDossiers`/`getDossier` read the **store** (live→Supabase,
       sim→memory), keep `requireAdminSession()`; map records → `DossierRow`/`DossierDetail`, resolving
       photos to **signed URLs** (live) or seed mocks (sim). **Keep the photo grid + lightbox.**
       · done: admin list renders store rows; SLA from real `paid_at`; detail shows photos (AC-7).
-- [ ] T10 `admin/actions.ts` — `setDossierStatut(ref, statut)`: `requireAdminSession()`, refuse on
+- [x] T10 `admin/actions.ts` — `setDossierStatut(ref, statut)`: `requireAdminSession()`, refuse on
       unpaid, persist. Wire the detail toggle (replace local `useState`). · done: `actions.test.ts` —
       no session denied, unpaid refused (AC-6, AC-9); e2e flip persists across reload (AC-8).
-- [ ] T10b Retention `0007_retention.sql` — `pg_cron` job: delete never-paid dossiers + their bucket
-      objects after ~7 d, and paid ones after ~12 mo (confirm windows with client); a
-      `deleteDossier(ref)` helper for delete-on-request. Add one line to the confidentialité page.
-      · done: cron scheduled; helper removes row + objects.
+- [x] T10b Retention — windows confirmed by the client (paid **12 months**, never-paid **7 days**).
+      Implemented in `src/lib/dossiers/retention.ts` (`purgeExpiredDossiers`, `deleteDossier`) behind
+      `POST /api/retention`, guarded by a constant-time `CRON_SECRET`. **Not a pg_cron SQL job**:
+      Supabase refuses direct deletes from `storage.objects` ("Use the Storage API instead"), so the
+      sweep must run in server code — photos are deleted before the row so bytes are never orphaned.
+      Confidentialité page states both windows. · done: `retention.test.ts` green; route fails closed.
+      ⚠️ Remaining at deploy: point a scheduler (Vercel Cron / pg_cron + pg_net) at the endpoint.
 
 ## Phase 4 — verification
 
-- [ ] T11 E2E `e2e/funnel.spec.ts` + `e2e/admin.spec.ts`: submit via demo → dossier shows **paid**
+- [x] T11 E2E `e2e/funnel.spec.ts` + `e2e/admin.spec.ts`: submit via demo → dossier shows **paid**
       in admin → flip « Devis envoyé » → reload persists. `shot()` at each. · done:
       `FEATURE=006-backend pnpm e2e:shots` green.
 - [ ] T12 [P] (splittable PR) AC-10 cleanup — remove `/sign-in`, `/account`, `auth` slice,
@@ -78,5 +81,5 @@ Keep the seam green at every step: nothing here breaks the simulation path.
 
 ## AC coverage (mirror of plan.md — keep in sync)
 
-- [ ] AC-1 → T2 · [ ] AC-2 → T5c,T6,T9 · [ ] AC-3 → T6,T11 · [ ] AC-4 → T7 · [ ] AC-5 → T7,T8
-- [ ] AC-6 → T10 · [ ] AC-7 → T9,T11 · [ ] AC-8 → T10,T11 · [ ] AC-9 → T7,T10 · [ ] AC-10 → T12
+- [x] AC-1 → T2 · [x] AC-2 → T5c,T6,T9 · [x] AC-3 → T6,T11 · [x] AC-4 → T7 · [x] AC-5 → T7,T8
+- [x] AC-6 → T10 · [x] AC-7 → T9,T11 · [x] AC-8 → T10,T11 · [x] AC-9 → T7,T10 · [ ] AC-10 → T12

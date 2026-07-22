@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { downscaleImage } from "@/lib/image";
 import { startCheckout } from "../actions";
+import { loadPhotos } from "../photo-storage";
 import { useFunnelStore } from "../provider";
 import type { PieceKey, SurfacePart } from "../types";
 import { formatMissing, missingForPayment } from "../validation";
@@ -104,10 +106,27 @@ export function PaiementForm() {
     setError(false);
     setStarting(true);
     try {
+      // Send the whole dossier + its photos NOW, so it is persisted server-side
+      // before the visitor leaves for Stripe — a closed tab can no longer lose
+      // anything. Photos are downscaled here so the upload stays quick.
+      const form = new FormData();
+      form.set("dossier", JSON.stringify(data));
+      const stored = await loadPhotos();
+      const meta: { name: string; takenAt: string | null }[] = [];
+      for (const photo of stored) {
+        if (!photo.blob) continue;
+        const small = await downscaleImage(
+          new File([photo.blob], photo.name, { type: photo.blob.type }),
+        );
+        form.append("photos", small, photo.name);
+        meta.push({ name: photo.name, takenAt: photo.takenAt });
+      }
+      form.set("photosMeta", JSON.stringify(meta));
+
       // The card itself is collected on Stripe's hosted page (or the demo
       // stand-in) — never here. A full navigation, since the URL is external
       // when Stripe is live.
-      const { url } = await startCheckout(data.email);
+      const { url } = await startCheckout(form);
       window.location.assign(url);
     } catch {
       setError(true);

@@ -9,7 +9,9 @@ test("legal pages render their documents and cross-link (spec 005)", async ({ pa
   await expect(page.getByRole("heading", { name: "Mentions légales" })).toBeVisible();
   await expect(page.getByText("BEERI CAPITAL").first()).toBeVisible();
   await expect(page.getByText("999 817 174 R.C.S. Créteil")).toBeVisible();
-  await expect(page.getByText("SAS BATITEC")).toBeVisible();
+  // The devis are produced by a partner network for BEERI CAPITAL (client copy,
+  // replacing the former single-contractor « SAS BATITEC » mention).
+  await expect(page.getByText(/réseau d’entreprises du bâtiment qualifiées/)).toBeVisible();
   await shot(page, "legal-mentions");
 
   // Footer cross-link → confidentialité (AC-4)

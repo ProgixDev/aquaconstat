@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -10,8 +11,10 @@ import {
   createSessionToken,
   safeEqual,
 } from "@/lib/admin-session";
+import { dossierStore } from "@/lib/dossiers";
 import { logger } from "@/lib/logger";
 import { safeRedirectPath } from "@/lib/redirect";
+import { requireAdminSession } from "./session";
 
 const loginInput = z.object({
   password: z.string().min(1).max(256),
@@ -119,4 +122,39 @@ export async function adminLogoutAction(): Promise<void> {
   const store = await cookies();
   store.delete({ name: ADMIN_COOKIE, path: "/admin" });
   redirect("/admin/connexion");
+}
+
+const statutSchema = z.object({
+  ref: z.string().min(1).max(32),
+  statut: z.enum(["En attente", "Devis envoyé"]),
+});
+
+export type SetStatutResult = { ok: boolean; error?: "invalid" | "notfound" | "unpaid" };
+
+/**
+ * Marks a dossier « Devis envoyé » (or back to « En attente »), persistently.
+ *
+ * Authorization comes FIRST and from the session, never from the arguments:
+ * requireAdminSession() redirects an unauthenticated caller before any dossier
+ * is read or written (SEC-AUTHZ-001).
+ */
+export async function setDossierStatut(ref: string, statut: string): Promise<SetStatutResult> {
+  await requireAdminSession();
+
+  const parsed = statutSchema.safeParse({ ref, statut });
+  if (!parsed.success) return { ok: false, error: "invalid" };
+
+  const record = await dossierStore.get(parsed.data.ref);
+  if (!record) return { ok: false, error: "notfound" };
+
+  // « Devis envoyé » is meaningless on a dossier nobody paid for — the devis is
+  // what the payment buys, so the transition is refused (AC-6).
+  if (parsed.data.statut === "Devis envoyé" && !record.paidAt) {
+    return { ok: false, error: "unpaid" };
+  }
+
+  await dossierStore.setStatut(parsed.data.ref, parsed.data.statut, new Date().toISOString());
+  revalidatePath("/admin/dossiers");
+  revalidatePath(`/admin/dossiers/${parsed.data.ref}`);
+  return { ok: true };
 }

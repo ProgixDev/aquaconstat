@@ -14,11 +14,30 @@ export const isDossierStoreLive = Boolean(env.SUPABASE_SERVICE_ROLE_KEY);
 
 export const dossierStore: DossierStore = isDossierStoreLive ? supabaseStore : memoryStore;
 
+export {
+  deleteDossierPhotos,
+  fetchDossierPhotos,
+  isPhotoStorageLive,
+  signDossierPhotos,
+  uploadDossierPhotos,
+  type UploadablePhoto,
+} from "./photos";
+
+export {
+  deleteDossier,
+  purgeExpiredDossiers,
+  PAID_RETENTION_DAYS,
+  UNPAID_RETENTION_DAYS,
+  type PurgeResult,
+} from "./retention";
+
 export type {
   DossierData,
   DossierMatch,
+  DossierPhoto,
   DossierRecord,
   DossierStatut,
   DossierStore,
   NewDossier,
+  ResolvedPhoto,
 } from "./types";

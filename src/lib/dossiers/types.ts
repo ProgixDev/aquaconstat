@@ -8,6 +8,13 @@
 
 export type DossierStatut = "En attente" | "Devis envoyé";
 
+/** Photo metadata as persisted on the dossier row. The BYTES live in the private
+ *  `dossier-photos` bucket — `path` is the object key, never a public URL. */
+export type DossierPhoto = { path: string; name: string; takenAt: string | null };
+
+/** A photo with a short-lived signed URL, ready for the admin to render. */
+export type ResolvedPhoto = DossierPhoto & { url: string };
+
 /** The funnel answers we persist. Text only — never any image data. */
 export type DossierData = {
   assuranceReclame: boolean;
@@ -42,20 +49,27 @@ export type DossierRecord = {
   devisEnvoyeAt: string | null;
   stripeSessionId: string | null;
   data: DossierData;
+  /** Object keys in the private bucket — resolve with `signDossierPhotos`. */
+  photos: DossierPhoto[];
 };
 
 export type NewDossier = {
   reference: string;
   stripeSessionId?: string | null;
   data: DossierData;
+  photos?: DossierPhoto[];
 };
 
 /** Matches a dossier by reference or Stripe session id (webhook idempotency). */
 export type DossierMatch = { reference?: string; sessionId?: string };
 
 export interface DossierStore {
-  /** Persist a dossier at « En attente ». Idempotent on the reference. */
+  /** Persist a dossier at « En attente ». THROWS if the reference already
+   *  exists — the caller retries with a fresh one, so two dossiers can never
+   *  share a reference. */
   create(input: NewDossier): Promise<void>;
+  /** Attach uploaded photo metadata once the reference is known to be unique. */
+  attachPhotos(reference: string, photos: DossierPhoto[]): Promise<void>;
   /** Set `paidAt` iff currently null; returns the row on the paying transition,
    *  null if it was already paid or not found (so callers e-mail exactly once). */
   markPaid(match: DossierMatch, paidAtISO: string): Promise<DossierRecord | null>;

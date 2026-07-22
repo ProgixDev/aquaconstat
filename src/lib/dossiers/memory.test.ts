@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 vi.mock("server-only", () => ({}));
 
@@ -25,16 +25,12 @@ const data: DossierData = {
   photosAttestation: true,
 };
 
-// Each test mints a unique reference so the shared module-level seed store never
-// collides between cases.
+// The store is a module-level Map shared by every test, and `create` now throws
+// on a duplicate reference — so the counter must keep climbing across cases.
 let n = 0;
 const ref = () => `AC-2026-90${(n += 1).toString().padStart(2, "0")}`;
 
 describe("memoryStore (simulation adapter)", () => {
-  beforeEach(() => {
-    n = 0;
-  });
-
   it("is seeded with the nine fixture dossiers (keeps /admin populated offline)", async () => {
     const all = await memoryStore.list();
     expect(all.length).toBeGreaterThanOrEqual(9);

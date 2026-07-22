@@ -10,3 +10,4 @@ export { QuestionnaireForm } from "./components/questionnaire-form";
 export { PhotosForm } from "./components/photos-form";
 export { PaiementForm } from "./components/paiement-form";
 export { ConfirmationContent } from "./components/confirmation-content";
+export { handleStripeWebhook, type WebhookResult } from "./webhook";

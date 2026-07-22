@@ -2,6 +2,7 @@ import "server-only";
 import type {
   DossierData,
   DossierMatch,
+  DossierPhoto,
   DossierRecord,
   DossierStatut,
   DossierStore,
@@ -40,6 +41,25 @@ const seedData: DossierData = {
   surfaces: { sdb: { parts: { plaf: "12", murs: "12" } }, couloirWc: { parts: { murs: "6" } } },
   photosAttestation: true,
 };
+
+// Simulation has no bucket, so the seed photos point at the public mock files —
+// `signDossierPhotos` passes a path straight through when storage is offline,
+// which keeps the admin photo grid and its lightbox working with no cloud.
+const seedPhotos: DossierPhoto[] = [
+  {
+    path: "/mock/dossier/01-vue-generale.jpg",
+    name: "vue générale — salle de bain",
+    takenAt: null,
+  },
+  { path: "/mock/dossier/02-plafond.jpg", name: "plafond — salle de bain", takenAt: null },
+  {
+    path: "/mock/dossier/03-zone-endommagee.jpg",
+    name: "zone endommagée — gros plan",
+    takenAt: null,
+  },
+  { path: "/mock/dossier/04-mur-couloir.jpg", name: "mur — couloir", takenAt: null },
+  { path: "/mock/dossier/05-reprise.jpg", name: "photo-05 — reprise", takenAt: null },
+];
 
 type Seed = {
   reference: string;
@@ -141,6 +161,7 @@ function seedRecords(): Map<string, DossierRecord> {
       devisEnvoyeAt: s.statut === "Devis envoyé" ? s.paidAt : null,
       stripeSessionId: null,
       data: { ...seedData, nom: s.nom, ville: s.ville },
+      photos: seedPhotos,
     });
   }
   return map;
@@ -150,7 +171,8 @@ const store = seedRecords();
 
 export const memoryStore: DossierStore = {
   async create(input: NewDossier) {
-    if (store.has(input.reference)) return; // idempotent on the reference
+    // Mirrors the DB's unique constraint so both adapters behave identically.
+    if (store.has(input.reference)) throw new Error(`duplicate reference ${input.reference}`);
     const d = input.data;
     store.set(input.reference, {
       reference: input.reference,
@@ -163,7 +185,13 @@ export const memoryStore: DossierStore = {
       devisEnvoyeAt: null,
       stripeSessionId: input.stripeSessionId ?? null,
       data: d,
+      photos: input.photos ?? [],
     });
+  },
+
+  async attachPhotos(reference: string, photos: DossierPhoto[]) {
+    const row = store.get(reference);
+    if (row) row.photos = photos;
   },
 
   async markPaid(match: DossierMatch, paidAtISO: string) {

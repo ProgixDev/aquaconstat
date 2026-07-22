@@ -1,4 +1,5 @@
-import { pieceKeys, type FunnelData, type PieceKey, type SurfacePart } from "./types";
+import type { DossierData } from "@/lib/dossiers";
+import { pieceKeys, type PieceKey, type SurfacePart } from "./types";
 
 /**
  * The two e-mails a paid dossier produces, as pure content (subject + HTML +
@@ -16,13 +17,13 @@ export type EmailContent = { subject: string; html: string; text: string };
 /** Just what the templates need about each attached photo. */
 export type PhotoSummary = { name: string; takenAt: string | null };
 
-const typeLieuLabels: Record<Exclude<FunnelData["typeLieu"], "">, string> = {
+const typeLieuLabels: Record<string, string> = {
   maison: "Maison particulière",
   copro: "Immeuble en copropriété",
   locatif: "Immeuble locatif",
 };
 
-const statutLabels: Record<Exclude<FunnelData["statut"], "">, string> = {
+const statutLabels: Record<string, string> = {
   locataire: "Locataire ou occupant non propriétaire",
   proprio: "Propriétaire / copropriétaire",
   syndic: "Syndic de copropriété",
@@ -50,7 +51,7 @@ function frDateTime(iso: string): string {
   return m ? `${m[3]}/${m[2]}/${m[1]} à ${m[4]} h ${m[5]}` : iso;
 }
 
-function fullName(d: FunnelData): string {
+function fullName(d: DossierData): string {
   return [d.prenom, d.nom].filter(Boolean).join(" ").trim() || "—";
 }
 
@@ -59,7 +60,7 @@ const partNames: Record<SurfacePart, string> = { plaf: "plafond", murs: "murs", 
 
 /** One human line per touched room, each checked part with its own m²:
  *  « Salle de bain — plafond ≈ 12 m², sol ≈ 8 m² ». */
-function roomLines(d: FunnelData): string[] {
+function roomLines(d: DossierData): string[] {
   return pieceKeys
     .filter((key) => d.pieces[key])
     .map((key) => {
@@ -87,7 +88,7 @@ function escapeHtml(value: string): string {
  * attachments (added by the server action), so the body only lists them.
  */
 export function buildOperatorEmail(
-  data: FunnelData,
+  data: DossierData,
   reference: string,
   photos: PhotoSummary[],
 ): EmailContent {
@@ -107,8 +108,8 @@ export function buildOperatorEmail(
     ["E-mail", data.email || "—"],
     ["Téléphone", data.telephone || "—"],
     ["Lieu du sinistre", lieu || "—"],
-    ["Type de logement", data.typeLieu ? typeLieuLabels[data.typeLieu] : "—"],
-    ["Statut", data.statut ? statutLabels[data.statut] : "—"],
+    ["Type de logement", data.typeLieu ? (typeLieuLabels[data.typeLieu] ?? data.typeLieu) : "—"],
+    ["Statut", data.statut ? (statutLabels[data.statut] ?? data.statut) : "—"],
     ...(data.syndic ? ([["Syndic / gérant", data.syndic]] as [string, string][]) : []),
     ["Date du sinistre déclaré", data.dateSinistre ? frDate(data.dateSinistre) : "—"],
     ["Devis réclamé par l’assurance", data.assuranceReclame ? "Oui" : "Non"],
@@ -171,7 +172,7 @@ export function buildOperatorEmail(
 /**
  * Customer e-mail — the confirmation the visitor is promised on-screen.
  */
-export function buildCustomerEmail(data: FunnelData, reference: string): EmailContent {
+export function buildCustomerEmail(data: DossierData, reference: string): EmailContent {
   const hello = data.prenom ? `Bonjour ${data.prenom},` : "Bonjour,";
   const text = [
     hello,

@@ -65,7 +65,9 @@ test("@cuj CUJ-03: admin signs in, triages by urgency, opens a detail", async ({
   await page.getByLabel("Rechercher par nom ou référence").fill("zzz");
   await expect(page.getByText("Aucun résultat pour « zzz ».")).toBeVisible();
   await page.getByRole("button", { name: "Effacer la recherche" }).click();
-  await expect(page.getByText("9 dossiers · cliquez sur une ligne")).toBeVisible();
+  // Not a hard-coded 9: the list is now backed by the shared dossier store, so a
+  // funnel run in the same server process legitimately adds rows.
+  await expect(page.getByText(/\d+ dossiers · cliquez sur une ligne/)).toBeVisible();
   await shot(page, "admin-dossiers");
 
   await page.getByRole("link", { name: /AC-2026-0147/ }).click();

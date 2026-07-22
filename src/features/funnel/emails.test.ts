@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
+import type { DossierData } from "@/lib/dossiers";
 import { buildCustomerEmail, buildOperatorEmail } from "./emails";
-import type { FunnelData } from "./types";
 
-const dossier: FunnelData = {
+const dossier: DossierData = {
   assuranceReclame: true,
   prenom: "Camille",
   nom: "Moreau",

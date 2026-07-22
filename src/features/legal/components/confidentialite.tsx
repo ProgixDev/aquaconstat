@@ -62,6 +62,14 @@ export function Confidentialite() {
           obligations légales de facturation et de suivi technique d’assurance, sauf demande
           d’effacement anticipée du Client.
         </p>
+        {/* Photo retention (client, 2026-07-22) — the windows the automated
+            purge actually enforces, so the page and the code agree. */}
+        <p>
+          Les photographies transmises sont hébergées sur un espace de stockage privé, accessible
+          uniquement au professionnel chargé du chiffrage. Elles sont supprimées automatiquement
+          douze (12) mois après le paiement du dossier, et sept (7) jours après le dépôt lorsque le
+          dossier n’a jamais été payé.
+        </p>
       </LegalSection>
 
       <LegalSection title="5. Vos droits (RGPD)">
