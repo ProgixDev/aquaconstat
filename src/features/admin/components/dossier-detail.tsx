@@ -16,13 +16,23 @@ const statuts: DossierStatut[] = ["En attente", "Devis envoyé"];
 type Photo = DossierDetailData["photos"][number];
 
 /**
- * Force a same-origin download with a chosen filename. The `download`
- * attribute is honoured because the file is served from our own origin
- * (/public/mock) — cross-origin URLs would open in a tab instead.
+ * Force a download with a chosen filename.
+ *
+ * The `download` attribute is only honoured SAME-ORIGIN, so it works for the
+ * simulation's /public/mock paths but would silently open a tab for the signed
+ * Supabase URLs used in production. Supabase serves an object as an attachment
+ * when asked with `?download=<name>`, so remote URLs get that instead — the
+ * signature covers the path, not the query, so adding it stays valid.
  */
+function downloadHref(src: string, filename: string): string {
+  if (!/^https?:\/\//i.test(src)) return src;
+  const separator = src.includes("?") ? "&" : "?";
+  return `${src}${separator}download=${encodeURIComponent(filename)}`;
+}
+
 function triggerDownload(src: string, filename: string) {
   const a = document.createElement("a");
-  a.href = src;
+  a.href = downloadHref(src, filename);
   a.download = filename;
   document.body.appendChild(a);
   a.click();
@@ -99,8 +109,12 @@ export function DossierDetail({ dossier, now }: DossierDetailProps) {
   };
 
   // Name downloads by the dossier so a pro's Downloads folder stays sorted:
-  // AC-2026-0147-02-plafond.jpg.
-  const fileName = (photo: Photo) => `${dossier.ref}-${photo.src.split("/").pop()}`;
+  // AC-2026-0147-02-plafond.jpg. The query string is stripped first — a signed
+  // URL would otherwise drag its whole token into the filename.
+  const fileName = (photo: Photo) => {
+    const last = photo.src.split("?")[0]!.split("/").pop() || "photo.jpg";
+    return `${dossier.ref}-${decodeURIComponent(last)}`;
+  };
   const downloadOne = (photo: Photo) => triggerDownload(photo.src, fileName(photo));
   // Staggered so the browser doesn't drop rapid-fire programmatic downloads.
   // A single zip would be nicer, but that needs a dependency; this stays
@@ -248,6 +262,12 @@ export function DossierDetail({ dossier, now }: DossierDetailProps) {
                   alt={photo.label}
                   fill
                   sizes="(min-width: 1024px) 20vw, (min-width: 640px) 33vw, 50vw"
+                  // Dossier photos are SIGNED, short-lived URLs on the Supabase
+                  // host. Unoptimized on purpose: it avoids allow-listing a
+                  // hostname that changes per project, and keeps private photos
+                  // out of Next's image cache, which would serve them from our
+                  // own origin long after the signature expired.
+                  unoptimized
                   className="object-cover transition-transform duration-300 group-hover:scale-105"
                 />
               </button>
@@ -282,6 +302,7 @@ export function DossierDetail({ dossier, now }: DossierDetailProps) {
               alt={lightbox.label}
               fill
               sizes="94vw"
+              unoptimized
               className="object-contain"
             />
           </div>

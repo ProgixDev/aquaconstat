@@ -121,6 +121,10 @@ test("@cuj CUJ-02: visitor fills the funnel and reaches confirmation", async ({ 
   await row.click();
   await expect(page.getByRole("heading", { name: reference })).toBeVisible();
   await page.getByRole("radio", { name: "Devis envoyé" }).click();
+  // The pills are disabled while the server action is in flight; waiting for
+  // them to come back is the deterministic « saved » signal. Reloading straight
+  // away would race the round-trip (instant in simulation, not against a real DB).
+  await expect(page.getByRole("radio", { name: "Devis envoyé" })).toBeEnabled();
   await page.reload();
   await expect(page.getByRole("radio", { name: "Devis envoyé" })).toHaveAttribute(
     "aria-checked",
