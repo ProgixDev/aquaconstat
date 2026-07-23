@@ -1,3 +1,4 @@
+import { site } from "@/core/site";
 import type { DossierData } from "@/lib/dossiers";
 import { pieceKeys, type PieceKey, type SurfacePart } from "./types";
 
@@ -84,48 +85,85 @@ function escapeHtml(value: string): string {
 }
 
 // Email-safe styling: tables + inline styles only (no flexbox/grid, no web fonts,
-// no external CSS — Outlook and Gmail strip all of it). Brand palette from
-// globals.css: navy #133a5f, navy-deep #0d2842, aqua #5aa9e6, aqua-pale #a8d6fa,
-// mist #d6ecfd, link #2e7fc2, steel #446c93, success #1b7d6e.
+// no external CSS — Outlook and Gmail strip all of it). Gradients always carry a
+// solid background-color fallback for the clients that drop them. Palette from
+// globals.css: navy #133a5f, navy-deep #0d2842, navy-light #1d5688, aqua #5aa9e6,
+// aqua-bright #7fc8f8, aqua-pale #a8d6fa, mist #d6ecfd, link #2e7fc2, steel
+// #446c93, success #1b7d6e, primary/yellow #ffe45e.
 const FONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
 const SERIF = "Georgia,'Times New Roman',serif";
+// The signature photoreal droplet from the hero, served from the site.
+const DROPLET = `${site.url}/droplet.png`;
 
-/** Branded wrapper: navy header with the wordmark, aqua rule, footer slogan. */
+/**
+ * Branded wrapper matched to the site: a navy hero band with the droplet + the
+ * wordmark, an aqua→yellow accent rule, a white panel, and the footer slogan —
+ * on a soft aqua page like the funnel background.
+ */
 function shell(title: string, preheader: string, content: string): string {
   return `<!doctype html>
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escapeHtml(
     title,
   )}</title></head>
-<body style="margin:0;padding:0;background:#d6ecfd;">
+<body style="margin:0;padding:0;background-color:#eaf4fd;">
 <span style="display:none;max-height:0;overflow:hidden;opacity:0;">${escapeHtml(preheader)}</span>
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#d6ecfd;padding:24px 12px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#eaf4fd;background-image:linear-gradient(180deg,#d6ecfd 0%,#eaf4fd 32%);padding:28px 12px;">
 <tr><td align="center">
-<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;background:#fdfeff;border-radius:14px;overflow:hidden;">
-<tr><td style="background:#0d2842;padding:22px 32px;">
-<span style="font-family:${SERIF};font-size:24px;font-weight:700;letter-spacing:4px;color:#fdfeff;">ÔLALA</span>
-<div style="font-family:${FONT};font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#a8d6fa;margin-top:4px;">Du sinistre à la solution</div>
+<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;background:#fdfeff;border-radius:16px;overflow:hidden;border:1px solid #cfe6fb;">
+<tr><td align="center" style="background-color:#0d2842;background-image:linear-gradient(135deg,#0d2842 0%,#1d5688 100%);padding:34px 32px 28px;">
+<img src="${DROPLET}" width="54" height="54" alt="Ôlala" style="display:block;border:0;outline:none;margin:0 auto 12px;" />
+<div style="font-family:${SERIF};font-size:26px;font-weight:700;letter-spacing:5px;color:#fdfeff;">ÔLALA</div>
+<div style="font-family:${FONT};font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:#a8d6fa;margin-top:6px;">Du sinistre à la solution</div>
 </td></tr>
-<tr><td style="height:4px;line-height:4px;font-size:4px;background:#5aa9e6;">&nbsp;</td></tr>
-<tr><td style="padding:32px;font-family:${FONT};color:#133a5f;font-size:14px;line-height:1.6;">${content}</td></tr>
-<tr><td style="background:#f4faff;border-top:1px solid #d6ecfd;padding:20px 32px;font-family:${FONT};">
+<tr><td style="height:3px;line-height:3px;font-size:3px;background-color:#5aa9e6;background-image:linear-gradient(90deg,#7fc8f8 0%,#5aa9e6 55%,#ffe45e 100%);">&nbsp;</td></tr>
+<tr><td style="padding:34px 34px 30px;font-family:${FONT};color:#133a5f;font-size:15px;line-height:1.62;">${content}</td></tr>
+<tr><td align="center" style="background:#f4faff;border-top:1px solid #e0f0fd;padding:22px 34px;font-family:${FONT};">
 <div style="font-family:${SERIF};font-weight:700;color:#133a5f;font-size:15px;">Ôlala — Du sinistre à la solution.</div>
-<div style="color:#446c93;font-size:12px;margin-top:4px;">Devis dégât des eaux à distance — France métropolitaine.</div>
+<div style="color:#446c93;font-size:12px;margin-top:5px;">Devis dégât des eaux à distance — France métropolitaine.</div>
 </td></tr>
 </table>
+<div style="font-family:${FONT};color:#8fb3d4;font-size:11px;margin-top:16px;">olala-degatdeseaux.fr</div>
 </td></tr>
 </table>
 </body></html>`;
 }
 
-/** The reference in a mist chip — the one thing to keep. */
-function referenceBox(reference: string): string {
-  return `<table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="background:#d6ecfd;border:1px solid #a8d6fa;border-radius:10px;padding:12px 18px;">
-<div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#2e7fc2;">Référence</div>
-<div style="font-family:${SERIF};font-size:20px;font-weight:700;letter-spacing:1px;color:#133a5f;margin-top:2px;">${escapeHtml(
+/** The reference in an aqua-gradient ring — the confirmation page's jewel. */
+function referenceRing(reference: string): string {
+  return `<table role="presentation" cellpadding="0" cellspacing="0" align="center" style="margin:0 auto;"><tr><td style="border-radius:14px;background-color:#5aa9e6;background-image:linear-gradient(135deg,#7fc8f8 0%,#5aa9e6 100%);padding:2px;">
+<table role="presentation" cellpadding="0" cellspacing="0"><tr><td align="center" style="background:#fdfeff;border-radius:12px;padding:13px 30px;">
+<div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#2e7fc2;">Référence</div>
+<div style="font-family:${SERIF};font-size:22px;font-weight:700;letter-spacing:2px;color:#133a5f;margin-top:3px;">${escapeHtml(
     reference,
   )}</div>
+</td></tr></table>
 </td></tr></table>`;
 }
+
+/** « La suite » — numbered circles linked as a journey, like /confirmation. */
+function timeline(steps: readonly (readonly [string, string])[]): string {
+  return steps
+    .map(([t, d], i) => {
+      const pad = i < steps.length - 1 ? "18px" : "0";
+      return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+<td width="30" valign="top" style="padding:0 0 ${pad};">
+<table role="presentation" cellpadding="0" cellspacing="0"><tr><td width="30" height="30" align="center" valign="middle" style="background-color:#5aa9e6;background-image:linear-gradient(135deg,#7fc8f8,#5aa9e6);border-radius:50%;color:#ffffff;font-family:${FONT};font-size:14px;font-weight:700;">${
+        i + 1
+      }</td></tr></table>
+</td>
+<td valign="top" style="padding:3px 0 ${pad} 13px;">
+<div style="font-weight:700;color:#133a5f;font-size:15px;">${escapeHtml(t)}</div>
+<div style="color:#446c93;font-size:13px;margin-top:2px;">${escapeHtml(d)}</div>
+</td></tr></table>`;
+    })
+    .join("");
+}
+
+const SUITE: readonly (readonly [string, string])[] = [
+  ["Étude du dossier", "Un professionnel examine vos réponses et vos photos."],
+  ["Préparation du devis", "Chiffrage poste par poste des travaux de remise en état."],
+  ["Envoi par e-mail", "Votre devis détaillé, prêt à être transmis à votre assurance."],
+];
 
 /**
  * Operator e-mail — the whole dossier, sent to Nino. Photos ride as
@@ -194,16 +232,19 @@ export function buildOperatorEmail(
   const sectionTitle = (t: string) =>
     `<h3 style="margin:24px 0 8px;font-size:13px;text-transform:uppercase;letter-spacing:1px;color:#2e7fc2;">${t}</h3>`;
 
-  const content = `<h1 style="margin:0 0 6px;font-size:20px;font-weight:800;color:#133a5f;">Nouveau dossier payé</h1>
-<p style="margin:0 0 18px;color:#446c93;">Un client vient de régler l’étude de son dossier.</p>
-${referenceBox(reference)}
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:22px;border-collapse:collapse;">${rows
+  const content = `<div style="text-align:center;">
+<div style="font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:#2e7fc2;">Back-office · nouveau dossier</div>
+<h1 style="margin:6px 0 4px;font-family:${SERIF};font-size:24px;font-weight:700;color:#133a5f;">Dossier payé ✓</h1>
+<p style="margin:0 0 22px;color:#446c93;">Un client vient de régler l’étude de son dossier.</p>
+${referenceRing(reference)}
+</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:26px;border-collapse:collapse;">${rows
     .map(row)
     .join("")}</table>
 ${sectionTitle("Pièces touchées")}${list(rooms)}
 ${sectionTitle(`Photos (${photos.length}) — en pièces jointes`)}${list(photoLines)}
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:24px;"><tr>
-<td style="background:#e8f6ec;border-radius:10px;padding:14px 18px;color:#1b7d6e;font-size:13px;line-height:1.5;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:26px;"><tr>
+<td style="background-color:#e8f6ec;border:1px solid #cdeed7;border-radius:12px;padding:15px 18px;color:#1b7d6e;font-size:13px;line-height:1.55;">
 <strong>Pour envoyer le devis :</strong> répondez simplement à cet e-mail — votre réponse partira directement au client${
     data.email ? ` (${escapeHtml(data.email)})` : ""
   }.
@@ -232,13 +273,20 @@ export function buildCustomerEmail(data: DossierData, reference: string): EmailC
     "Ôlala — Du sinistre à la solution.",
   ].join("\n");
 
-  const content = `<h1 style="margin:0 0 12px;font-size:22px;font-weight:800;color:#133a5f;">${escapeHtml(
-    hello,
-  )}</h1>
-<p style="margin:0 0 4px;">Nous avons bien reçu votre dossier de dégât des eaux et votre paiement.</p>
-<div style="margin:18px 0;">${referenceBox(reference)}</div>
-<p style="margin:0 0 16px;">Un professionnel prépare votre devis détaillé. Vous le recevrez par e-mail <strong>sous 48 h ouvrées</strong>, prêt à être transmis à votre assurance.</p>
-<p style="margin:0;color:#446c93;">Une question ? Répondez simplement à cet e-mail.</p>`;
+  const merci = data.prenom ? `Merci ${data.prenom},` : "Merci,";
+  const content = `<div style="text-align:center;">
+<h1 style="margin:0 0 8px;font-family:${SERIF};font-size:25px;font-weight:700;color:#133a5f;">${escapeHtml(
+    merci,
+  )} votre dossier est bien reçu.</h1>
+<p style="margin:0 0 22px;color:#446c93;">Nous avons bien reçu votre dossier de dégât des eaux et votre paiement.</p>
+${referenceRing(reference)}
+</div>
+<p style="margin:24px 0 4px;">Un professionnel prépare votre devis détaillé. Vous le recevrez par e-mail <strong>sous 48 h ouvrées</strong>, prêt à être transmis à votre assurance.</p>
+<div style="text-align:center;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#2e7fc2;margin:30px 0 18px;">La suite</div>
+${timeline(SUITE)}
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:28px;"><tr><td align="center" style="border-top:1px solid #e0f0fd;padding-top:18px;color:#446c93;font-size:13px;">
+Une question ? Répondez simplement à cet e-mail.
+</td></tr></table>`;
 
   const html = shell(
     `Votre dossier Ôlala — ${reference}`,
