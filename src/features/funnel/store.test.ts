@@ -84,10 +84,13 @@ describe("funnel store", () => {
     expect(stripped?.status).toBe("ok");
   });
 
-  it("generates a stable AC-2026-NNNN reference on payment (AC-5)", () => {
+  it("remembers the server-owned reference so a retry reuses the same dossier (AC-4)", () => {
     const store = createFunnelStore();
-    const ref = store.getState().submitPayment();
-    expect(ref).toMatch(/^AC-2026-\d{4}$/);
-    expect(store.getState().submitPayment()).toBe(ref);
+    expect(store.getState().reference).toBeNull();
+    store.getState().setReference("AC-2026-1234");
+    expect(store.getState().reference).toBe("AC-2026-1234");
+    // clearFunnel wipes it so the next visitor on this device starts clean.
+    store.getState().clearFunnel();
+    expect(store.getState().reference).toBeNull();
   });
 });

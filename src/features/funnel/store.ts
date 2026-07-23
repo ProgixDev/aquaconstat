@@ -89,7 +89,9 @@ export type FunnelState = {
   hydratePhotos: (photos: PhotoItem[]) => void;
   removePhoto: (id: number) => void;
   retryPhoto: (id: number) => void;
-  submitPayment: () => string;
+  /** Remembers the server-owned reference from the first checkout so a retry
+   *  after « Annuler » re-opens the SAME dossier instead of minting a second. */
+  setReference: (reference: string) => void;
   /** Wipes the dossier after a confirmed send — so a refresh can't resend it
    *  and the next visitor on this device starts clean. */
   clearFunnel: () => void;
@@ -204,13 +206,7 @@ export function createFunnelStore(seed: Partial<FunnelData> = {}) {
             );
             void deletePhoto(id);
           },
-          submitPayment: () => {
-            const existing = get().reference;
-            if (existing) return existing;
-            const reference = `AC-2026-${String(Math.floor(1000 + Math.random() * 9000))}`;
-            set({ reference }, undefined, "funnel/submitPayment");
-            return reference;
-          },
+          setReference: (reference) => set({ reference }, undefined, "funnel/setReference"),
           clearFunnel: () => {
             set(
               { data: { ...initialData }, photos: [], nextPhotoId: 1, reference: null },

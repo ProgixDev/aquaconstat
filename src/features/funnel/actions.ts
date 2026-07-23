@@ -94,14 +94,36 @@ export async function startCheckout(
   const data = toDossierData(parsed.data);
   const email = z.string().email().catch("").parse(data.email);
 
-  // Photos arrive already downscaled by the browser; re-check the cap server-side.
+  // RETRY REUSE (AC-4): after « Annuler » the browser still holds the reference
+  // from the first attempt. Re-open THAT dossier's checkout instead of minting a
+  // second row and re-uploading every photo — so a hesitant visitor leaves one
+  // dossier, not a trail of unpaid ghosts, and keeps the reference they saw.
+  const priorRef = z
+    .string()
+    .regex(/^AC-\d{4}-\d{4}$/)
+    .catch("")
+    .parse(formData.get("reference"));
+  if (priorRef) {
+    const existing = await dossierStore.get(priorRef);
+    if (existing && !existing.paidAt) {
+      const { url } = await createCheckout({ reference: priorRef, customerEmail: email });
+      return { url, reference: priorRef };
+    }
+  }
+
+  // Photos arrive already downscaled by the browser. REJECT rather than silently
+  // drop an oversized one: dropping it would charge the customer 82,90 € for a
+  // dossier missing a photo they added, and the artisan would quote blind.
   const meta = photosMetaSchema
     .catch([])
     .parse(JSON.parse(String(formData.get("photosMeta") ?? "[]")));
   const files = formData.getAll("photos").filter((f): f is File => f instanceof File);
   const uploadable: UploadablePhoto[] = [];
   for (const [i, file] of files.entries()) {
-    if (file.size === 0 || file.size > MAX_PHOTO_BYTES) continue;
+    if (file.size === 0) continue; // empty part, not a photo the visitor chose
+    if (file.size > MAX_PHOTO_BYTES) {
+      throw new Error("photo-too-large");
+    }
     uploadable.push({
       name: meta[i]?.name ?? file.name,
       takenAt: meta[i]?.takenAt ?? null,

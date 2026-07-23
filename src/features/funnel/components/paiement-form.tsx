@@ -86,10 +86,12 @@ export function PaiementForm() {
   const recap = useRecap();
   const data = useFunnelStore((s) => s.data);
   const okPhotoCount = useFunnelStore((s) => s.photos.filter((p) => p.status === "ok").length);
+  const reference = useFunnelStore((s) => s.reference);
+  const setReference = useFunnelStore((s) => s.setReference);
   // A cancelled checkout returns here with ?canceled=1 — the dossier is intact.
   const canceled = useSearchParams().get("canceled") === "1";
   const [starting, setStarting] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<null | "generic" | "photo">(null);
   // Vente à distance (client, 2026-07-16): the CGV acceptance and the
   // renonciation au droit de rétractation are two distinct express consents —
   // bundling them would weaken the waiver. Local state on purpose: consent is
@@ -103,7 +105,7 @@ export function PaiementForm() {
   const canPay = cgvAccepted && retractationWaived && incomplete.length === 0 && !starting;
 
   const pay = async () => {
-    setError(false);
+    setError(null);
     setStarting(true);
     try {
       // Send the whole dossier + its photos NOW, so it is persisted server-side
@@ -111,25 +113,35 @@ export function PaiementForm() {
       // anything. Photos are downscaled here so the upload stays quick.
       const form = new FormData();
       form.set("dossier", JSON.stringify(data));
-      const stored = await loadPhotos();
-      const meta: { name: string; takenAt: string | null }[] = [];
-      for (const photo of stored) {
-        if (!photo.blob) continue;
-        const small = await downscaleImage(
-          new File([photo.blob], photo.name, { type: photo.blob.type }),
-        );
-        form.append("photos", small, photo.name);
-        meta.push({ name: photo.name, takenAt: photo.takenAt });
+      // A retry after « Annuler » carries the first attempt's reference, so the
+      // server re-opens that dossier instead of creating a second one — which
+      // also means these photos don't need re-uploading.
+      if (reference) form.set("reference", reference);
+      else {
+        const stored = await loadPhotos();
+        const meta: { name: string; takenAt: string | null }[] = [];
+        for (const photo of stored) {
+          if (!photo.blob) continue;
+          const small = await downscaleImage(
+            new File([photo.blob], photo.name, { type: photo.blob.type }),
+          );
+          form.append("photos", small, photo.name);
+          meta.push({ name: photo.name, takenAt: photo.takenAt });
+        }
+        form.set("photosMeta", JSON.stringify(meta));
       }
-      form.set("photosMeta", JSON.stringify(meta));
 
       // The card itself is collected on Stripe's hosted page (or the demo
       // stand-in) — never here. A full navigation, since the URL is external
       // when Stripe is live.
-      const { url } = await startCheckout(form);
+      const { url, reference: ref } = await startCheckout(form);
+      // Remember it BEFORE leaving, so a « Annuler » that returns here reuses it.
+      setReference(ref);
       window.location.assign(url);
-    } catch {
-      setError(true);
+    } catch (e) {
+      // A too-large photo won't get better on retry — point the visitor back to
+      // étape 3 instead of blaming the connection.
+      setError(e instanceof Error && e.message === "photo-too-large" ? "photo" : "generic");
       setStarting(false);
     }
   };
@@ -220,13 +232,29 @@ export function PaiementForm() {
               role="alert"
               className="border-destructive/30 bg-destructive-soft mt-4 rounded-md border-[1.5px] px-4.5 py-4"
             >
-              <div className="text-destructive text-sm font-semibold">
-                L’envoi de vos photos a échoué.
-              </div>
-              <p className="text-destructive/80 mt-1.5 text-sm leading-relaxed">
-                Vérifiez votre connexion et réessayez — vos photos et vos réponses sont conservées
-                sur cet appareil.
-              </p>
+              {error === "photo" ? (
+                <>
+                  <div className="text-destructive text-sm font-semibold">
+                    Une de vos photos est trop lourde (20 Mo maximum).
+                  </div>
+                  <p className="text-destructive/80 mt-1.5 text-sm leading-relaxed">
+                    <Link href="/dossier/photos" className="underline">
+                      Revenez à l’étape photos
+                    </Link>{" "}
+                    pour la remplacer — vos réponses sont conservées.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <div className="text-destructive text-sm font-semibold">
+                    L’envoi de vos photos a échoué.
+                  </div>
+                  <p className="text-destructive/80 mt-1.5 text-sm leading-relaxed">
+                    Vérifiez votre connexion et réessayez — vos photos et vos réponses sont
+                    conservées sur cet appareil.
+                  </p>
+                </>
+              )}
             </div>
           )}
 
