@@ -83,6 +83,50 @@ function escapeHtml(value: string): string {
     .replace(/"/g, "&quot;");
 }
 
+// Email-safe styling: tables + inline styles only (no flexbox/grid, no web fonts,
+// no external CSS — Outlook and Gmail strip all of it). Brand palette from
+// globals.css: navy #133a5f, navy-deep #0d2842, aqua #5aa9e6, aqua-pale #a8d6fa,
+// mist #d6ecfd, link #2e7fc2, steel #446c93, success #1b7d6e.
+const FONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
+const SERIF = "Georgia,'Times New Roman',serif";
+
+/** Branded wrapper: navy header with the wordmark, aqua rule, footer slogan. */
+function shell(title: string, preheader: string, content: string): string {
+  return `<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escapeHtml(
+    title,
+  )}</title></head>
+<body style="margin:0;padding:0;background:#d6ecfd;">
+<span style="display:none;max-height:0;overflow:hidden;opacity:0;">${escapeHtml(preheader)}</span>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#d6ecfd;padding:24px 12px;">
+<tr><td align="center">
+<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;background:#fdfeff;border-radius:14px;overflow:hidden;">
+<tr><td style="background:#0d2842;padding:22px 32px;">
+<span style="font-family:${SERIF};font-size:24px;font-weight:700;letter-spacing:4px;color:#fdfeff;">ÔLALA</span>
+<div style="font-family:${FONT};font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#a8d6fa;margin-top:4px;">Du sinistre à la solution</div>
+</td></tr>
+<tr><td style="height:4px;line-height:4px;font-size:4px;background:#5aa9e6;">&nbsp;</td></tr>
+<tr><td style="padding:32px;font-family:${FONT};color:#133a5f;font-size:14px;line-height:1.6;">${content}</td></tr>
+<tr><td style="background:#f4faff;border-top:1px solid #d6ecfd;padding:20px 32px;font-family:${FONT};">
+<div style="font-family:${SERIF};font-weight:700;color:#133a5f;font-size:15px;">Ôlala — Du sinistre à la solution.</div>
+<div style="color:#446c93;font-size:12px;margin-top:4px;">Devis dégât des eaux à distance — France métropolitaine.</div>
+</td></tr>
+</table>
+</td></tr>
+</table>
+</body></html>`;
+}
+
+/** The reference in a mist chip — the one thing to keep. */
+function referenceBox(reference: string): string {
+  return `<table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="background:#d6ecfd;border:1px solid #a8d6fa;border-radius:10px;padding:12px 18px;">
+<div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#2e7fc2;">Référence</div>
+<div style="font-family:${SERIF};font-size:20px;font-weight:700;letter-spacing:1px;color:#133a5f;margin-top:2px;">${escapeHtml(
+    reference,
+  )}</div>
+</td></tr></table>`;
+}
+
 /**
  * Operator e-mail — the whole dossier, sent to Nino. Photos ride as
  * attachments (added by the server action), so the body only lists them.
@@ -132,39 +176,40 @@ export function buildOperatorEmail(
     ...(photoLines.length ? photoLines.map((l) => `  • ${l}`) : ["  (aucune)"]),
   ].join("\n");
 
-  const html = `
-    <div style="font-family:Arial,Helvetica,sans-serif;color:#12283e;max-width:640px">
-      <h2 style="margin:0 0 4px">Nouveau dossier payé</h2>
-      <p style="margin:0 0 16px;color:#446c93;font-size:14px">Référence <strong>${escapeHtml(
-        reference,
-      )}</strong></p>
-      <table style="border-collapse:collapse;width:100%;font-size:14px">
-        ${rows
-          .map(
-            ([label, value]) =>
-              `<tr><td style="padding:6px 12px 6px 0;color:#8aa9c6;white-space:nowrap;vertical-align:top">${escapeHtml(
-                label,
-              )}</td><td style="padding:6px 0"><strong>${escapeHtml(value)}</strong></td></tr>`,
-          )
-          .join("")}
-      </table>
-      <h3 style="margin:20px 0 6px;font-size:15px">Pièces touchées</h3>
-      <ul style="margin:0;padding-left:18px;font-size:14px">
-        ${
-          rooms.length
-            ? rooms.map((r) => `<li>${escapeHtml(r)}</li>`).join("")
-            : "<li>(aucune)</li>"
-        }
-      </ul>
-      <h3 style="margin:20px 0 6px;font-size:15px">Photos (${photos.length}) — en pièces jointes</h3>
-      <ul style="margin:0;padding-left:18px;font-size:14px">
-        ${
-          photoLines.length
-            ? photoLines.map((l) => `<li>${escapeHtml(l)}</li>`).join("")
-            : "<li>(aucune)</li>"
-        }
-      </ul>
-    </div>`.trim();
+  const row = ([label, value]: [string, string]) =>
+    `<tr>
+<td style="padding:8px 14px 8px 0;color:#446c93;white-space:nowrap;vertical-align:top;border-bottom:1px solid #eef6fd;">${escapeHtml(
+      label,
+    )}</td>
+<td style="padding:8px 0;color:#133a5f;font-weight:600;border-bottom:1px solid #eef6fd;">${escapeHtml(
+      value,
+    )}</td>
+</tr>`;
+  const list = (items: string[]) =>
+    `<ul style="margin:0;padding-left:18px;color:#133a5f;">${
+      items.length
+        ? items.map((i) => `<li style="margin:3px 0;">${escapeHtml(i)}</li>`).join("")
+        : "<li>(aucune)</li>"
+    }</ul>`;
+  const sectionTitle = (t: string) =>
+    `<h3 style="margin:24px 0 8px;font-size:13px;text-transform:uppercase;letter-spacing:1px;color:#2e7fc2;">${t}</h3>`;
+
+  const content = `<h1 style="margin:0 0 6px;font-size:20px;font-weight:800;color:#133a5f;">Nouveau dossier payé</h1>
+<p style="margin:0 0 18px;color:#446c93;">Un client vient de régler l’étude de son dossier.</p>
+${referenceBox(reference)}
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:22px;border-collapse:collapse;">${rows
+    .map(row)
+    .join("")}</table>
+${sectionTitle("Pièces touchées")}${list(rooms)}
+${sectionTitle(`Photos (${photos.length}) — en pièces jointes`)}${list(photoLines)}
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:24px;"><tr>
+<td style="background:#e8f6ec;border-radius:10px;padding:14px 18px;color:#1b7d6e;font-size:13px;line-height:1.5;">
+<strong>Pour envoyer le devis :</strong> répondez simplement à cet e-mail — votre réponse partira directement au client${
+    data.email ? ` (${escapeHtml(data.email)})` : ""
+  }.
+</td></tr></table>`;
+
+  const html = shell(`Nouveau dossier ${reference}`, `${fullName(data)} — dossier payé`, content);
 
   return { subject: `Nouveau dossier ${reference} — ${fullName(data)}`, html, text };
 }
@@ -187,18 +232,19 @@ export function buildCustomerEmail(data: DossierData, reference: string): EmailC
     "Ôlala — Du sinistre à la solution.",
   ].join("\n");
 
-  const html = `
-    <div style="font-family:Arial,Helvetica,sans-serif;color:#12283e;max-width:560px;line-height:1.6">
-      <p>${escapeHtml(hello)}</p>
-      <p>Nous avons bien reçu votre dossier de dégât des eaux et votre paiement.</p>
-      <p style="margin:16px 0;padding:12px 16px;background:#e4f1fd;border-radius:8px">
-        Votre référence : <strong>${escapeHtml(reference)}</strong>
-      </p>
-      <p>Un professionnel prépare votre devis détaillé. Vous le recevrez par e-mail
-      <strong>sous 48 h ouvrées</strong>, prêt à être transmis à votre assurance.</p>
-      <p style="color:#446c93">Une question ? Répondez simplement à cet e-mail.</p>
-      <p style="margin-top:24px;font-style:italic;color:#446c93">Ôlala — Du sinistre à la solution.</p>
-    </div>`.trim();
+  const content = `<h1 style="margin:0 0 12px;font-size:22px;font-weight:800;color:#133a5f;">${escapeHtml(
+    hello,
+  )}</h1>
+<p style="margin:0 0 4px;">Nous avons bien reçu votre dossier de dégât des eaux et votre paiement.</p>
+<div style="margin:18px 0;">${referenceBox(reference)}</div>
+<p style="margin:0 0 16px;">Un professionnel prépare votre devis détaillé. Vous le recevrez par e-mail <strong>sous 48 h ouvrées</strong>, prêt à être transmis à votre assurance.</p>
+<p style="margin:0;color:#446c93;">Une question ? Répondez simplement à cet e-mail.</p>`;
+
+  const html = shell(
+    `Votre dossier Ôlala — ${reference}`,
+    "Bien reçu — votre devis vous sera envoyé sous 48 h ouvrées.",
+    content,
+  );
 
   return { subject: `Votre dossier Ôlala est bien reçu — ${reference}`, html, text };
 }
