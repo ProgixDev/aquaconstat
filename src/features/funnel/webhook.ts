@@ -67,15 +67,18 @@ export async function handleStripeWebhook(
     takenAt: p.takenAt,
   }));
   const attachments: EmailAttachment[] = await fetchDossierPhotos(claimed.photos);
+  const customer = claimed.email || session.customer_email || session.customer_details?.email || "";
 
   // Operator first — that's the one the business can't afford to lose.
+  // replyTo is the customer: this mail is from Nino to Nino, so without it
+  // « Répondre » answers himself instead of delivering the devis.
   await sendEmail({
     to: operatorAddress,
+    replyTo: customer || undefined,
     ...buildOperatorEmail(claimed.data, reference, summaries),
     attachments,
   });
 
-  const customer = claimed.email || session.customer_email || session.customer_details?.email || "";
   if (customer) {
     await sendEmail({ to: customer, ...buildCustomerEmail(claimed.data, reference) });
   }

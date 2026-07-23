@@ -26,6 +26,13 @@ export type EmailMessage = {
   attachments?: EmailAttachment[];
   /** Overrides the default from-address for this message. */
   from?: string;
+  /**
+   * Where a reply should go. Load-bearing on the operator e-mail: it is sent
+   * from Nino's address TO Nino's address, so without this « Répondre » answers
+   * himself — and replying with the devis is how the customer receives the
+   * thing they paid for.
+   */
+  replyTo?: string;
 };
 
 const isSmtpLive = Boolean(env.SMTP_HOST && env.SMTP_USER && env.SMTP_PASSWORD);
@@ -56,6 +63,7 @@ export async function sendEmail(message: EmailMessage): Promise<{ delivered: boo
     await transport.sendMail({
       from,
       to: message.to,
+      replyTo: message.replyTo,
       subject: message.subject,
       text: message.text,
       html: message.html,
@@ -70,6 +78,7 @@ export async function sendEmail(message: EmailMessage): Promise<{ delivered: boo
     const { error } = await resend.emails.send({
       from,
       to: message.to,
+      replyTo: message.replyTo,
       subject: message.subject,
       html: message.html,
       text: message.text,

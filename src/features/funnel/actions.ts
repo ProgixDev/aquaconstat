@@ -8,7 +8,7 @@ import {
   type UploadablePhoto,
 } from "@/lib/dossiers";
 import { isEmailLive, operatorAddress, sendEmail, type EmailAttachment } from "@/lib/email";
-import { createCheckout, getCheckout } from "@/lib/payments";
+import { createCheckout, getCheckout, isPaymentLive } from "@/lib/payments";
 import { buildCustomerEmail, buildOperatorEmail, type PhotoSummary } from "./emails";
 
 /**
@@ -55,7 +55,10 @@ const photosMetaSchema = z.array(z.object({ name: z.string(), takenAt: z.string(
 
 function generateReference(): string {
   const n = Math.floor(1000 + Math.random() * 9000);
-  return `AC-2026-${n}`;
+  // Year is read at call time, not hardcoded: a literal "2026" would still be
+  // printed on every devis and insurance e-mail in January. The NNNN shape is
+  // unchanged — widening it is the client's open question (spec 006).
+  return `AC-${new Date().getFullYear()}-${n}`;
 }
 
 /** How many fresh references to try before giving up on a collision. */
@@ -162,10 +165,22 @@ export async function confirmAndSend(formData: FormData): Promise<ConfirmResult>
     };
   }
 
-  // Claim the payment. `markPaid` only transitions once, so when the Stripe
-  // webhook already recorded it (live), this returns null and we send nothing —
-  // that single guard is what stops the webhook and this page double-e-mailing.
-  // In simulation there is no webhook, so this page is the one that claims it.
+  // LIVE: the signature-verified webhook is the only thing allowed to claim a
+  // payment and send (spec AC-3). This page just reports the reference back, so
+  // it never races the webhook, never re-uploads the photos the visitor already
+  // sent at checkout, and can never show « envoi impossible » for a dossier the
+  // webhook handled perfectly well.
+  if (isPaymentLive) {
+    return {
+      ok: true,
+      reference: checkout.reference,
+      email: checkout.email,
+      emailLive: isEmailLive,
+    };
+  }
+
+  // SIMULATION only: there is no webhook, so this page claims it instead.
+  // `markPaid` still transitions once, so a refresh cannot double-send.
   const claimed = await dossierStore.markPaid(
     { reference: checkout.reference },
     new Date().toISOString(),
@@ -198,7 +213,12 @@ export async function confirmAndSend(formData: FormData): Promise<ConfirmResult>
   const customerMsg = buildCustomerEmail(dossier, checkout.reference);
 
   // Operator first — that's the one the business can't afford to lose.
-  await sendEmail({ to: operatorAddress, ...operatorMsg, attachments });
+  await sendEmail({
+    to: operatorAddress,
+    replyTo: checkout.email || undefined,
+    ...operatorMsg,
+    attachments,
+  });
   if (checkout.email) {
     await sendEmail({ to: checkout.email, ...customerMsg });
   }

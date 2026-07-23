@@ -40,7 +40,7 @@ export function ContinueCta({ href, children, missing = [] }: ContinueCtaProps) 
 
       {blocked ? (
         <p role="status" className="text-steel mt-3.5 text-center text-sm">
-          Pour continuer, indiquez {formatMissing(missing)}.
+          Pour continuer, il manque {formatMissing(missing)}.
         </p>
       ) : null}
 

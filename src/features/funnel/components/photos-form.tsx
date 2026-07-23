@@ -205,7 +205,7 @@ export function PhotosForm() {
         {okCount} {okCount > 1 ? "photos ajoutées" : "photo ajoutée"}
       </div>
       <p className="text-hint mt-1 text-xs">
-        Au moins 1 photo est requise pour passer à l’étape suivante.
+        Pour continuer : au moins 1 photo, et la déclaration ci-dessous cochée.
       </p>
 
       {/* Honour declaration (client, 2026-07-21) — live capture can't be

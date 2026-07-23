@@ -34,6 +34,10 @@ const serverEnvSchema = z.object({
   // demo path is refused in production, because it marks dossiers paid for free.
   // Never set this once real payments are live.
   ALLOW_DEMO_CHECKOUT: z.string().optional(),
+  // Same idea for the dossier store: "1" lets a production build serve the
+  // in-memory store. Only ever for a staging deploy with no Supabase project —
+  // with it set, paid dossiers are lost on every cold start.
+  ALLOW_MEMORY_STORE: z.string().optional(),
   STRIPE_SECRET_KEY: z.string().min(20).optional(),
   // Verifies the Stripe webhook signature (spec 006). Without it the webhook
   // route rejects every call — payment confirmation then only happens via the

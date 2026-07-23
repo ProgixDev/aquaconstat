@@ -216,12 +216,16 @@ export function PaiementForm() {
           )}
 
           {error && (
-            <div className="border-destructive/30 bg-destructive-soft mt-4 rounded-md border-[1.5px] px-4.5 py-4">
+            <div
+              role="alert"
+              className="border-destructive/30 bg-destructive-soft mt-4 rounded-md border-[1.5px] px-4.5 py-4"
+            >
               <div className="text-destructive text-sm font-semibold">
-                Impossible d’ouvrir le paiement pour le moment.
+                L’envoi de vos photos a échoué.
               </div>
               <p className="text-destructive/80 mt-1.5 text-sm leading-relaxed">
-                Réessayez dans un instant — votre dossier est conservé.
+                Vérifiez votre connexion et réessayez — vos photos et vos réponses sont conservées
+                sur cet appareil.
               </p>
             </div>
           )}
@@ -262,10 +266,21 @@ export function PaiementForm() {
             disabled={!canPay}
             className="bg-primary text-primary-foreground shadow-cta-sm mt-5 flex w-full cursor-pointer justify-center rounded-full px-8 py-4.5 font-sans text-base font-semibold disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {starting ? "Redirection vers le paiement…" : "Payer 82,90 € et envoyer mon dossier"}
+            {starting ? "Envoi de vos photos…" : "Payer 82,90 € et envoyer mon dossier"}
           </button>
+          {/* Every other step explains why its CTA is blocked; the one screen
+              where money is at stake used to just grey out silently. */}
+          {incomplete.length === 0 && !canPay && !starting && (
+            <p role="status" className="text-hint mt-3 text-center text-xs leading-relaxed">
+              Pour payer, cochez les deux cases ci-dessus : l’acceptation des CGV et la demande
+              d’exécution immédiate.
+            </p>
+          )}
+          {/* Accurate about WHEN data moves: the photos are uploaded before the
+              redirect, so promising nothing leaves before payment was false. */}
           <p className="text-hint mt-4 text-center text-xs leading-relaxed">
-            Votre dossier n’est transmis qu’une fois le paiement confirmé.
+            Vos photos sont envoyées de façon sécurisée avant le paiement, puis transmises à
+            l’artisan une fois le paiement confirmé.
           </p>
           <p className="text-muted-foreground mt-2 text-center text-xs">
             Paiement sécurisé par Stripe — votre carte n’est jamais stockée par Ôlala.
