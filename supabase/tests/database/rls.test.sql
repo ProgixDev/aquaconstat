@@ -1,6 +1,11 @@
 -- pgTAP RLS tests. Run with: supabase test db
--- Asserts the security invariants — fails loudly if a future migration disables RLS
--- or opens a client write path on entitlements.
+-- Asserts the security invariants — fails loudly if a future migration disables
+-- RLS or opens a client path to dossier data.
+--
+-- Rewritten for spec 006: the notes/profiles/subscriptions scaffolding is gone
+-- (AC-10) and `dossiers` is the only application table. Its posture is
+-- deny-all — RLS on, NO policies — because nothing but the server-side service
+-- role (which bypasses RLS) is ever allowed to touch it.
 
 begin;
 select plan(4);
@@ -11,20 +16,19 @@ select ok(
 );
 
 select policies_are(
-  'public', 'notes',
-  array['notes: select own', 'notes: insert own', 'notes: update own', 'notes: delete own'],
-  'notes has exactly the owner-scoped CRUD policies'
-);
-
-select is_empty(
-  $$ select p.polname from pg_policy p join pg_class c on c.oid = p.polrelid
-     where c.relname = 'subscriptions' and p.polcmd in ('a', 'w', 'd') $$,
-  'subscriptions has no client INSERT/UPDATE/DELETE policy'
+  'public', 'dossiers',
+  array[]::text[],
+  'dossiers has NO policies — deny-all, service-role only'
 );
 
 select ok(
-  not has_table_privilege('anon', 'public.notes', 'select'),
-  'anon cannot select from notes'
+  not has_table_privilege('anon', 'public.dossiers', 'select'),
+  'anon cannot select dossiers'
+);
+
+select ok(
+  not has_table_privilege('authenticated', 'public.dossiers', 'select'),
+  'authenticated cannot select dossiers either'
 );
 
 select * from finish();

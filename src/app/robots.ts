@@ -8,7 +8,14 @@ export default function robots(): MetadataRoute.Robots {
     return { rules: { userAgent: "*", disallow: "/" } };
   }
   return {
-    rules: { userAgent: "*", allow: "/", disallow: ["/account", "/api/"] },
+    // /admin is the operator back-office and /dossier/paiement/demo is the
+    // simulation stand-in — neither belongs in an index. (/account went with
+    // the visitor-auth scaffolding, spec 006 AC-10.)
+    rules: {
+      userAgent: "*",
+      allow: "/",
+      disallow: ["/admin", "/api/", "/dossier/paiement/demo"],
+    },
     sitemap: `${site.url}/sitemap.xml`,
     host: site.url,
   };

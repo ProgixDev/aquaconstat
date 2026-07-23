@@ -66,7 +66,7 @@ Keep the seam green at every step: nothing here breaks the simulation path.
 - [x] T11 E2E `e2e/funnel.spec.ts` + `e2e/admin.spec.ts`: submit via demo → dossier shows **paid**
       in admin → flip « Devis envoyé » → reload persists. `shot()` at each. · done:
       `FEATURE=006-backend pnpm e2e:shots` green.
-- [ ] T12 [P] (splittable PR) AC-10 cleanup — remove `/sign-in`, `/account`, `auth` slice,
+- [x] T12 [P] (splittable PR) AC-10 cleanup — remove `/sign-in`, `/account`, `auth` slice,
       `profiles`/`notes` migrations+routes; fix middleware. · done: `pnpm verify` + e2e green, no
       dangling imports.
 - [ ] T13 `pnpm verify` green; conventional commits.
@@ -82,4 +82,4 @@ Keep the seam green at every step: nothing here breaks the simulation path.
 ## AC coverage (mirror of plan.md — keep in sync)
 
 - [x] AC-1 → T2 · [x] AC-2 → T5c,T6,T9 · [x] AC-3 → T6,T11 · [x] AC-4 → T7 · [x] AC-5 → T7,T8
-- [x] AC-6 → T10 · [x] AC-7 → T9,T11 · [x] AC-8 → T10,T11 · [x] AC-9 → T7,T10 · [ ] AC-10 → T12
+- [x] AC-6 → T10 · [x] AC-7 → T9,T11 · [x] AC-8 → T10,T11 · [x] AC-9 → T7,T10 · [x] AC-10 → T12
