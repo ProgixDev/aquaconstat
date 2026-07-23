@@ -5,7 +5,7 @@ import { FactList, LegalSection, LegalShell } from "./legal-shell";
  * replaced 2026-07-18 (client): the named partner became a network of
  * qualified building companies. The domain is not purchased yet, so the text
  * designates the site by name rather than URL; the hébergeur (Vercel) and
- * the contact address (contact@olala.fr, as in the footer) were confirmed by
+ * the contact address (support@olala-degatdeseaux.fr, as in the footer) were confirmed by
  * the owner.
  */
 export function MentionsLegales() {
@@ -26,7 +26,7 @@ export function MentionsLegales() {
             },
             { label: "Immatriculation", value: "999 817 174 R.C.S. Créteil" },
             { label: "EUID", value: "FR9401.999817174" },
-            { label: "Contact", value: "contact@olala.fr" },
+            { label: "Contact", value: "support@olala-degatdeseaux.fr" },
             { label: "Directrice de la publication", value: "Estelle Boudon" },
           ]}
         />

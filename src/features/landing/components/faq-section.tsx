@@ -92,10 +92,10 @@ export function FaqSection() {
                 Une autre question ?
               </div>
               <a
-                href="mailto:contact@olala.fr"
+                href="mailto:support@olala-degatdeseaux.fr"
                 className="text-link hover:text-link-hover mt-2.5 inline-flex items-center gap-1.5 text-sm font-semibold underline decoration-1 underline-offset-4 transition-colors"
               >
-                Écrivez-nous à contact@olala.fr
+                Écrivez-nous à support@olala-degatdeseaux.fr
                 <span aria-hidden>↗</span>
               </a>
             </div>

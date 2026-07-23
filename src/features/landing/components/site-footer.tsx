@@ -72,7 +72,7 @@ export function SiteFooter() {
               Contact
             </div>
             <div className="mt-4 text-sm leading-relaxed">
-              contact@olala.fr
+              support@olala-degatdeseaux.fr
               <br />
               <span className="text-aqua-pale/80">
                 Une question sur un dossier envoyé ? Répondez à votre e-mail de confirmation.

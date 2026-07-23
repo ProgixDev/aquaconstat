@@ -166,8 +166,11 @@ export function Cgv() {
           </Link>{" "}
           et au Règlement Général sur la Protection des Données (RGPD). Le Client dispose d’un droit
           d’accès, de rectification et d’effacement en écrivant à :{" "}
-          <a href="mailto:contact@olala.fr" className="text-link hover:text-link-hover">
-            contact@olala.fr
+          <a
+            href="mailto:support@olala-degatdeseaux.fr"
+            className="text-link hover:text-link-hover"
+          >
+            support@olala-degatdeseaux.fr
           </a>
           .
         </p>

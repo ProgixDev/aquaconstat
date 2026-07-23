@@ -80,8 +80,11 @@ export function Confidentialite() {
         </p>
         <p>
           Vous pouvez exercer ces droits à tout moment en adressant votre demande par e-mail à :{" "}
-          <a href="mailto:contact@olala.fr" className="text-link hover:text-link-hover">
-            contact@olala.fr
+          <a
+            href="mailto:support@olala-degatdeseaux.fr"
+            className="text-link hover:text-link-hover"
+          >
+            support@olala-degatdeseaux.fr
           </a>
           .
         </p>
