@@ -48,8 +48,8 @@ export function Confidentialite() {
         <p>Les données personnelles collectées sont destinées exclusivement :</p>
         <LegalList
           items={[
-            "Aux équipes internes de BEERI CAPITAL pour la gestion de la plateforme.",
-            "Aux professionnels qualifiés de la SAS BATITEC pour l’analyse technique et la signature du devis.",
+            "Aux équipes internes pour la gestion de la plateforme.",
+            "Aux professionnels qualifiés pour l’analyse technique et la signature du devis.",
           ]}
         />
         <p>Aucune donnée n’est vendue, louée ou cédée à des tiers à des fins commerciales.</p>
