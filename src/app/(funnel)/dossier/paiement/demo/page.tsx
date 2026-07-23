@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
+import { isSimulationAllowed } from "@/lib/payments";
 
 export const metadata: Metadata = {
   title: "Paiement (démonstration)",
@@ -19,6 +20,10 @@ export default async function DemoCheckoutPage({
 }: {
   searchParams: Promise<{ s?: string }>;
 }) {
+  // Never exists in production unless deliberately re-opened for staging: this
+  // page marks a dossier paid without charging anything.
+  if (!isSimulationAllowed) notFound();
+
   const { s } = await searchParams;
   if (!s) redirect("/dossier/paiement");
 

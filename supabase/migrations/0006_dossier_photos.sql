@@ -24,4 +24,11 @@ values (
   20971520,
   array['image/jpeg', 'image/png', 'image/webp']
 )
-on conflict (id) do nothing;
+-- do UPDATE, not do NOTHING: if the bucket already existed (e.g. created from
+-- the dashboard, where the default toggle is PUBLIC) a `do nothing` would leave
+-- every home photo world-readable while this migration reported success.
+-- Privacy has to be re-asserted, not merely requested once.
+on conflict (id) do update
+  set public = false,
+      file_size_limit = excluded.file_size_limit,
+      allowed_mime_types = excluded.allowed_mime_types;

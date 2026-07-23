@@ -22,6 +22,22 @@ const DEMO_PREFIX = "demo_";
 
 export const isPaymentLive = Boolean(env.STRIPE_SECRET_KEY);
 
+/**
+ * Whether the demo checkout may stand in for Stripe.
+ *
+ * SECURITY: this used to be a silent fallback — no Stripe key meant the demo
+ * checkout, everywhere. But the dossier store is keyed on a DIFFERENT variable
+ * (SUPABASE_SERVICE_ROLE_KEY), so a production deploy with Supabase configured
+ * and Stripe not yet configured would happily stamp `paid_at` on real rows and
+ * e-mail the operator — the 82,90 € product, free, for anyone who found the
+ * page. Two seams keyed on two different variables is how a dev-only branch
+ * ends up running against the production database.
+ *
+ * Simulation is therefore allowed outside production, or in production ONLY
+ * when ALLOW_DEMO_CHECKOUT is set deliberately (staging with no Stripe account).
+ */
+export const isSimulationAllowed = env.NODE_ENV !== "production" || env.ALLOW_DEMO_CHECKOUT === "1";
+
 export type CheckoutInput = { reference: string; customerEmail: string };
 export type CheckoutResult = { paid: boolean; reference: string; email: string };
 
@@ -30,6 +46,10 @@ export async function createCheckout(input: CheckoutInput): Promise<{ url: strin
   const site = clientEnv.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "");
 
   if (!isPaymentLive) {
+    // Fail closed rather than hand out a free checkout.
+    if (!isSimulationAllowed) {
+      throw new Error("Payment is not configured: STRIPE_SECRET_KEY is missing.");
+    }
     const token = Buffer.from(JSON.stringify(input)).toString("base64url");
     return { url: `/dossier/paiement/demo?s=${token}` };
   }
@@ -69,6 +89,9 @@ export async function getCheckout(sessionId: string): Promise<CheckoutResult> {
   // unreachable once Stripe is live, so a forged `demo_` id can never be
   // trusted in production — there it falls through to a real Stripe lookup.
   if (!isPaymentLive) {
+    // Same guard as createCheckout: in production a demo token proves nothing,
+    // so it can never be read back as a payment.
+    if (!isSimulationAllowed) return unpaid;
     if (!sessionId.startsWith(DEMO_PREFIX)) return unpaid;
     try {
       const json = Buffer.from(sessionId.slice(DEMO_PREFIX.length), "base64url").toString();

@@ -29,6 +29,11 @@ const serverEnvSchema = z.object({
   // SIMULATION mode (a local demo checkout / e-mails logged to the server),
   // so the whole flow works in dev with no accounts. Paste the real keys and
   // it goes live with no code change — the providers detect them at runtime.
+  // Escape hatch for a STAGING deploy that has no Stripe account yet: set it to
+  // "1" to re-enable the demo checkout in production. Unset (the default) the
+  // demo path is refused in production, because it marks dossiers paid for free.
+  // Never set this once real payments are live.
+  ALLOW_DEMO_CHECKOUT: z.string().optional(),
   STRIPE_SECRET_KEY: z.string().min(20).optional(),
   // Verifies the Stripe webhook signature (spec 006). Without it the webhook
   // route rejects every call — payment confirmation then only happens via the
