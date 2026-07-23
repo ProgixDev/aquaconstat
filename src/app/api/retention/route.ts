@@ -3,10 +3,13 @@ import { safeEqual } from "@/lib/admin-session";
 import { purgeExpiredDossiers } from "@/lib/dossiers";
 
 /**
- * RGPD retention sweep, triggered by a scheduler (Vercel Cron, pg_cron + pg_net,
- * or any cron that can POST). It cannot be a pure SQL job: Supabase forbids
- * deleting `storage.objects` directly, so photos must go through the Storage
- * API — i.e. server code. See src/lib/dossiers/retention.ts.
+ * RGPD retention sweep, triggered by a scheduler. It cannot be a pure SQL job:
+ * Supabase forbids deleting `storage.objects` directly, so photos must go
+ * through the Storage API — i.e. server code. See src/lib/dossiers/retention.ts.
+ *
+ * GET and POST both work on purpose: Vercel Cron issues a **GET** (and attaches
+ * `Authorization: Bearer $CRON_SECRET` by itself), while a manual run or any
+ * other scheduler is more naturally a POST.
  *
  * Fails closed: with no CRON_SECRET the route refuses everything, so an
  * unconfigured deployment can never be swept by a stranger.
@@ -14,7 +17,7 @@ import { purgeExpiredDossiers } from "@/lib/dossiers";
 
 export const dynamic = "force-dynamic";
 
-export async function POST(request: Request): Promise<Response> {
+async function sweep(request: Request): Promise<Response> {
   const secret = env.CRON_SECRET;
   if (!secret) return new Response("Retention not configured.", { status: 503 });
 
@@ -28,4 +31,12 @@ export async function POST(request: Request): Promise<Response> {
 
   const result = await purgeExpiredDossiers();
   return Response.json(result);
+}
+
+export async function GET(request: Request): Promise<Response> {
+  return sweep(request);
+}
+
+export async function POST(request: Request): Promise<Response> {
+  return sweep(request);
 }
