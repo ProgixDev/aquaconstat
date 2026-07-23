@@ -202,15 +202,21 @@ export function buildOperatorEmail(
     (p) => `${p.name}${p.takenAt ? ` — prise le ${frDateTime(p.takenAt)}` : ""}`,
   );
 
+  // Photos live in the private bucket, viewed from the back-office — not
+  // attached, so they stay in one place the retention job can actually purge.
+  const adminUrl = `${site.url}/admin/dossiers/${encodeURIComponent(reference)}`;
+
   const text = [
     `Nouveau dossier payé — ${reference}`,
+    "",
+    `Voir le dossier et les photos : ${adminUrl}`,
     "",
     ...rows.map(([label, value]) => `${label} : ${value}`),
     "",
     "Pièces touchées :",
     ...(rooms.length ? rooms.map((r) => `  • ${r}`) : ["  (aucune)"]),
     "",
-    `Photos (${photos.length}) — en pièces jointes :`,
+    `Photos (${photos.length}) :`,
     ...(photoLines.length ? photoLines.map((l) => `  • ${l}`) : ["  (aucune)"]),
   ].join("\n");
 
@@ -237,12 +243,16 @@ export function buildOperatorEmail(
 <h1 style="margin:6px 0 4px;font-family:${SERIF};font-size:24px;font-weight:700;color:#133a5f;">Dossier payé ✓</h1>
 <p style="margin:0 0 22px;color:#446c93;">Un client vient de régler l’étude de son dossier.</p>
 ${referenceRing(reference)}
+<div style="margin-top:22px;">
+<a href="${adminUrl}" style="display:inline-block;background-color:#ffe45e;color:#133a5f;font-family:${FONT};font-weight:700;font-size:15px;text-decoration:none;padding:13px 30px;border-radius:999px;">Voir le dossier et les photos &rarr;</a>
+</div>
 </div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:26px;border-collapse:collapse;">${rows
     .map(row)
     .join("")}</table>
 ${sectionTitle("Pièces touchées")}${list(rooms)}
-${sectionTitle(`Photos (${photos.length}) — en pièces jointes`)}${list(photoLines)}
+${sectionTitle(`Photos (${photos.length})`)}${list(photoLines)}
+<p style="margin:8px 0 0;color:#8fb3d4;font-size:12px;">Les photos sont consultables dans le back-office (bouton ci-dessus).</p>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:26px;"><tr>
 <td style="background-color:#e8f6ec;border:1px solid #cdeed7;border-radius:12px;padding:15px 18px;color:#1b7d6e;font-size:13px;line-height:1.55;">
 <strong>Pour envoyer le devis :</strong> répondez simplement à cet e-mail — votre réponse partira directement au client${

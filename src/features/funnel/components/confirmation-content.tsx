@@ -3,7 +3,6 @@
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { m } from "@/components/motion";
-import { downscaleImage } from "@/lib/image";
 import { confirmAndSend } from "../actions";
 import { loadPhotos } from "../photo-storage";
 import { useFunnelStore, useFunnelStoreApi } from "../provider";
@@ -27,7 +26,10 @@ const suite = [
     title: "Préparation du devis",
     text: "Chiffrage poste par poste des travaux de remise en état.",
   },
-  { title: "Envoi par e-mail", text: "Votre devis PDF, prêt à être transmis à votre assurance." },
+  {
+    title: "Envoi par e-mail",
+    text: "Votre devis détaillé, prêt à être transmis à votre assurance.",
+  },
 ] as const;
 
 type Done = { reference: string; email: string; prenom: string; emailLive: boolean };
@@ -71,20 +73,17 @@ export function ConfirmationContent() {
     void (async () => {
       try {
         const { data } = storeApi.getState();
+        // Photos were already uploaded to the bucket at checkout and are never
+        // attached to the e-mail — so this page only needs to pass their
+        // names/dates for the operator e-mail's photo list, not re-upload bytes.
         const stored = await loadPhotos();
 
         const form = new FormData();
         form.set("sessionId", sessionId);
         form.set("dossier", JSON.stringify(data));
-        const meta: { name: string; takenAt: string | null }[] = [];
-        for (const photo of stored) {
-          if (!photo.blob) continue;
-          const small = await downscaleImage(
-            new File([photo.blob], photo.name, { type: photo.blob.type }),
-          );
-          form.append("photos", small, photo.name);
-          meta.push({ name: photo.name, takenAt: photo.takenAt });
-        }
+        const meta = stored
+          .filter((photo) => photo.blob)
+          .map((photo) => ({ name: photo.name, takenAt: photo.takenAt }));
         form.set("photosMeta", JSON.stringify(meta));
 
         const res = await confirmAndSend(form);
@@ -138,7 +137,7 @@ export function ConfirmationContent() {
         </h1>
         <p className="text-steel mx-auto mt-4 max-w-md text-base leading-relaxed">
           {isError
-            ? "Votre paiement a bien été pris en compte, mais l’envoi automatique a échoué. Écrivez-nous à contact@olala.fr avec votre nom — nous récupérons votre dossier."
+            ? "Votre paiement a bien été pris en compte, mais l’envoi automatique a échoué. Écrivez-nous à support@olala-degatdeseaux.fr avec votre nom — nous récupérons votre dossier."
             : "Cette page s’affiche après un paiement. Si vous avez un dossier en cours, reprenez-le depuis l’accueil."}
         </p>
         <div className="mt-8 flex justify-center">

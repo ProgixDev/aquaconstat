@@ -7,7 +7,7 @@ import {
   type DossierData,
   type UploadablePhoto,
 } from "@/lib/dossiers";
-import { isEmailLive, operatorAddress, sendEmail, type EmailAttachment } from "@/lib/email";
+import { isEmailLive, operatorAddress, sendEmail } from "@/lib/email";
 import { createCheckout, getCheckout, isPaymentLive } from "@/lib/payments";
 import { buildCustomerEmail, buildOperatorEmail, type PhotoSummary } from "./emails";
 
@@ -216,22 +216,10 @@ export async function confirmAndSend(formData: FormData): Promise<ConfirmResult>
     };
   }
 
-  // Zip each uploaded file with its metadata; drop anything over the cap
-  // server-side (AC-2) rather than trusting the client's own check.
-  const files = formData.getAll("photos").filter((f): f is File => f instanceof File);
-  const attachments: EmailAttachment[] = [];
-  const summaries: PhotoSummary[] = [];
-  for (let i = 0; i < files.length; i++) {
-    const file = files[i]!;
-    if (file.size === 0 || file.size > MAX_PHOTO_BYTES) continue;
-    attachments.push({
-      filename: photosMeta[i]?.name ?? file.name,
-      content: Buffer.from(await file.arrayBuffer()),
-    });
-    summaries.push(photosMeta[i] ?? { name: file.name, takenAt: null });
-  }
-
-  const operatorMsg = buildOperatorEmail(dossier, checkout.reference, summaries);
+  // Photos are NOT attached — Nino views them from the back-office link in the
+  // e-mail (single source, purgeable). We only need their names/dates for the
+  // list, which the browser posted as photosMeta.
+  const operatorMsg = buildOperatorEmail(dossier, checkout.reference, photosMeta);
   const customerMsg = buildCustomerEmail(dossier, checkout.reference);
 
   // Operator first — that's the one the business can't afford to lose.
@@ -239,7 +227,6 @@ export async function confirmAndSend(formData: FormData): Promise<ConfirmResult>
     to: operatorAddress,
     replyTo: checkout.email || undefined,
     ...operatorMsg,
-    attachments,
   });
   if (checkout.email) {
     await sendEmail({ to: checkout.email, ...customerMsg });

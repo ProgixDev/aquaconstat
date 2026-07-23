@@ -1,7 +1,7 @@
 import "server-only";
 import { env } from "@/core/env";
-import { dossierStore, fetchDossierPhotos } from "@/lib/dossiers";
-import { operatorAddress, sendEmail, type EmailAttachment } from "@/lib/email";
+import { dossierStore } from "@/lib/dossiers";
+import { operatorAddress, sendEmail } from "@/lib/email";
 import { buildCustomerEmail, buildOperatorEmail, type PhotoSummary } from "./emails";
 
 /**
@@ -66,17 +66,17 @@ export async function handleStripeWebhook(
     name: p.name,
     takenAt: p.takenAt,
   }));
-  const attachments: EmailAttachment[] = await fetchDossierPhotos(claimed.photos);
   const customer = claimed.email || session.customer_email || session.customer_details?.email || "";
 
   // Operator first — that's the one the business can't afford to lose.
-  // replyTo is the customer: this mail is from Nino to Nino, so without it
-  // « Répondre » answers himself instead of delivering the devis.
+  // No attachments: the photos stay in the private bucket and Nino views them
+  // from the back-office button in the e-mail, so the only copies are the ones
+  // the retention job can actually delete. replyTo is the customer — this mail
+  // is from Nino to Nino, so without it « Répondre » answers himself.
   await sendEmail({
     to: operatorAddress,
     replyTo: customer || undefined,
     ...buildOperatorEmail(claimed.data, reference, summaries),
-    attachments,
   });
 
   if (customer) {
