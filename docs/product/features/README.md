@@ -4,7 +4,7 @@ One file per shipped feature. These are the **spec-anchored long-term memory**: 
 
 ## Rules
 
-- File name = feature slug (matches `src/features/<slug>/` when one exists): `task-list.md`.
+- File name = feature slug (matches `src/features/<slug>/` when one exists): `funnel.md`.
 - Update in the same PR that changes the behavior (Definition of Done item).
 - When a feature is removed, don't delete the doc — add a final "Removed in #PR, because…" line and move it to `archive/` (cheap institutional memory).
 
@@ -35,6 +35,4 @@ Key components, store, actions; anything non-obvious.
 
 ## Index
 
-| Feature          | Status | Doc                          |
-| ---------------- | ------ | ---------------------------- |
-| Task list (demo) | live   | [task-list.md](task-list.md) |
+_No living feature docs yet — add one per shipped feature (funnel, admin, landing, legal) via `/update-docs`._

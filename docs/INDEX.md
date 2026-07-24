@@ -20,18 +20,11 @@ The docs tree is the repository's long-term memory. Agents and humans ground the
 
 (Coverage matrix lives in `SECURITY.md` at the repo root.)
 
-## Web production-readiness
-
-| File                                 | What it answers                                                           |
-| ------------------------------------ | ------------------------------------------------------------------------- |
-| [web/checklist.md](web/checklist.md) | `WEB-*` launch checklist (SEO, PWA, errors, a11y, perf); `pnpm web:check` |
-
 ## Design
 
-| File                                                                   | What it answers                                              |
-| ---------------------------------------------------------------------- | ------------------------------------------------------------ |
-| [design/quality-bar.md](design/quality-bar.md)                         | Premium vs "vibe-coded"; the checklist every page must clear |
-| [templates/claude-design-prompt.md](templates/claude-design-prompt.md) | The professional design brief (`/design-prompt` fills it)    |
+| File                                           | What it answers                                              |
+| ---------------------------------------------- | ------------------------------------------------------------ |
+| [design/quality-bar.md](design/quality-bar.md) | Premium vs "vibe-coded"; the checklist every page must clear |
 
 ## Conventions (how we write code)
 
@@ -55,15 +48,6 @@ The docs tree is the repository's long-term memory. Agents and humans ground the
 | [process/definition-of-done.md](process/definition-of-done.md) | The checklist that gates every merge                           |
 | [process/painted-door.md](process/painted-door.md)             | How designers/PMs ship UI experiments safely                   |
 
-## Templates (artifacts skills instantiate)
-
-| File                                                                   | Filled by                      |
-| ---------------------------------------------------------------------- | ------------------------------ |
-| [templates/](templates/README.md)                                      | Index of all project artifacts |
-| [templates/prd.md](templates/prd.md)                                   | `/write-prd`                   |
-| [templates/claude-design-prompt.md](templates/claude-design-prompt.md) | `/design-prompt`               |
-| [templates/daily-report.md](templates/daily-report.md)                 | `/daily-report`                |
-
 ## Product (what we are building)
 
 | File                                                                   | What it answers                                      |
@@ -72,14 +56,9 @@ The docs tree is the repository's long-term memory. Agents and humans ground the
 | [product/critical-user-journeys.md](product/critical-user-journeys.md) | The CUJs that must never break; screenshot targets   |
 | [product/features/](product/features/README.md)                        | Living docs, one per shipped feature                 |
 
-## Review personas
-
-[personas/](personas/) — the lenses used by `/review` and CI: [frontend-architect](personas/frontend-architect.md), [appsec-engineer](personas/appsec-engineer.md), [qa-engineer](personas/qa-engineer.md), [ux-reviewer](personas/ux-reviewer.md), [product-reviewer](personas/product-reviewer.md).
-
 ## Generated
 
 - [reports/](reports/README.md) — feature reports produced by `/feature-report` (diff + screenshots + spec)
-- [references/](references/README.md) — vendored `llms.txt` docs for key dependencies
 
 ## Related (outside docs/)
 
