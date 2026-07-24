@@ -37,7 +37,7 @@ export function Confidentialite() {
         <p>Ces données sont strictement nécessaires pour :</p>
         <LegalList
           items={[
-            "L’analyse technique des dommages et la rédaction du devis officiel par la SAS BATITEC.",
+            "L’analyse technique des dommages et la rédaction du devis officiel par un professionnel qualifié.",
             "La facturation et le traitement sécurisé du paiement par Stripe.",
             "La transmission du devis par e-mail et le suivi du dossier client.",
           ]}
