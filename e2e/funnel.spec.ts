@@ -34,6 +34,11 @@ test("@cuj CUJ-02: visitor fills the funnel and reaches confirmation", async ({ 
   await page.getByRole("link", { name: "Continuer vers le questionnaire" }).click();
   await expect(page.getByRole("heading", { name: "Décrivez votre dégât des eaux" })).toBeVisible();
   await page.getByLabel("Date du sinistre déclaré à votre assureur").fill("2026-06-14");
+  // Free-text account of the sinistre — required before the step can be left
+  // (client, 2026-07-25).
+  await page
+    .getByLabel("Racontez ce qu’il s’est passé")
+    .fill("Fuite au plafond de la salle de bain depuis l’étage du dessus.");
   await expect(page.getByText("Que faut-il refaire ?")).toHaveCount(0);
   await page.getByRole("checkbox", { name: "Salle de bain" }).click();
   await expect(page.getByText("Que faut-il refaire ?")).toBeVisible();
