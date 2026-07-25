@@ -4,12 +4,12 @@ The docs tree is the repository's long-term memory. Agents and humans ground the
 
 ## Architecture
 
-| File                                                                   | What it answers                                              |
-| ---------------------------------------------------------------------- | ------------------------------------------------------------ |
-| [architecture/overview.md](architecture/overview.md)                   | What the system is, rendering model, data flow               |
-| [architecture/backend.md](architecture/backend.md)                     | Supabase SSR clients, RLS-first DB, auth, payments           |
-| [architecture/module-boundaries.md](architecture/module-boundaries.md) | Where code may live and what it may import (ESLint-enforced) |
-| [architecture/decisions/](architecture/decisions/README.md)            | ADRs — why the stack and structure are what they are         |
+| File                                                                   | What it answers                                                  |
+| ---------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| [architecture/overview.md](architecture/overview.md)                   | What the system is, rendering model, data flow                   |
+| [architecture/backend.md](architecture/backend.md)                     | Supabase service-role data store, private photo bucket, payments |
+| [architecture/module-boundaries.md](architecture/module-boundaries.md) | Where code may live and what it may import (ESLint-enforced)     |
+| [architecture/decisions/](architecture/decisions/README.md)            | ADRs — why the stack and structure are what they are             |
 
 ## Security
 

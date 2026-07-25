@@ -1,32 +1,31 @@
-# Backend (Supabase, SSR)
+# Backend (Supabase — server-owned data store)
 
-The backend is Supabase, configured **RLS-first** with **SSR cookie auth** (ADR-0007). Golden rule:
-**the browser is untrusted and ships a public key — Postgres Row-Level Security is the
-authorization boundary, not the client.**
+Supabase is used here as a **private data store** for dossiers plus a **private photo bucket**,
+reached exclusively through the **service-role** client from server code (ADR-0007). There is **no
+end-user Supabase auth**: the devis funnel is anonymous, and the admin area is gated by a shared
+password (ADR-0008). Golden rule: **the service-role key is the authorization boundary and never
+leaves the server** — the browser never talks to Supabase.
 
-## Clients (`src/lib/supabase/`)
+> The skeleton's SSR cookie-auth setup (browser/server/middleware clients, `src/features/auth/`,
+> per-user `auth.users` tables) was removed — this app has no logged-in end users. RLS stays on as
+> defence in depth: the tables deny all by default and only the service-role client (which bypasses
+> RLS) can reach them.
 
-- **`client.ts`** — browser client (`createBrowserClient`) for Client Components. Sets auth cookies.
-- **`server.ts`** — server client (`createServerClient` + `next/headers` cookies) for Server
-  Components, Server Actions, and Route Handlers. Reads the session; RLS enforces access.
-- **`middleware.ts`** + **`src/middleware.ts`** — refresh the session on every request and redirect
-  unauthenticated users away from protected routes (`PROTECTED_PREFIXES`). Always returns the
-  `supabaseResponse` so cookies stay in sync. **Do not** run code between `createServerClient` and
-  `auth.getUser()`.
-- **`admin.ts`** — service-role client (`server-only`); **bypasses RLS**. Use sparingly (account
-  deletion). Never expose it or the key to the browser.
+## Client (`src/lib/supabase/`)
 
-## Auth (`src/features/auth/`)
+- **`admin.ts`** — the only client. Service-role (`createClient` with `SUPABASE_SERVICE_ROLE_KEY`),
+  `server-only`, **bypasses RLS**, no session persistence. Everything server-side goes through it:
+  the dossier store (`src/lib/dossiers/supabase.ts`) and photo storage (`src/lib/dossiers/photos.ts`).
+  Never expose this client or the key to the browser.
 
-`SignInForm` (client) uses the browser client to sign in/up (Zod-validated). `signOut` and
-`deleteAccount` are server actions; `/account` is a Server Component guarded by the middleware and
-re-checked server-side. The `?next=` redirect target is sanitised by `safeRedirectPath`.
+Simulation fallback: when `SUPABASE_SERVICE_ROLE_KEY` is unset, the store and photo layers fall back
+to an in-memory implementation (`src/lib/dossiers/memory.ts`), so dev and tests run with no cloud.
 
-### The admin area does not use Supabase auth (ADR-0008)
+## The admin area is password-gated, not Supabase auth (ADR-0008)
 
 `/admin/*` is gated by a **shared password** (`ADMIN_PASSWORD`) with an HMAC-signed `httpOnly`
-cookie — Supabase is not provisioned, and there is one operator and no user table. Three things
-about it generalise to any gate in this repo:
+cookie — there is one operator and no user table. Three things about it generalise to any gate in
+this repo:
 
 - **The boundary is the data layer, not the layout.** `getDossiers()`/`getDossier()` in
   `src/features/admin/data.ts` call `requireAdminSession()` themselves. A layout is not a reliable
@@ -41,54 +40,49 @@ about it generalise to any gate in this repo:
   middleware matcher excludes, so no gate can reach it. This is not hypothetical; it is what
   `data.ts` did until 2026-07-16.
 
-## Database — secure-by-default rules
+## Database — secure-by-default
 
-Migrations in `supabase/migrations/` run in order. `0001_security_baseline` enforces deny-by-default:
-blanket grants revoked, RLS auto-enabled on every new public table, a `private` schema for
-`security definer` helpers (`search_path = ''` pinned).
+Migrations in `supabase/migrations/` run in order:
 
-### Adding a per-user table (copy `0003_notes`)
+- **`0001_security_baseline`** — deny-by-default: blanket grants revoked, RLS auto-enabled on every
+  new public table, a `private` schema for `security definer` helpers (`search_path = ''` pinned).
+- **`0005_dossiers`** — the `dossiers` table: `reference` (unique), contact fields, `statut`,
+  `paid_at`, `devis_envoye_at`, `stripe_session_id`, the full answers as `data jsonb`, and photo
+  metadata as `photos jsonb`. **RLS enabled with no policies ⇒ deny-all**; only the service-role
+  client reaches it.
+- **`0006_dossier_photos`** — the private `dossier-photos` **storage bucket** (images only,
+  size-limited), created non-public so no object is ever served without a signed URL.
 
-```sql
-create table public.things (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid not null default auth.uid() references auth.users (id) on delete cascade,
-  created_at timestamptz not null default now()
-);
-grant select, insert, update, delete on public.things to authenticated;
-create index things_user_id_idx on public.things (user_id);
-create policy "things: select own" on public.things for select to authenticated
-  using ((select auth.uid()) = user_id);
-create policy "things: insert own" on public.things for insert to authenticated
-  with check ((select auth.uid()) = user_id);
-create policy "things: update own" on public.things for update to authenticated
-  using ((select auth.uid()) = user_id) with check ((select auth.uid()) = user_id);
-create policy "things: delete own" on public.things for delete to authenticated
-  using ((select auth.uid()) = user_id);
-```
+Because there are no per-user tables (single operator, anonymous funnel), there is no
+`auth.uid()`/policy model to maintain — the data is server-owned and the service-role key is the
+boundary. If a future feature ever needs per-user rows, add an ADR and a proper one-policy-per-command
+RLS model before creating the table.
 
-Rules: one policy **per command** (never `FOR ALL`); always `to authenticated`; wrap `auth.uid()`
-in `(select …)`; `WITH CHECK` on writes; index the policy column; never read `user_metadata` in a
-policy; split highly-sensitive columns into their own table.
+## Photos (private bucket)
 
-## Payments (entitlement is server-owned)
+Photos are uploaded to the private `dossier-photos` bucket **at checkout** (nothing depends on the
+browser surviving the Stripe redirect). The admin only ever sees **short-lived signed URLs**; the
+bytes are never public. Retention is automated — 12 months after payment, 7 days if never paid —
+and must run through the Storage API, not SQL (Supabase forbids direct `storage.objects` deletes).
+See `src/lib/dossiers/photos.ts` and `src/lib/dossiers/retention.ts`.
 
-`public.subscriptions` is **client read-only**. Only a trusted server writes it: a Stripe webhook
-**Route Handler** that verifies the `Stripe-Signature` against the raw body, then upserts entitlement
-with the service-role client. Never trust the client for entitlement. (Add the `stripe` dep + the
-route when you wire payments.)
+## Payments (paid state is server-owned)
 
-## Verification (release gates)
+A Stripe **webhook Route Handler** (`src/app/api/stripe/webhook`) verifies the `Stripe-Signature`
+against the raw body, then marks the dossier paid with the service-role client — a compare-and-set
+`markPaid` that transitions once, so a retried delivery can't double-send. The browser never sets
+paid state. See `src/features/funnel/webhook.ts`.
 
-- `supabase test db` runs the pgTAP RLS tests in `supabase/tests/database/`.
-- `supabase db lint` (Security Advisor) must be clean of ERROR lints — **0007** (policy exists, RLS
-  disabled), **0013** (RLS disabled in public), **0015** (RLS references user_metadata).
+## Verification
+
+- `supabase test db` runs the pgTAP RLS tests in `supabase/tests/database/rls.test.sql`.
+- `supabase db lint` (Security Advisor) must be clean of ERROR lints — notably **0013** (RLS
+  disabled in public) and **0015** (RLS references `user_metadata`).
 
 ## Setup (on your machine)
 
 ```
-pnpm add @supabase/ssr @supabase/supabase-js
+pnpm add @supabase/supabase-js
 # set NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY (+ SUPABASE_SERVICE_ROLE_KEY) in .env.local
-supabase init   # if you don't have a full config.toml
 supabase start && supabase db reset && supabase test db
 ```
