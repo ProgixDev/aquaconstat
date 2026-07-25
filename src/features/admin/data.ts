@@ -48,6 +48,8 @@ export type DossierDetail = DossierRow & {
   batiment: string;
   demandeur: string;
   syndic: string;
+  /** The visitor's free-text account of the sinistre, or "—" if empty. */
+  description: string;
   sinistre: { label: string; value: string }[];
   /** Per pièce: what to redo + the m² touched on each part. */
   surfaces: { label: string; value: string }[];
@@ -163,6 +165,7 @@ export async function getDossier(ref: string): Promise<DossierRead> {
     batiment: d.typeLieu ? (typeLieuLabels[d.typeLieu] ?? d.typeLieu) : "—",
     demandeur: d.statut ? (statutLabels[d.statut] ?? d.statut) : "—",
     syndic: d.syndic || "—",
+    description: d.descriptionSinistre?.trim() || "—",
     sinistre: [
       { label: "Date du sinistre", value: d.dateSinistre ? frDate(d.dateSinistre) : "—" },
       { label: "Pièces endommagées", value: pieces.length ? pieces.join(" · ") : "—" },

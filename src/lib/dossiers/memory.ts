@@ -37,6 +37,8 @@ const seedData: DossierData = {
   syndic: "Cabinet Berthelot — 4 quai Saint-Antoine, 69002 Lyon · 04 72 10 22 30",
   statut: "locataire",
   dateSinistre: "2026-06-14",
+  descriptionSinistre:
+    "Une fuite venue de l’appartement du dessus a traversé le plafond de la salle de bain, puis coulé le long du mur jusqu’au couloir. Les peintures sont cloquées et le plafond taché.",
   pieces: { sdb: true, couloirWc: true },
   surfaces: { sdb: { parts: { plaf: "12", murs: "12" } }, couloirWc: { parts: { murs: "6" } } },
   photosAttestation: true,

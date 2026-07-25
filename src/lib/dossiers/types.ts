@@ -31,6 +31,8 @@ export type DossierData = {
   syndic: string;
   statut: string;
   dateSinistre: string;
+  /** The visitor's free-text account of the sinistre (client, 2026-07-25). */
+  descriptionSinistre: string;
   pieces: Record<string, boolean>;
   surfaces: Record<string, { parts: Record<string, string> }>;
   photosAttestation: boolean;

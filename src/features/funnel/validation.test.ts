@@ -23,6 +23,7 @@ const empty: FunnelData = {
   syndic: "",
   statut: "",
   dateSinistre: "",
+  descriptionSinistre: "",
   pieces: {
     salon: false,
     chambre: false,
@@ -46,6 +47,7 @@ const filled: FunnelData = {
   typeLieu: "copro",
   statut: "locataire",
   dateSinistre: "2026-07-10",
+  descriptionSinistre: "Fuite au plafond de la salle de bain depuis l’étage du dessus.",
   pieces: { ...empty.pieces, sdb: true },
   surfaces: { sdb: { parts: { plaf: "12" } } },
   photosAttestation: true,
@@ -68,10 +70,17 @@ describe("missingForDossier", () => {
 });
 
 describe("missingForQuestionnaire", () => {
-  it("requires a date and at least one room", () => {
+  it("requires a date, a description and at least one room", () => {
     expect(missingForQuestionnaire(empty)).toEqual([
       "la date du sinistre",
+      "une description de votre sinistre",
       "au moins une pièce touchée",
+    ]);
+  });
+
+  it("requires the free-text description (client, 2026-07-25)", () => {
+    expect(missingForQuestionnaire({ ...filled, descriptionSinistre: "   " })).toEqual([
+      "une description de votre sinistre",
     ]);
   });
 

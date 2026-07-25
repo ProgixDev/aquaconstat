@@ -17,6 +17,7 @@ const dossier: DossierData = {
   syndic: "Cabinet Duval",
   statut: "locataire",
   dateSinistre: "2026-07-10",
+  descriptionSinistre: "Une canalisation a cédé au plafond de la salle de bain.",
   pieces: {
     salon: false,
     chambre: false,
@@ -60,6 +61,12 @@ describe("buildOperatorEmail", () => {
 
   it("describes the touched room with a m² per checked part", () => {
     expect(email.text).toContain("Salle de bain — plafond ≈ 12 m², sol ≈ 8 m²");
+  });
+
+  it("carries the client's free-text account of the sinistre", () => {
+    expect(email.text).toContain("Origine du sinistre (récit du client)");
+    expect(email.text).toContain("Une canalisation a cédé au plafond de la salle de bain.");
+    expect(email.html).toContain("Une canalisation a cédé au plafond de la salle de bain.");
   });
 
   it("lists the photos with their capture dates", () => {

@@ -46,6 +46,10 @@ const dossierSchema = z.object({
   syndic: z.string(),
   statut: z.enum(["locataire", "proprio", "syndic", "gerant", ""]),
   dateSinistre: z.string(),
+  // `.catch("")`: a visitor who began the funnel before this field shipped has a
+  // saved dossier without it — tolerate that rather than reject the whole
+  // checkout. New submissions always carry it (the payment button gates on it).
+  descriptionSinistre: z.string().catch(""),
   pieces: z.record(z.string(), z.boolean()),
   surfaces: z.record(z.string(), roomSchema),
   photosAttestation: z.boolean(),

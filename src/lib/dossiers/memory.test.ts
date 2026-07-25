@@ -20,6 +20,7 @@ const data: DossierData = {
   syndic: "",
   statut: "proprio",
   dateSinistre: "2026-07-10",
+  descriptionSinistre: "Fuite constatée sous l’évier de la cuisine.",
   pieces: { salon: true },
   surfaces: { salon: { parts: { sol: "15" } } },
   photosAttestation: true,

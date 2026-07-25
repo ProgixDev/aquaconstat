@@ -219,7 +219,15 @@ export function DossierDetail({ dossier, now }: DossierDetailProps) {
       </div>
 
       <SectionCard title="Réponses au questionnaire">
-        <div className="mt-4.5 grid gap-6 lg:grid-cols-2">
+        <div className="mt-4.5">
+          <div className="text-link text-xs font-semibold tracking-wider uppercase">
+            Origine du sinistre (récit du client)
+          </div>
+          <p className="text-foreground mt-2 text-sm leading-relaxed whitespace-pre-wrap">
+            {dossier.description}
+          </p>
+        </div>
+        <div className="mt-6 grid gap-6 lg:grid-cols-2">
           <div>
             <div className="text-link text-xs font-semibold tracking-wider uppercase">
               Le sinistre

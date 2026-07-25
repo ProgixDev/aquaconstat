@@ -77,6 +77,26 @@ export function QuestionnaireForm() {
       </section>
 
       <section className="mt-9">
+        <h2 className="font-display text-lg font-bold">
+          Décrivez-nous l’origine de votre sinistre
+        </h2>
+        <div className="mt-4">
+          {/* Free-text account in the visitor's own words (client, 2026-07-25) —
+              a big paragraph field, so the artisan gets the story the structured
+              fields can't capture. */}
+          <TextField
+            label="Racontez ce qu’il s’est passé"
+            multiline
+            rows={6}
+            placeholder="D’où vient la fuite, quelle pièce est touchée, quels dégâts avez-vous constatés…"
+            hint="Avec vos propres mots — plus c’est précis, plus le devis sera juste."
+            value={data.descriptionSinistre ?? ""}
+            onChange={(v) => setField("descriptionSinistre", v)}
+          />
+        </div>
+      </section>
+
+      <section className="mt-9">
         <h2 className="font-display text-lg font-bold">Les pièces touchées</h2>
         <div className="mt-4">
           <div className="text-sm font-semibold">Cochez la ou les pièces endommagées</div>

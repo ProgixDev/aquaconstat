@@ -14,6 +14,8 @@ type TextFieldProps = {
   inputMode?: "decimal" | "numeric";
   placeholder?: string;
   multiline?: boolean;
+  /** Textarea height in rows — only used when `multiline`. Defaults to 3. */
+  rows?: number;
   className?: string;
 };
 
@@ -29,6 +31,7 @@ export function TextField({
   inputMode,
   placeholder,
   multiline = false,
+  rows = 3,
   className,
 }: TextFieldProps) {
   const id = useId();
@@ -44,7 +47,7 @@ export function TextField({
       {multiline ? (
         <textarea
           id={id}
-          rows={3}
+          rows={rows}
           value={value}
           placeholder={placeholder}
           onChange={(e) => onChange(e.target.value)}

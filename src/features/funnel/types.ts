@@ -54,6 +54,9 @@ export type FunnelData = {
   // occupant) were removed 2026-07-16 (client feedback) — see dossier-form.tsx.
   // Étape 2 — questionnaire (only what changes the price of the work)
   dateSinistre: string;
+  /** Free-text account of the sinistre, in the visitor's own words (client,
+   *  2026-07-25): where the leak comes from, the room touched, the damage seen. */
+  descriptionSinistre: string;
   pieces: Record<PieceKey, boolean>;
   surfaces: Partial<Record<PieceKey, RoomSurface>>;
   // Étape 3 — photos

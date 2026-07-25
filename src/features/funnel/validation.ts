@@ -32,6 +32,8 @@ export function missingForDossier(data: FunnelData): string[] {
 export function missingForQuestionnaire(data: FunnelData): string[] {
   const missing: string[] = [];
   if (!data.dateSinistre) missing.push("la date du sinistre");
+  // `?? ""`: a funnel saved before this field shipped rehydrates without it.
+  if (!(data.descriptionSinistre ?? "").trim()) missing.push("une description de votre sinistre");
 
   const selected = pieceKeys.filter((key) => data.pieces[key]);
   if (selected.length === 0) {

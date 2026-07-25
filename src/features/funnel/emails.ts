@@ -206,12 +206,17 @@ export function buildOperatorEmail(
   // attached, so they stay in one place the retention job can actually purge.
   const adminUrl = `${site.url}/admin/dossiers/${encodeURIComponent(reference)}`;
 
+  const description = data.descriptionSinistre?.trim();
+
   const text = [
     `Nouveau dossier payé — ${reference}`,
     "",
     `Voir le dossier et les photos : ${adminUrl}`,
     "",
     ...rows.map(([label, value]) => `${label} : ${value}`),
+    "",
+    "Origine du sinistre (récit du client) :",
+    `  ${description || "(non renseigné)"}`,
     "",
     "Pièces touchées :",
     ...(rooms.length ? rooms.map((r) => `  • ${r}`) : ["  (aucune)"]),
@@ -250,6 +255,10 @@ ${referenceRing(reference)}
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:26px;border-collapse:collapse;">${rows
     .map(row)
     .join("")}</table>
+${sectionTitle("Origine du sinistre (récit du client)")}
+<div style="background:#f4faff;border:1px solid #e0f0fd;border-radius:10px;padding:14px 16px;color:#133a5f;font-size:14px;line-height:1.6;white-space:pre-wrap;">${
+    description ? escapeHtml(description) : '<span style="color:#8fb3d4;">(non renseigné)</span>'
+  }</div>
 ${sectionTitle("Pièces touchées")}${list(rooms)}
 ${sectionTitle(`Photos (${photos.length})`)}${list(photoLines)}
 <p style="margin:8px 0 0;color:#8fb3d4;font-size:12px;">Les photos sont consultables dans le back-office (bouton ci-dessus).</p>

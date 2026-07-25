@@ -57,6 +57,7 @@ const initialData: FunnelData = {
   syndic: "",
   statut: "",
   dateSinistre: "",
+  descriptionSinistre: "",
   pieces: {
     salon: false,
     chambre: false,
