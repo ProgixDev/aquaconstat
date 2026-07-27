@@ -49,12 +49,55 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Structured data (JSON-LD) so Google understands who we are, what we sell,
+  // and where — Organization + WebSite + the priced Service, linked by @id.
+  const orgId = `${site.url}/#organization`;
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: site.name,
-    url: site.url,
-    description: site.description,
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": orgId,
+        name: site.name,
+        url: site.url,
+        logo: `${site.url}/droplet.png`,
+        email: "support@olala-degatdeseaux.fr",
+        description: site.description,
+        areaServed: { "@type": "Country", name: "France" },
+        contactPoint: {
+          "@type": "ContactPoint",
+          contactType: "customer support",
+          email: "support@olala-degatdeseaux.fr",
+          availableLanguage: ["French"],
+        },
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${site.url}/#website`,
+        name: site.name,
+        url: site.url,
+        description: site.description,
+        inLanguage: "fr-FR",
+        publisher: { "@id": orgId },
+      },
+      {
+        "@type": "Service",
+        "@id": `${site.url}/#service`,
+        name: "Devis dégât des eaux à distance",
+        serviceType: "Devis de travaux de rénovation après dégât des eaux",
+        provider: { "@id": orgId },
+        areaServed: { "@type": "Country", name: "France" },
+        description:
+          "Chiffrage à distance des travaux de remise en état après un dégât des eaux : à partir de vos photos et de votre description, un professionnel établit sous 48 h ouvrées un devis détaillé à transmettre à votre assurance.",
+        offers: {
+          "@type": "Offer",
+          price: "82.90",
+          priceCurrency: "EUR",
+          availability: "https://schema.org/InStock",
+          url: site.url,
+        },
+      },
+    ],
   };
 
   return (
